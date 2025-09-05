@@ -1,0 +1,20 @@
+<div class="container">
+  <h1>Dashboard de la Aplicación</h1>
+
+  <div class="card">
+    <h2>Resultado del Ping</h2>
+    <p *ngIf="pingResult">Estado: <strong>{{ pingResult }}</strong></p>
+    <p *ngIf="!pingResult">Cargando...</p>
+  </div>
+
+  <div class="card">
+    <h2>Datos de Test (test.json)</h2>
+    <div *ngIf="testResult">
+      <p>ID: <strong>{{ testResult.id }}</strong></p>
+      <p>Nombre: <strong>{{ testResult.name }}</strong></p>
+      <p>Edad: <strong>{{ testResult.age }}</strong></p>
+      <p>Ciudad: <strong>{{ testResult.city }}</strong></p>
+    </div>
+    <p *ngIf="!testResult">Cargando...</p>
+  </div>
+</div>
