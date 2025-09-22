@@ -5,5 +5,5 @@ export const environment = {
         realm: 'dacs',
         clientId: 'dacs-fe'
     },
-      backendForFrontendUrl: '/api'
+      backendForFrontendUrl: '/bff'
 };
