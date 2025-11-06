@@ -1,9 +1,9 @@
 export const environment = {
     production: true,
     keycloak: {
-        url:  'http://localhost:8080' ,//https://dacs2025/secure
+        url:  '/auth' ,//https://dacs2025/secure
         realm: 'dacs',
-        clientId: 'dacs-fe'
+        clientId: 'dacs-app'
     },
-      backendForFrontendUrl: '/bff'
+      backendForFrontendUrl: '/api'
 };

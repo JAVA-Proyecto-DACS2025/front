@@ -15,5 +15,10 @@ export const routes: Routes = [
     loadComponent: () => import('./dashboard-view/dashboard-view').then(m => m.DashboardViewComponent),
     canActivate: [RoleBGuard]
   },
+  { 
+    path: 'solicitudes', 
+    loadComponent: () => import('./solicitudes/pages/solicitudes').then(m => m.SolicitudesComponent),
+    canActivate: [RoleBGuard]
+  },
   { path: '**', redirectTo: '/home' }
 ];
