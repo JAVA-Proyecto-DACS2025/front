@@ -8,7 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
-
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { SolicitudDialogComponent } from '../solicitud-dialog/solicitud-dialog';
 
 export interface Solicitud {
   id: number;
@@ -20,8 +21,22 @@ export interface Solicitud {
 }
 
 const DATA: Solicitud[] = [
-  { id: 1, paciente: 'Juan Pérez', tipo: 'Consulta', medico: 'Dr. Díaz', fecha: '2025-11-01', estado: 'Pendiente' },
-  { id: 2, paciente: 'María Gómez', tipo: 'Turno', medico: 'Dra. Ruiz', fecha: '2025-11-02', estado: 'Atendida' },
+  {
+    id: 1,
+    paciente: 'Juan Pérez',
+    tipo: 'Consulta',
+    medico: 'Dr. Díaz',
+    fecha: '2025-11-01',
+    estado: 'Pendiente',
+  },
+  {
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },
   // ...más datos
 ];
 
@@ -38,11 +53,14 @@ const DATA: Solicitud[] = [
     MatIconModule,
     MatButtonModule,
     MatTableModule,
-  ]
+    MatDialogModule,
+  ],
 })
 export class SolicitudesListComponent implements AfterViewInit {
   displayedColumns: string[] = ['id', 'paciente', 'tipo', 'medico', 'fecha', 'estado', 'actions'];
   dataSource = new MatTableDataSource<Solicitud>(DATA);
+
+  constructor(private dialog: MatDialog) {}
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -59,5 +77,20 @@ export class SolicitudesListComponent implements AfterViewInit {
   verDetalle(row: Solicitud) {
     // abrir dialog o expandir fila con detalle
     console.log('ver detalle', row);
+  }
+
+  crearSolicitud() {
+    const ref = this.dialog.open(SolicitudDialogComponent, {
+      width: '480px',
+      data: {}, // puedes pasar datos para editar
+    });
+
+    ref.afterClosed().subscribe((result) => {
+      if (result) {
+        // result contiene el objeto del formulario -> guarda en backend/actualiza datasource
+        console.log('Nueva solicitud:', result);
+        // ejemplo: this.dataSource.data = [result, ...this.dataSource.data];
+      }
+    });
   }
 }

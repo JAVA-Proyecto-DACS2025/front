@@ -1,0 +1,16 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+/* el campo de búsqueda ocupa el espacio disponible */
+.search {
+  flex: 1 1 400px; /* crece, puede encogerse, base 400px */
+  min-width: 200px;
+  max-width: 500px;
+}
+
+.table-wrapper {
+  min-height: 600px; /* altura mínima que quieras */
+}
