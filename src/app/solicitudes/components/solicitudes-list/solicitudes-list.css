@@ -9,8 +9,41 @@
   flex: 1 1 400px; /* crece, puede encogerse, base 400px */
   min-width: 200px;
   max-width: 500px;
+  border-radius: 6px;
 }
 
 .table-wrapper {
-  min-height: 600px; /* altura mínima que quieras */
+  min-height: auto; /* o el valor que quieras */
+  overflow: auto;
+  border-radius: 8px;
+  /* box-shadow: 0 6px 18px rgba(0, 0, 0, 0.171); */
+  border: 1px solid #e0e0e0;
+}
+
+.table-list-container {
+  min-height: auto;
+  max-width: 1800px; /* ancho máximo del container */
+  margin: 25px auto; /* centra horizontalmente y separa del top */
+  padding: 16px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.171);
+  background: white;
+}
+
+.table-list-container .mat-mdc-header-cell {
+  background: #9cb0f5;
+  font-weight: 600;
+}
+
+.table-list-container .mat-mdc-row {
+  background: #f7f7f7;
+  cursor: pointer;
+  border-color: black;
+  border-radius: 8px;
+}
+
+.table-list-container .mat-mdc-row:hover {
+  background: #dfdfdf;
+  cursor: pointer;
 }

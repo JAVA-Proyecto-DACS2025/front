@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -36,6 +36,132 @@ const DATA: Solicitud[] = [
     medico: 'Dra. Ruiz',
     fecha: '2025-11-02',
     estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },{
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    medico: 'Dra. Ruiz',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
   },
   // ...más datos
 ];
@@ -44,6 +170,7 @@ const DATA: Solicitud[] = [
   selector: 'app-solicitudes-list',
   templateUrl: './solicitudes-list.html',
   styleUrls: ['./solicitudes-list.css'],
+
   imports: [
     CommonModule,
     MatPaginatorModule,
