@@ -15,7 +15,6 @@ export interface Solicitud {
   id: number;
   paciente: string;
   tipo: string;
-  medico: string;
   fecha: string;
   estado: string;
 }
@@ -25,7 +24,6 @@ const DATA: Solicitud[] = [
     id: 1,
     paciente: 'Juan Pérez',
     tipo: 'Consulta',
-    medico: 'Dr. Díaz',
     fecha: '2025-11-01',
     estado: 'Pendiente',
   },
@@ -33,137 +31,126 @@ const DATA: Solicitud[] = [
     id: 2,
     paciente: 'María Gómez',
     tipo: 'Turno',
-    medico: 'Dra. Ruiz',
     fecha: '2025-11-02',
     estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },{
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    medico: 'Dra. Ruiz',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
+  },  {
+    id: 1,
+    paciente: 'Juan Pérez',
+    tipo: 'Consulta',
+    fecha: '2025-11-01',
+    estado: 'Pendiente',
   },
-  // ...más datos
+  {
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },  {
+    id: 1,
+    paciente: 'Juan Pérez',
+    tipo: 'Consulta',
+    fecha: '2025-11-01',
+    estado: 'Pendiente',
+  },
+  {
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },  {
+    id: 1,
+    paciente: 'Juan Pérez',
+    tipo: 'Consulta',
+    fecha: '2025-11-01',
+    estado: 'Pendiente',
+  },
+  {
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },  {
+    id: 1,
+    paciente: 'Juan Pérez',
+    tipo: 'Consulta',
+    fecha: '2025-11-01',
+    estado: 'Pendiente',
+  },
+  {
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },  {
+    id: 1,
+    paciente: 'Juan Pérez',
+    tipo: 'Consulta',
+    fecha: '2025-11-01',
+    estado: 'Pendiente',
+  },
+  {
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },  {
+    id: 1,
+    paciente: 'Juan Pérez',
+    tipo: 'Consulta',
+    fecha: '2025-11-01',
+    estado: 'Pendiente',
+  },
+  {
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },  {
+    id: 1,
+    paciente: 'Juan Pérez',
+    tipo: 'Consulta',
+    fecha: '2025-11-01',
+    estado: 'Pendiente',
+  },
+  {
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },  {
+    id: 1,
+    paciente: 'Juan Pérez',
+    tipo: 'Consulta',
+    fecha: '2025-11-01',
+    estado: 'Pendiente',
+  },
+  {
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  },  {
+    id: 1,
+    paciente: 'Juan Pérez',
+    tipo: 'Consulta',
+    fecha: '2025-11-01',
+    estado: 'Pendiente',
+  },
+  {
+    id: 2,
+    paciente: 'María Gómez',
+    tipo: 'Turno',
+    fecha: '2025-11-02',
+    estado: 'Atendida',
+  }
 ];
 
 @Component({
@@ -184,7 +171,7 @@ const DATA: Solicitud[] = [
   ],
 })
 export class SolicitudesListComponent implements AfterViewInit {
-  displayedColumns: string[] = ['id', 'paciente', 'tipo', 'medico', 'fecha', 'estado', 'actions'];
+  displayedColumns: string[] = ['id', 'paciente', 'tipo', 'fecha', 'estado', 'actions'];
   dataSource = new MatTableDataSource<Solicitud>(DATA);
 
   constructor(private dialog: MatDialog) {}

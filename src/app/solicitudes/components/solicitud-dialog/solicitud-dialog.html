@@ -1,23 +1,26 @@
 <h2 mat-dialog-title>Crear Solicitud</h2>
-
 <div mat-dialog-content class="dialog-content" [formGroup]="form">
-  <mat-form-field appearance="outline" style="width:100%">
+  <div class="content-dialog">
+  <mat-form-field appearance="outline" style="width: 100%">
     <mat-label>Paciente</mat-label>
     <input matInput formControlName="paciente" />
   </mat-form-field>
 
-  <mat-form-field appearance="outline" style="width:100%">
+  <mat-form-field appearance="outline" style="width: 100%">
     <mat-label>Tipo</mat-label>
     <input matInput formControlName="tipo" />
   </mat-form-field>
 
-  <mat-form-field appearance="outline" style="width:100%">
-    <mat-label>Médico</mat-label>
-    <input matInput formControlName="medico" />
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Fecha</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="fecha" (focus)="picker.open()" />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
+  </div>
 </div>
 
 <div mat-dialog-actions align="end">
-  <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+  <button mat-raised-button color="primary" type="button" (click)="cancelar()">Cancelar</button>
   <button mat-raised-button color="primary" (click)="guardar()">Guardar</button>
 </div>

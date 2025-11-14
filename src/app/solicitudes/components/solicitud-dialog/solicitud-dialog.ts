@@ -5,6 +5,11 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { provideNativeDateAdapter } from '@angular/material/core';
+
 
 @Component({
   standalone: true,
@@ -12,10 +17,16 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatDialogModule,      // <- asegurarse que está aquí
+    MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatIconModule, 
+  ],
+  providers: [
+  provideNativeDateAdapter()
   ],
   templateUrl: './solicitud-dialog.html',
   styleUrls: ['./solicitud-dialog.css']
@@ -31,9 +42,8 @@ export class SolicitudDialogComponent {
   ) {
     this.form = this.fb.group({
       paciente: ['', Validators.required],
-      tipo: [''],
-      medico: [''],
-      fecha: [''],
+      tipo: ['', Validators.required],
+      fecha: [new Date(), Validators.required],
       observaciones: ['']
     });
 

@@ -21,7 +21,7 @@
 }
 
 .table-list-container {
-  min-height: auto;
+  min-height: 800px;
   max-width: 1800px; /* ancho máximo del container */
   margin: 25px auto; /* centra horizontalmente y separa del top */
   padding: 16px;
@@ -32,7 +32,8 @@
 }
 
 .table-list-container .mat-mdc-header-cell {
-  background: #9cb0f5;
+  background: #6a60ff;
+  color: white;
   font-weight: 600;
 }
 
@@ -46,4 +47,10 @@
 .table-list-container .mat-mdc-row:hover {
   background: #dfdfdf;
   cursor: pointer;
+}
+
+
+.table-list-container .button-add {
+  background: #6a60ff;       
+  color: white;
 }
