@@ -1,0 +1,158 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 270px;
+  height: 100vh;
+  background: white;
+  border-right: 1px solid #e5e5e5;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 0rem;
+}
+
+.sidebar-brand .brand-link {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  padding-left: 15px;
+  text-decoration: none;
+  color: #2c3e50;
+  font-size: 1.85rem;
+}
+
+.sidebar-nav {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid #dadada;
+  gap: 10px;
+}
+
+.nav-link {
+  padding: 20px 25px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #333;
+  cursor: pointer;
+  font: 400 17px 'Inter', sans-serif;
+}
+
+.nav-link.active {
+  background: #0033a0;
+  color: #ffffff;
+}
+
+.nav-link:hover {
+  background: #bdc5d4;
+}
+
+.arrow {
+  margin-left: auto;
+  transition: 0.2s;
+}
+
+.arrow.rotated {
+  transform: rotate(180deg);
+}
+
+
+/* User */
+
+.sidebar-user {
+  margin-top: auto; /* <-- agregar para colocarlo en la parte inferior */
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-top: 1px solid #dadada;
+}
+
+.user-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: .2s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.user-box:hover {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #3f51b5;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.user-details .name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.user-details .role {
+  font-size: 12px;
+  color: #6c7a89;
+}
+
+/* Dropdown */
+.user-dropdown {
+  background: white;
+  border-radius: 8px;
+  padding: 8px;
+  margin-top: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  animation: fadeIn .15s ease-out;
+}
+
+.dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.dropdown-item:hover {
+  background: #f0f3ff;
+}
+
+.logout {
+  color: #d9534f;
+}
+
+.arrow {
+  margin-left: auto;
+  transition: transform .2s;
+}
+
+.arrow.rotated {
+  transform: rotate(180deg);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

@@ -1,5 +1,8 @@
 <header class="header">
+
   <div class="header-container">
+    <!-- Menu -->
+
     <!-- Logo y título -->
     <div class="header-brand">
       <a routerLink="/home" class="brand-link">
@@ -37,9 +40,7 @@
             <span class="user-name">{{ getFullName() }}</span>
             <span class="user-role">{{ getUserRoles().join(', ') }}</span>
           </div>
-          <div class="user-arrow" [class.rotated]="showUserMenu">
-            ▼
-          </div>
+          <div class="user-arrow" [class.rotated]="showUserMenu">▼</div>
         </div>
 
         <!-- Menú desplegable del usuario -->
@@ -62,8 +63,8 @@
           <div class="menu-section">
             <h4 class="menu-section-title">Roles</h4>
             <div class="menu-roles">
-              <span 
-                *ngFor="let role of getUserRoles()" 
+              <span
+                *ngFor="let role of getUserRoles()"
                 class="role-badge"
                 [class.role-a]="role === 'ROLE-A'"
                 [class.role-b]="role === 'ROLE-B'"
@@ -91,9 +92,5 @@
   </div>
 
   <!-- Overlay para cerrar el menú -->
-  <div 
-    *ngIf="showUserMenu" 
-    class="menu-overlay" 
-    (click)="closeUserMenu()"
-  ></div>
+  <div *ngIf="showUserMenu" class="menu-overlay" (click)="closeUserMenu()"></div>
 </header>

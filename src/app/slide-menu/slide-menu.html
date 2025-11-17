@@ -1,0 +1,84 @@
+<aside class="sidebar">
+
+  <!-- Marca -->
+  <div class="sidebar-brand">
+    <a routerLink="/home" class="brand-link">
+      <mat-icon fontSet="material-symbols-outlined" style="color: #2563eb"
+        >health_and_safety</mat-icon
+      >
+      <span class="brand-text" style="color: #2563eb">DACS Frontend</span>
+    </a>
+  </div>
+
+  <!-- Navegación -->
+  <nav class="sidebar-nav">
+    <a routerLink="/home" routerLinkActive="active" class="nav-link">
+      <mat-icon fontSet="material-symbols-outlined" style="color: #2563eb">home</mat-icon>
+      Inicio
+    </a>
+
+    <a routerLink="/solicitudes" routerLinkActive="active" class="nav-link">
+      <mat-icon fontSet="material-symbols-outlined" style="color: #2563eb">calendar_month</mat-icon>
+      Cirugías
+    </a>
+
+    <a routerLink="/personal" routerLinkActive="active" class="nav-link">
+      <mat-icon fontSet="material-symbols-outlined" style="color: #2563eb">groups</mat-icon>
+      Personal
+    </a>
+
+    <a routerLink="/insumos" routerLinkActive="active" class="nav-link">
+      <mat-icon fontSet="material-symbols-outlined" style="color: #2563eb">inventory_2</mat-icon>
+      Insumos
+    </a>
+
+    <a routerLink="/pacientes" routerLinkActive="active" class="nav-link">
+      <mat-icon fontSet="material-symbols-outlined" style="color: #2563eb">monitor_heart</mat-icon>
+      Pacientes
+    </a>
+
+    <a routerLink="/usuarios" routerLinkActive="active" class="nav-link">
+      <mat-icon fontSet="material-symbols-outlined" style="color: #2563eb"
+        >manage_accounts</mat-icon
+      >
+      Usuarios
+    </a>
+  </nav>
+
+  <!-- User -->
+  <div class="sidebar-user">
+    <div [hidden]="isLoggedIn">
+      <button mat-raised-button color="primary" (click)="login()">
+        <mat-icon>login</mat-icon>
+        Iniciar sesión
+      </button>
+    </div>
+
+    <div [hidden]="!isLoggedIn" class="user-box" (click)="toggleUserMenu()">
+      <div class="avatar">{{ getFullName().charAt(0).toUpperCase() }}</div>
+
+      <div class="user-details">
+        <div class="name">{{ getFullName() }}</div>
+        <div class="role">{{ getUserRoles().join(', ') }}</div>
+      </div>
+
+      <mat-icon fontSet="material-symbols-outlined" class="arrow" [class.rotated]="showUserMenu">
+        expand_more
+      </mat-icon>
+    </div>
+
+    <div class="user-dropdown" [hidden]="!showUserMenu">
+      <button (click)="goToAccount()" class="dropdown-item">
+        <mat-icon fontSet="material-symbols-outlined">person</mat-icon>
+        Mi Cuenta
+      </button>
+
+      <button (click)="logout()" class="dropdown-item logout">
+        <mat-icon fontSet="material-symbols-outlined">logout</mat-icon>
+        Cerrar sesión
+      </button>
+    </div>
+  </div>
+</aside>
+
+<div [hidden]="!showUserMenu" class="overlay" (click)="closeUserMenu()"></div>
