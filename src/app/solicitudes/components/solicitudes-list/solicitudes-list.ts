@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit  } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -10,148 +10,39 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SolicitudDialogComponent } from '../solicitud-dialog/solicitud-dialog';
+import pacientes from './pacientes.json';
 
 export interface Solicitud {
   id: number;
+  fecha?: string;
   paciente: string;
-  tipo: string;
-  fecha: string;
-  estado: string;
+  prioridad: string;
+  servicio: string;
+  sala?: string;
+  especialidad?: string;
+  intervencion?: string;
+  anestesia?: string;
+  cirujano?: string;
+  estado?: string;
+  quirofano?: string;
 }
 
-const DATA: Solicitud[] = [
-  {
-    id: 1,
-    paciente: 'Juan Pérez',
-    tipo: 'Consulta',
-    fecha: '2025-11-01',
-    estado: 'Pendiente',
-  },
-  {
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },  {
-    id: 1,
-    paciente: 'Juan Pérez',
-    tipo: 'Consulta',
-    fecha: '2025-11-01',
-    estado: 'Pendiente',
-  },
-  {
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },  {
-    id: 1,
-    paciente: 'Juan Pérez',
-    tipo: 'Consulta',
-    fecha: '2025-11-01',
-    estado: 'Pendiente',
-  },
-  {
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },  {
-    id: 1,
-    paciente: 'Juan Pérez',
-    tipo: 'Consulta',
-    fecha: '2025-11-01',
-    estado: 'Pendiente',
-  },
-  {
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },  {
-    id: 1,
-    paciente: 'Juan Pérez',
-    tipo: 'Consulta',
-    fecha: '2025-11-01',
-    estado: 'Pendiente',
-  },
-  {
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },  {
-    id: 1,
-    paciente: 'Juan Pérez',
-    tipo: 'Consulta',
-    fecha: '2025-11-01',
-    estado: 'Pendiente',
-  },
-  {
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },  {
-    id: 1,
-    paciente: 'Juan Pérez',
-    tipo: 'Consulta',
-    fecha: '2025-11-01',
-    estado: 'Pendiente',
-  },
-  {
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },  {
-    id: 1,
-    paciente: 'Juan Pérez',
-    tipo: 'Consulta',
-    fecha: '2025-11-01',
-    estado: 'Pendiente',
-  },
-  {
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },  {
-    id: 1,
-    paciente: 'Juan Pérez',
-    tipo: 'Consulta',
-    fecha: '2025-11-01',
-    estado: 'Pendiente',
-  },
-  {
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  },  {
-    id: 1,
-    paciente: 'Juan Pérez',
-    tipo: 'Consulta',
-    fecha: '2025-11-01',
-    estado: 'Pendiente',
-  },
-  {
-    id: 2,
-    paciente: 'María Gómez',
-    tipo: 'Turno',
-    fecha: '2025-11-02',
-    estado: 'Atendida',
-  }
-];
+const DATA: Solicitud[] = (pacientes as any as Solicitud[]).map((p, idx) => ({
+  // asegúrate de que el JSON tenga las mismas propiedades; rellenar id si falta
+  id: p.id ?? (idx + 1),
+  fecha: p.fecha,
+  paciente: p.paciente ?? p.paciente ?? 'Desconocido',
+  prioridad: p.prioridad ?? 'Media',
+  servicio: p.servicio ?? '',
+  sala: p.sala,
+  especialidad: p.especialidad,
+  intervencion: p.intervencion,
+  anestesia: p.anestesia,
+  cirujano: p.cirujano,
+  estado: p.estado,
+  quirofano: p.quirofano
+}));
+
 
 @Component({
   selector: 'app-solicitudes-list',
@@ -171,7 +62,7 @@ const DATA: Solicitud[] = [
   ],
 })
 export class SolicitudesListComponent implements AfterViewInit {
-  displayedColumns: string[] = ['id', 'paciente', 'tipo', 'fecha', 'estado', 'actions'];
+  displayedColumns: string[] = ['fecha', 'paciente', 'prioridad', 'servicio', 'sala', 'especialidad', 'intervencion', 'anestesia', 'cirujano', 'estado', 'quirofano', 'acciones'];
   dataSource = new MatTableDataSource<Solicitud>(DATA);
 
   constructor(private dialog: MatDialog) {}
