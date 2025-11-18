@@ -9,7 +9,7 @@
       />
     </mat-form-field>
     <button mat-raised-button class="button-add" (click)="crearSolicitud()">
-      <mat-icon>add</mat-icon> Nueva Solicitud
+      <mat-icon>add</mat-icon> Nueva Cirugía
     </button>
   </div>
 
@@ -58,7 +58,7 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[15,25]" showFirstLastButtons></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[15 , 25,40]" showFirstLastButtons></mat-paginator>
   </div>
     
 </div>

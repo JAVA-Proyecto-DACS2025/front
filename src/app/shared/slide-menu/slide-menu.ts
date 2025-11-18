@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { KeycloakService } from '../core/services/keycloak.service';
+import { KeycloakService } from '../../core/services/keycloak.service';
 import { KeycloakProfile } from 'keycloak-js';
 import { CommonModule } from '@angular/common';
 import { MatListModule } from '@angular/material/list';

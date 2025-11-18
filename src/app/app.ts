@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SlideMenuComponent } from "./slide-menu/slide-menu";
+import { SlideMenuComponent } from "./shared/slide-menu/slide-menu";
 
 @Component({
   selector: 'app-root',

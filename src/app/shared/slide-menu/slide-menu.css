@@ -1,5 +1,4 @@
 .sidebar {
-  position: fixed;
   top: 0;
   left: 0;
   width: 270px;
@@ -9,7 +8,8 @@
   z-index: 999;
   display: flex;
   flex-direction: column;
-  gap: 0rem;
+  gap: 0rem;  
+  position: sticky;
 }
 
 .sidebar-brand .brand-link {

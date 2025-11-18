@@ -1,5 +1,15 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
 
 .main-content {
   min-height: calc(100vh - 70px);
-  background: #ececec;
+  margin: 0 auto; /* centra horizontalmente */
+  width: 100%; /* asegura que se adapte */
+  padding-right: 50px;
+  padding-left: 50px;
 }
+
+
+

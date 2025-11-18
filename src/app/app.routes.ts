@@ -17,7 +17,7 @@ export const routes: Routes = [
   },
   { 
     path: 'solicitudes', 
-    loadComponent: () => import('./solicitudes/pages/solicitudes').then(m => m.SolicitudesComponent),
+    loadComponent: () => import('./solicitudes/solicitudes').then(m => m.SolicitudesComponent),
     canActivate: [RoleBGuard]
   },
   { path: '**', redirectTo: '/home' }
