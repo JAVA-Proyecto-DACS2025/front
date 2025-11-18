@@ -22,11 +22,11 @@
 }
 
 .table-list-container .mat-mdc-row:nth-child(odd) {
-  background: #f7f7f7; /* blanco */
+  background: #ffffff; /* blanco */
 }
 
 .table-list-container .mat-mdc-row:nth-child(even) {
-  background: #ffffff; /* gris claro que ya tenés */
+  background: #f7f7f7; /* gris claro que ya tenés */
 }
 
 
