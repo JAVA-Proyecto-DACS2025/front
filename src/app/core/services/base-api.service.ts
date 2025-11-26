@@ -36,7 +36,6 @@ export class BaseApiService {
     const url = this.buildUrl(endpoint);
     const httpParams = this.buildParams(params);
     const timeoutValue = customTimeout || HTTP_TIMEOUTS.DEFAULT;
-
     return this.http.get<T>(url, {
       headers: this.defaultHeaders,
       params: httpParams

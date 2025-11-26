@@ -1,22 +1,74 @@
 <h2 mat-dialog-title>Crear Solicitud</h2>
 <div mat-dialog-content class="dialog-content" [formGroup]="form">
   <div class="content-dialog">
-  <mat-form-field appearance="outline" style="width: 100%">
-    <mat-label>Paciente</mat-label>
-    <input matInput formControlName="paciente" />
-  </mat-form-field>
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Paciente</mat-label>
+      <input
+        matInput
+        formControlName="pacienteId"
+        [matAutocomplete]="auto"
+        (keydown.enter)="searchPacientesFromInput()"
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        [displayWith]="displayPaciente"
+        (optionSelected)="onPacienteSelected($event)"
+      >
+        <mat-option *ngFor="let u of pacienteOptions$ | async" [value]="u">
+          {{ u.dni }} - {{ u.nombre }}
+        </mat-option>
+        <mat-option *ngIf="(pacienteOptions$ | async)?.length === 0" disabled
+          >No hay resultados</mat-option
+        >
+      </mat-autocomplete>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" style="width: 100%">
-    <mat-label>Tipo</mat-label>
-    <input matInput formControlName="tipo" />
-  </mat-form-field>
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>servicio</mat-label>
+      <input matInput formControlName="servicio" />
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" style="width: 100%">
-    <mat-label>Fecha</mat-label>
-    <input matInput [matDatepicker]="picker" formControlName="fecha" (focus)="picker.open()" />
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Fecha</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        formControlName="fecha_hora_inicio"
+        (focus)="picker.open()"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Estado</mat-label>
+      <input matInput formControlName="estado" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Prioridad</mat-label>
+      <input matInput formControlName="prioridad" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Tipo</mat-label>
+      <input matInput formControlName="tipo" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Sala</mat-label>
+      <input matInput type="number" formControlName="quirofanoId" inputmode="numeric" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Anestesia</mat-label>
+      <input matInput formControlName="anestesia" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Tipo</mat-label>
+      <input matInput formControlName="tipo" />
+    </mat-form-field>
   </div>
 </div>
 
