@@ -26,7 +26,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { PacienteService } from '../../../core/services/paciente';
-import { CirugiaService } from '../../../core/services/cirugia';
+import { CirugiaService } from '../../../core/services/cirugia-service';
+import { ICirugia } from '../../../core/models/cirugia';
+import { Helpers } from '../../../core';
+
 
 @Component({
   standalone: true,
@@ -60,12 +63,13 @@ export class SolicitudDialogComponent {
     private pacienteService: PacienteService,
     private cirugiaService: CirugiaService,
     private dialogRef: MatDialogRef<SolicitudDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: ICirugia
   ) {
     this.form = this.fb.group({
       pacienteId: this.pacienteCtrl,
       servicio: [''],
       fecha_hora_inicio: [''],
+      hora: [null], // "HH:mm
       estado: [''],
       prioridad: [''],
       quirofanoId: [null],
@@ -102,10 +106,22 @@ export class SolicitudDialogComponent {
   cancelar() {
     this.dialogRef.close(null);
   }
+
   guardar() {
-    if (this.form.valid) this.form.value.pacienteId = this.form.value.pacienteId.id;
-    this.cirugiaService.saveCirugia(this.form.value).subscribe(() => {
-      this.dialogRef.close(this.form.value);
-    });
+    if (!this.form.valid) return;
+    const raw = this.form.value;
+    const fechaSql = Helpers.toSqlTimestamp(raw.fecha_hora_inicio, raw.hora);
+    const fechaIso = fechaSql ? fechaSql.replace(' ', 'T') : null;
+    const payload = {
+      ...raw,
+      fecha_hora_inicio: fechaIso,
+      pacienteId: extractPacienteId(raw),
+    };
+    this.cirugiaService.saveCirugia(payload).subscribe(() => this.dialogRef.close(payload));
   }
+}
+
+function extractPacienteId(raw: any) {
+  const p = raw.pacienteId;
+  return p && typeof p === 'object' ? p.id : p ?? null;
 }

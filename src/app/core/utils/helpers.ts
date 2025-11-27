@@ -246,4 +246,31 @@ export class Helpers {
   static rgbToHex(r: number, g: number, b: number): string {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   }
+
+  static toSqlTimestamp(date: Date | string | null, time?: string | null): string | null {
+    if (!date) return null;
+    const d = date instanceof Date ? new Date(date) : new Date(date);
+    if (time) {
+      const [hh, mm] = time.split(':').map(v => parseInt(v, 10));
+      d.setHours(hh || 0, mm || 0, 0, 0);
+    }
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const yyyy = d.getFullYear();
+    const mmth = pad(d.getMonth() + 1);
+    const dd = pad(d.getDate());
+    const hh = pad(d.getHours());
+    const min = pad(d.getMinutes());
+    const ss = pad(d.getSeconds());
+    return `${yyyy}-${mmth}-${dd} ${hh}:${min}:${ss}`;
+  }
+
+  static parseSqlTimestamp(ts: string | null): Date | null {
+    if (!ts) return null;
+    // acepta "YYYY-MM-DD HH:mm:ss" (convertir a ISO compatible)
+    return new Date(ts.replace(' ', 'T'));
+  }
+
+  // Uso al guardar:
+  // const fechaSql = this.toSqlTimestamp(raw.fecha_hora_inicio, raw.hora);
+  // enviar payload.fecha_hora_inicio = fechaSql;
 }

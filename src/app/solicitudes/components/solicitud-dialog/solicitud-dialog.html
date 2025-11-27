@@ -28,17 +28,19 @@
       <input matInput formControlName="servicio" />
     </mat-form-field>
 
-    <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Fecha</mat-label>
-      <input
-        matInput
-        [matDatepicker]="picker"
-        formControlName="fecha_hora_inicio"
-        (focus)="picker.open()"
-      />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
+    <div style="display:flex; gap:12px; align-items:start;">
+      <mat-form-field appearance="outline" style="flex:1">
+        <mat-label>Fecha</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="fecha_hora_inicio" (focus)="picker.open()" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" style="width:140px">
+        <mat-label>Hora</mat-label>
+        <input matInput type="time" formControlName="hora" />
+      </mat-form-field>
+    </div>
 
     <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Estado</mat-label>
