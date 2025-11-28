@@ -1,11 +1,11 @@
 export interface ICirugia {
   id: string;
-  pacienteId: number;
+  pacienteId: string;
   servicio: string;
   fecha_hora_inicio: string;
   estado: string;
   prioridad: string;
-  quirofanoId: number;
+  quirofanoId: string;
   anestesia: string;
   tipo: string;
 }

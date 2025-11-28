@@ -16,21 +16,18 @@
   <div class="table-wrapper">
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 tabla-solicitudes">
       <!-- Fecha -->
-      <ng-container matColumnDef="fecha">
+      <!-- reemplaza la celda de fecha por esto -->
+      <ng-container matColumnDef="fecha_hora_inicio">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
-        <td mat-cell *matCellDef="let s">{{ s.fecha }}</td>
+        <td mat-cell *matCellDef="let s">
+          {{ s.fecha_hora_inicio | date : 'dd/MM/yyyy HH:mm' }}
+        </td>
       </ng-container>
 
       <!-- Paciente -->
-      <ng-container matColumnDef="paciente">
+      <ng-container matColumnDef="pacienteId">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Paciente</th>
-        <td mat-cell *matCellDef="let s">{{ s.paciente }}</td>
-      </ng-container>
-
-      <!-- Tipo -->
-      <ng-container matColumnDef="prioridad">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Prioridad</th>
-        <td mat-cell *matCellDef="let s">{{ s.prioridad }}</td>
+        <td mat-cell *matCellDef="let s">{{ s.pacienteId }}</td>
       </ng-container>
 
       <!-- servicio -->
@@ -39,22 +36,20 @@
         <td mat-cell *matCellDef="let s">{{ s.servicio }}</td>
       </ng-container>
 
-      <!-- Sala -->
-      <ng-container matColumnDef="sala">
-        <th mat-header-cell *matHeaderCellDef>Sala</th>
-        <td mat-cell *matCellDef="let s">{{ s.sala }}</td>
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let s">{{ s.estado }}</td>
       </ng-container>
 
-      <!-- Especialidad -->
-      <ng-container matColumnDef="especialidad">
-        <th mat-header-cell *matHeaderCellDef>Especialidad</th>
-        <td mat-cell *matCellDef="let s">{{ s.especialidad }}</td>
+      <!-- Tipo -->
+      <ng-container matColumnDef="tipo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+        <td mat-cell *matCellDef="let s">{{ s.tipo }}</td>
       </ng-container>
 
-      <!-- Intervencion -->
-      <ng-container matColumnDef="intervencion">
-        <th mat-header-cell *matHeaderCellDef>Intervencion</th>
-        <td mat-cell *matCellDef="let s">{{ s.intervencion }}</td>
+      <ng-container matColumnDef="prioridad">
+        <th mat-header-cell *matHeaderCellDef>Prioridad</th>
+        <td mat-cell *matCellDef="let s">{{ s.prioridad }}</td>
       </ng-container>
 
       <ng-container matColumnDef="anestesia">
@@ -62,19 +57,10 @@
         <td mat-cell *matCellDef="let s">{{ s.anestesia }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="cirujano">
-        <th mat-header-cell *matHeaderCellDef>Cirujano</th>
-        <td mat-cell *matCellDef="let s">{{ s.cirujano }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="estado">
-        <th mat-header-cell *matHeaderCellDef>Estado</th>
-        <td mat-cell *matCellDef="let s">{{ s.estado }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="quirofano">
+      <!-- Sala -->
+      <ng-container matColumnDef="quirofanoId">
         <th mat-header-cell *matHeaderCellDef>Quirófano</th>
-        <td mat-cell *matCellDef="let s">{{ s.quirofano }}</td>
+        <td mat-cell *matCellDef="let s">{{ s.quirofanoId }}</td>
       </ng-container>
 
       <!-- Actions -->
@@ -90,6 +76,15 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[16, 24, 40]" showFirstLastButtons></mat-paginator>
+    <!-- paginador: length desde totalItems, pageSize/pageIndex desde el componente -->
+    <mat-paginator
+      [length]="totalItems"
+      [pageSize]="pageSize"
+      [pageIndex]="page"
+      [pageSizeOptions]="[16, 24, 40]"
+      showFirstLastButtons
+      (page)="onPage($event)"
+    >
+    </mat-paginator>
   </div>
 </div>
