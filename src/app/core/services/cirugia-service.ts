@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api.service';
-import { ICirugia } from '../models/cirugia';
+import { ICirugiaRequest, ICirugiaResponse } from '../models/cirugia';
 import { IPaginatedResponse } from '../../core/models/api-response';
 
 @Injectable({
@@ -8,12 +8,12 @@ import { IPaginatedResponse } from '../../core/models/api-response';
 })
 export class CirugiaService extends BaseApiService {
 
-  saveCirugia(data: ICirugia) {
+  saveCirugia(data: ICirugiaRequest) {
     return this.post<any>('/cirugia', data);
   }
 
   getCirugias(page = 0, pageSize = 16) {
     const params = { page: String(page), size: String(pageSize) };
-    return this.get<IPaginatedResponse<ICirugia>>('/cirugia', params);
+    return this.get<IPaginatedResponse<ICirugiaResponse>>('/cirugia', params);
   }
 }

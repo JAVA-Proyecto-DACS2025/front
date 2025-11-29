@@ -25,9 +25,15 @@
       </ng-container>
 
       <!-- Paciente -->
-      <ng-container matColumnDef="pacienteId">
+      <ng-container matColumnDef="paciente">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Paciente</th>
-        <td mat-cell *matCellDef="let s">{{ s.pacienteId }}</td>
+        <td mat-cell *matCellDef="let s">{{ s.paciente.nombre }}</td>
+      </ng-container>
+
+      <!-- Dni -->
+      <ng-container matColumnDef="dni">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>DNI</th>
+        <td mat-cell *matCellDef="let s">{{ s.paciente.dni }}</td>
       </ng-container>
 
       <!-- servicio -->
@@ -58,9 +64,9 @@
       </ng-container>
 
       <!-- Sala -->
-      <ng-container matColumnDef="quirofanoId">
+      <ng-container matColumnDef="quirofano">
         <th mat-header-cell *matHeaderCellDef>Quirófano</th>
-        <td mat-cell *matCellDef="let s">{{ s.quirofanoId }}</td>
+        <td mat-cell *matCellDef="let s">{{ s.quirofano.nombre}}</td>
       </ng-container>
 
       <!-- Actions -->

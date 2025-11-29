@@ -27,7 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { PacienteService } from '../../../core/services/paciente';
 import { CirugiaService } from '../../../core/services/cirugia-service';
-import { ICirugia } from '../../../core/models/cirugia';
+import { ICirugiaResponse } from '../../../core/models/cirugia';
 import { Helpers } from '../../../core';
 
 
@@ -63,7 +63,7 @@ export class SolicitudDialogComponent {
     private pacienteService: PacienteService,
     private cirugiaService: CirugiaService,
     private dialogRef: MatDialogRef<SolicitudDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ICirugia
+    @Inject(MAT_DIALOG_DATA) public data: ICirugiaResponse
   ) {
     this.form = this.fb.group({
       pacienteId: this.pacienteCtrl,

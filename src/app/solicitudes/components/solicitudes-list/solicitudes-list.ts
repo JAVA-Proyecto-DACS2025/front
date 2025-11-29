@@ -11,7 +11,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SolicitudDialogComponent } from '../solicitud-dialog/solicitud-dialog';
 import { CirugiaService } from '../../../core/services/cirugia-service';
-import { ICirugia } from '../../../core/models/cirugia';
+import { ICirugiaResponse } from '../../../core/models/cirugia';
 import { IPaginatedResponse } from '../../../core/models/api-response';
 import { Subscription } from 'rxjs';
 
@@ -48,7 +48,7 @@ export interface Solicitud {
   ],
 })
 export class SolicitudesListComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['fecha_hora_inicio','pacienteId','servicio','estado','tipo','prioridad','anestesia','quirofanoId'];
+  displayedColumns: string[] = ['fecha_hora_inicio','paciente','dni','servicio','estado','tipo','prioridad','anestesia','quirofano'];
   dataSource = new MatTableDataSource<any>([]);
   page = 0;
   pageSize = 16;
@@ -78,7 +78,7 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit {
   }
 
   loadPage(page: number, pageSize: number) {
-    this.cirugiaService.getCirugias(page, pageSize).subscribe((resp: IPaginatedResponse<ICirugia>) => {
+    this.cirugiaService.getCirugias(page, pageSize).subscribe((resp: IPaginatedResponse<ICirugiaResponse>) => {
       this.dataSource.data = resp.data;
       this.totalItems = resp.pagination.totalItems;
       this.page = resp.pagination.page;
