@@ -27,9 +27,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { PacienteService } from '../../../core/services/paciente';
 import { CirugiaService } from '../../../core/services/cirugia-service';
-import { ICirugiaResponse } from '../../../core/models/cirugia';
+import { ICirugiaResponse, ICirugiaRequest } from '../../../core/models/cirugia';
 import { Helpers } from '../../../core';
-
+import { MatListModule } from '@angular/material/list';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   standalone: true,
@@ -47,6 +48,8 @@ import { Helpers } from '../../../core';
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
+    MatListModule,
+    MatTabsModule,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './solicitud-dialog.html',
@@ -55,8 +58,10 @@ import { Helpers } from '../../../core';
 export class SolicitudDialogComponent {
   form: FormGroup;
   pacienteCtrl = new FormControl('');
-  pacienteOptions$: Observable<{ dni: string; nombre: string; id?: number }[]> = of([]);
+  quirofanoCtrl = new FormControl('');
+  pacienteOptions$: Observable<{ dni: string; nombre: string }[]> = of([]);
   private search$ = new Subject<string>();
+  equipo: any;
 
   constructor(
     private fb: FormBuilder,
@@ -66,32 +71,55 @@ export class SolicitudDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: ICirugiaResponse
   ) {
     this.form = this.fb.group({
-      pacienteId: this.pacienteCtrl,
+      paciente: this.pacienteCtrl,
+      pacienteId: [null],
+      quirofano: this.quirofanoCtrl,
+      quirofanoId: [null],
       servicio: [''],
-      fecha_hora_inicio: [''],
+      fecha_hora_inicio: [],
       hora: [null], // "HH:mm
       estado: [''],
       prioridad: [''],
-      quirofanoId: [null],
       anestesia: [''],
       tipo: [''],
     });
 
-    // Solo realiza la petición cuando se emite en search$ (ej: al presionar Enter)
-    this.pacienteOptions$ = this.search$.pipe(
-      switchMap((q) => this.pacienteService.searchPacientes(q)),
+    this.pacienteOptions$ = this.pacienteCtrl.valueChanges.pipe(
+      startWith(this.pacienteCtrl.value ?? ''),
+      debounceTime(300),
+      distinctUntilChanged((a: any, b: any) => {
+        const sa = typeof a === 'string' ? a : ((a as any)?.nombre ?? '');
+        const sb = typeof b === 'string' ? b : ((b as any)?.nombre ?? '');
+        return sa === sb;
+      }),
+      filter(v => typeof v === 'string' && v.trim().length > 0),
+      switchMap(q => this.pacienteService.searchPacientes(q)),
       catchError(() => of([])),
       shareReplay(1)
     );
 
-    if (data) this.form.patchValue(data);
-  }
+    // detectar selección/entrada en el control quirofano y rellenar quirofanoId
+    this.quirofanoCtrl.valueChanges.pipe(
+      distinctUntilChanged()
+    ).subscribe(v => {
+      // si el control recibe un objeto { id, nombre } (por autocomplete), usar id
+      if (v && typeof v === 'object' && (v as any).id != null) {
+        this.form.patchValue({ quirofanoId: (v as any).id });
+        return;
+      }
+      // si el usuario ingresó un número (id) como string/number, usarlo
+      const asStr = typeof v === 'string' ? v.trim() : (v == null ? '' : String(v));
+      if (/^\d+$/.test(asStr)) {
+        this.form.patchValue({ quirofanoId: Number(asStr) });
+        return;
+      }
+      // no válido → limpiar quirofanoId
+      this.form.patchValue({ quirofanoId: null });
+    });
 
-  // Llamar desde la plantilla al presionar Enter
-  searchPacientesFromInput(): void {
-    const v = this.pacienteCtrl.value;
-    if (typeof v === 'string' && v.trim().length > 0) {
-      this.search$.next(v.trim());
+    if (data) {
+      const mapped = this.mapDataToForm(data);
+      this.form.patchValue(mapped);
     }
   }
 
@@ -100,7 +128,23 @@ export class SolicitudDialogComponent {
   // opcional si necesitas detectar selección explicitamente
   onPacienteSelected(event: MatAutocompleteSelectedEvent) {
     const user = event.option.value as { dni: string; nombre: string; id: number };
-    this.form.patchValue({ pacienteId: user });
+
+    // setear objeto para display y guardar el id para enviar
+    this.pacienteCtrl.setValue(user.nombre);
+    this.form.patchValue({ paciente: user, pacienteId: user.id });
+
+    // obtener la sala actual de la forma / control / data (en ese orden) sin asumir this.data
+    const formQuirofano = this.form.get('quirofano')?.value;
+    const ctrlQuirofano = this.quirofanoCtrl.value;
+    const dataQuirofano = (this.data as any)?.quirofano;
+    const qDisplay = formQuirofano ?? ctrlQuirofano ?? (dataQuirofano ? (typeof dataQuirofano === 'object' ? (dataQuirofano.nombre ?? dataQuirofano.id) : dataQuirofano) : null);
+
+    if (qDisplay != null) {
+      this.quirofanoCtrl.setValue(qDisplay);
+      // si existe id en data.quirofano, setear quirofanoId; si no, mantener lo que haya en el form
+      const qId = (dataQuirofano && (dataQuirofano.id ?? null)) ?? this.form.get('quirofanoId')?.value ?? null;
+      if (qId != null) this.form.patchValue({ quirofanoId: qId });
+    }
   }
 
   cancelar() {
@@ -111,17 +155,64 @@ export class SolicitudDialogComponent {
     if (!this.form.valid) return;
     const raw = this.form.value;
     const fechaSql = Helpers.toSqlTimestamp(raw.fecha_hora_inicio, raw.hora);
-    const fechaIso = fechaSql ? fechaSql.replace(' ', 'T') : null;
-    const payload = {
-      ...raw,
+    const fechaIso = fechaSql ? fechaSql.replace(' ', 'T') : '';
+    const payload: ICirugiaRequest = {
+      anestesia: raw.anestesia,
+      estado: raw.estado,
+      prioridad: raw.prioridad,
+      servicio: raw.servicio,
+      tipo: raw.tipo,
       fecha_hora_inicio: fechaIso,
-      pacienteId: extractPacienteId(raw),
+      pacienteId: raw.pacienteId,
+      quirofanoId: raw.quirofanoId,
     };
     this.cirugiaService.saveCirugia(payload).subscribe(() => this.dialogRef.close(payload));
   }
-}
 
-function extractPacienteId(raw: any) {
-  const p = raw.pacienteId;
-  return p && typeof p === 'object' ? p.id : p ?? null;
+  openEquipoSelector() {
+    throw new Error('Method not implemented.');
+  }
+
+  removeMiembro(_t135: any) {
+    throw new Error('Method not implemented.');
+  }
+
+  // mapper: convierte ICirugiaResponse en objeto listo para patchValue
+  private mapDataToForm(data: ICirugiaResponse): any {
+    const mapped: any = { ...data };
+
+    // paciente (display + objeto)
+    if (data.paciente) {
+      this.pacienteCtrl.setValue(data.paciente.nombre); // muestra nombre en autocomplete
+      mapped.paciente = data.paciente;
+      mapped.pacienteId = data.paciente.id ?? (mapped.pacienteId ?? null);
+    }
+
+    // quirofano: mostramos solo el nombre (quirofano) y guardamos el id en quirofanoId
+    if ((data as any).quirofano) {
+      const q = (data as any).quirofano;
+      const qDisplay = typeof q === 'object' ? q.nombre : q;
+      this.quirofanoCtrl.setValue(qDisplay); // muestra solo nombre
+      mapped.quirofano = qDisplay;
+      mapped.quirofanoId = (q && (q.id ?? q)) ?? (mapped.quirofanoId ?? null);
+    } else if ((data as any).quirofanoId != null) {
+      // si viene solo el id
+      // opcional: podrías resolver el nombre aquí desde un servicio si lo necesitas
+      this.quirofanoCtrl.setValue((data as any).quirofanoId);
+      mapped.quirofano = (data as any).quirofanoId;
+      mapped.quirofanoId = (data as any).quirofanoId;
+    }
+
+    // fecha_hora_inicio ISO -> date + hora ("HH:mm")
+    if (data.fecha_hora_inicio) {
+      const dt = new Date(data.fecha_hora_inicio);
+      if (!isNaN(dt.getTime())) {
+        mapped.fecha_hora_inicio = dt;
+        const pad = (n: number) => String(n).padStart(2, '0');
+        mapped.hora = `${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+      }
+    }
+
+    return mapped;
+  }
 }

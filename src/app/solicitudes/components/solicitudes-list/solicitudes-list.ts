@@ -48,7 +48,7 @@ export interface Solicitud {
   ],
 })
 export class SolicitudesListComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['fecha_hora_inicio','paciente','dni','servicio','estado','tipo','prioridad','anestesia','quirofano'];
+  displayedColumns: string[] = ['fecha_hora_inicio','paciente','dni','servicio','estado','tipo','prioridad','anestesia','quirofano', 'acciones', 'medicos'];
   dataSource = new MatTableDataSource<any>([]);
   page = 0;
   pageSize = 16;
@@ -110,10 +110,6 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  verDetalle(row: Solicitud) {
-    // abrir dialog o expandir fila con detalle
-    console.log('ver detalle', row);
-  }
 
   getCirugias() {
     this.cirugiaService.getCirugias().subscribe((response) => {
@@ -122,16 +118,17 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit {
     console.log('Obteniendo cirugías...');
   }
 
-  crearSolicitud() {
+  openCirugia(ICirugiaResponse?: any) {
     const ref = this.dialog.open(SolicitudDialogComponent, {
       width: '480px',
-      data: {}, // puedes pasar datos para editar
+      data: ICirugiaResponse || {}, // puedes pasar datos para editar
     });
 
     ref.afterClosed().subscribe((result) => {
       if (result) {
-        // result contiene el objeto del formulario -> guarda en backend/actualiza datasource
-        console.log('Nueva solicitud:', result);
+        // si se creó/actualizó una cirugia, recargar la página actual
+        // (alternativa: insertar directamente en dataSource.data si prefieres evitar recarga)
+        this.loadPage(this.page, this.pageSize);
       }
     });
   }
