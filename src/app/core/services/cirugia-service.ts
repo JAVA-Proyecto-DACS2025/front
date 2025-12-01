@@ -16,4 +16,5 @@ export class CirugiaService extends BaseApiService {
     const params = { page: String(page), size: String(pageSize) };
     return this.get<IPaginatedResponse<ICirugiaResponse>>('/cirugia', params);
   }
+  
 }

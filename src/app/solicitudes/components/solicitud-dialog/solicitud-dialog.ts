@@ -57,11 +57,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 })
 export class SolicitudDialogComponent {
   form: FormGroup;
-  pacienteCtrl = new FormControl('');
+  pacienteCtrl = new FormControl('');    //MODIFICAR A FormGroup
   quirofanoCtrl = new FormControl('');
-  pacienteOptions$: Observable<{ dni: string; nombre: string }[]> = of([]);
+  pacienteOptions$: Observable<{ dni: string; nombre: string }[]> = of([]);    //MODIFICAR
   private search$ = new Subject<string>();
-  equipo: any;
+  equipo: any; // ????
 
   constructor(
     private fb: FormBuilder,

@@ -20,5 +20,6 @@ export const routes: Routes = [
     loadComponent: () => import('./solicitudes/solicitudes').then(m => m.SolicitudesComponent),
     canActivate: [RoleBGuard]
   },
+  {path: 'personal', loadComponent: () => import('./personal/personal').then(m => m.PersonalComponent)},
   { path: '**', redirectTo: '/home' }
 ];

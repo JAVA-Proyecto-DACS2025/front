@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../core/services/api-service';
-import { ITestResponse } from '../core/models/iresponse';
+import { ITestResponse } from '../core/models/test-response';
 
 @Component({
   selector: 'app-dashboard-view',

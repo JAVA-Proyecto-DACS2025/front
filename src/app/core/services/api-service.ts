@@ -3,10 +3,10 @@ import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { BaseApiService } from './base-api.service';
 import { IRequestTest } from '../models/irequest-test';
-import { ITestResponse } from '../models/iresponse';
 import { IApiResponse, IStatusResponse } from '../models/api-response';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
 import { environment } from '../../../environments/environment';
+import { ITestResponse } from '../models/test-response';
 
 /**
  * Servicio para operaciones de API específicas de la aplicación

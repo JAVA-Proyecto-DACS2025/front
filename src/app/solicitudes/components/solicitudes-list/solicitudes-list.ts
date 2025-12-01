@@ -65,7 +65,7 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     // si quieres paginación cliente activar dataSource.paginator; para servidor no es necesario
-    // this.dataSource.paginator = this.paginator;
+    // this.dataSource.paginator = this.paginato  
 
     // opcional: subscribe para detectar cambios de pageSize desde UI
     this.paginatorSub = this.paginator.page.subscribe((ev: PageEvent) => {
@@ -118,6 +118,7 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit {
     console.log('Obteniendo cirugías...');
   }
 
+  
   openCirugia(ICirugiaResponse?: any) {
     const ref = this.dialog.open(SolicitudDialogComponent, {
       width: '480px',
