@@ -247,28 +247,43 @@ export class Helpers {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   }
 
-  static toSqlTimestamp(date: Date | string | null, time?: string | null): string | null {
-    if (!date) return null;
-    const d = date instanceof Date ? new Date(date) : new Date(date);
-    if (time) {
-      const [hh, mm] = time.split(':').map(v => parseInt(v, 10));
-      d.setHours(hh || 0, mm || 0, 0, 0);
-    }
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    const yyyy = d.getFullYear();
-    const mmth = pad(d.getMonth() + 1);
-    const dd = pad(d.getDate());
-    const hh = pad(d.getHours());
-    const min = pad(d.getMinutes());
-    const ss = pad(d.getSeconds());
-    return `${yyyy}-${mmth}-${dd} ${hh}:${min}:${ss}`;
+  static formatLocalDateTime(fecha: any, hora?: string): string | null {
+  if (!fecha) return null;
+  const d = fecha instanceof Date ? new Date(fecha) : new Date(fecha);
+  if (isNaN(d.getTime())) return null;
+  let hh = '00', mm = '00';
+  if (hora && typeof hora === 'string') {
+    const parts = hora.split(':');
+    if (parts.length >= 1) hh = parts[0].padStart(2, '0');
+    if (parts.length >= 2) mm = parts[1].padStart(2, '0');
   }
+  d.setHours(parseInt(hh, 10) || 0, parseInt(mm, 10) || 0, 0, 0);
+  const Y = d.getFullYear();
+  const M = String(d.getMonth() + 1).padStart(2, '0');
+  const D = String(d.getDate()).padStart(2, '0');
+  const H = String(d.getHours()).padStart(2, '0');
+  const Min = String(d.getMinutes()).padStart(2, '0');
+  return `${Y}-${M}-${D}T${H}:${Min}:00`;
+}
 
-  static parseSqlTimestamp(ts: string | null): Date | null {
-    if (!ts) return null;
-    // acepta "YYYY-MM-DD HH:mm:ss" (convertir a ISO compatible)
-    return new Date(ts.replace(' ', 'T'));
-  }
+static buildCirugiaPayload(data: any): any {
+  const p: any = { ...data };
+  // mapear ids a objetos anidados
+  const pacId = p.pacienteId != null ? Number(p.pacienteId) : null;
+  const qId = p.quirofanoId != null ? Number(p.quirofanoId) : null;
+  p.paciente = pacId ? { id: pacId } : null;
+  p.quirofano = qId ? { id: qId } : null;
+  // formatear fecha/hora a ISO LocalDateTime string
+  p.fecha_hora_inicio = Helpers.formatLocalDateTime(p.fecha_inicio, p.hora_inicio);
+  // eliminar auxiliares/no requeridos
+  delete p.pacienteId;
+  delete p.quirofanoId;
+  delete p.pacienteNombre;
+  delete p.quirofanoNombre;
+  delete p.fecha_inicio;
+  delete p.hora_inicio;
+  return p;
+}
 
   // Uso al guardar:
   // const fechaSql = this.toSqlTimestamp(raw.fecha_hora_inicio, raw.hora);

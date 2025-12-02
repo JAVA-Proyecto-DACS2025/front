@@ -1,12 +1,14 @@
-export interface IPersonal {
+
+
+export interface IPersonalLite {
+  id: number;
   legajo: string;
   nombre: string;
-  especialidad: string;
+}
+
+export interface IPersonal extends IPersonalLite {
   rol: string;
   estado: string;
   telefono: string;
-}
-
-export interface IPersonalUpdate extends IPersonal {
-  id: number;
+  especialidad: string;
 }

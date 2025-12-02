@@ -9,11 +9,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { SolicitudDialogComponent } from '../solicitud-dialog/solicitud-dialog';
 import { CirugiaService } from '../../../core/services/cirugia-service';
-import { ICirugiaResponse } from '../../../core/models/cirugia';
+import { ICirugia } from '../../../core/models/cirugia';
 import { IPaginatedResponse } from '../../../core/models/api-response';
 import { Subscription } from 'rxjs';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog';
+import { CirugiaDialog } from '../../cirugia-dialog/cirugia-dialog';
 
 export interface Solicitud {
   id: number;
@@ -48,7 +49,20 @@ export interface Solicitud {
   ],
 })
 export class SolicitudesListComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['fecha_hora_inicio','paciente','dni','servicio','estado','tipo','prioridad','anestesia','quirofano', 'acciones', 'medicos'];
+  displayedColumns: string[] = [
+    'fecha_hora_inicio',
+    'paciente',
+    'dni',
+    'servicio',
+    'estado',
+    'tipo',
+    'prioridad',
+    'anestesia',
+    'quirofano',
+    'acciones',
+    'medicos',
+    'eliminar',
+  ];
   dataSource = new MatTableDataSource<any>([]);
   page = 0;
   pageSize = 16;
@@ -65,7 +79,7 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     // si quieres paginación cliente activar dataSource.paginator; para servidor no es necesario
-    // this.dataSource.paginator = this.paginato  
+    // this.dataSource.paginator = this.paginato
 
     // opcional: subscribe para detectar cambios de pageSize desde UI
     this.paginatorSub = this.paginator.page.subscribe((ev: PageEvent) => {
@@ -78,18 +92,23 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit {
   }
 
   loadPage(page: number, pageSize: number) {
-    this.cirugiaService.getCirugias(page, pageSize).subscribe((resp: IPaginatedResponse<ICirugiaResponse>) => {
-      this.dataSource.data = resp.data;
-      this.totalItems = resp.pagination.totalItems;
-      this.page = resp.pagination.page;
-      this.pageSize = resp.pagination.pageSize;
+    this.cirugiaService.getCirugias(page, pageSize).subscribe(
+      (resp: IPaginatedResponse<ICirugia>) => {
+        this.dataSource.data = resp.data;
+        this.totalItems = resp.pagination.totalItems;
+        this.page = resp.pagination.page;
+        this.pageSize = resp.pagination.pageSize;
 
-      // actualizar UI del paginator si existe
-      if (this.paginator) {
-        this.paginator.pageIndex = this.page;
-        this.paginator.pageSize = this.pageSize;
+        // actualizar UI del paginator si existe
+        if (this.paginator) {
+          this.paginator.pageIndex = this.page;
+          this.paginator.pageSize = this.pageSize;
+        }
+      },
+      (err) => {
+        console.error('Error loading cirugias', err);
       }
-    }, err => { console.error('Error loading cirugias', err); });
+    );
   }
 
   // llamado desde (page) del mat-paginator
@@ -110,7 +129,6 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-
   getCirugias() {
     this.cirugiaService.getCirugias().subscribe((response) => {
       console.log('Cirugías obtenidas:', response);
@@ -118,18 +136,33 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit {
     console.log('Obteniendo cirugías...');
   }
 
-  
-  openCirugia(ICirugiaResponse?: any) {
-    const ref = this.dialog.open(SolicitudDialogComponent, {
-      width: '480px',
-      data: ICirugiaResponse || {}, // puedes pasar datos para editar
+  openCirugia(cirugia?: ICirugia) {
+    const dialogRef = this.dialog.open(CirugiaDialog, {
+      width: '400px',
+      data: cirugia, 
     });
 
-    ref.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        // si se creó/actualizó una cirugia, recargar la página actual
-        // (alternativa: insertar directamente en dataSource.data si prefieres evitar recarga)
-        this.loadPage(this.page, this.pageSize);
+        // manejar respuesta: refrescar listado, mostrar notificación, etc.
+        console.log('Cirugía guardada/actualizada:', result);
+      }
+    });
+  }
+
+  deleteCirugia(cirugiaId: number) {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirmar eliminación',
+        message: '¿Estás seguro de que deseas eliminar esta cirugía?',
+      },
+    });
+
+    ref.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.cirugiaService.deleteCirugia(cirugiaId).subscribe(() => {
+          this.loadPage(this.page, this.pageSize);
+        });
       }
     });
   }

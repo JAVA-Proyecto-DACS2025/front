@@ -1,0 +1,82 @@
+<h2 mat-dialog-title>
+  {{ form.value.id ? 'Editar cirugía' : 'Nueva cirugía' }}
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="form" novalidate>
+    <!-- Paciente -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Paciente</mat-label>
+      <input type="text"
+             matInput
+             [formControl]="pacienteCtrl"
+             [matAutocomplete]="auto"
+             placeholder="Nombre o DNI">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPaciente.bind(this)" (optionSelected)="onPacienteSelected($event)">
+        <mat-option *ngFor="let p of filteredPacientes$ | async" [value]="p">
+          {{ p.nombre }} <small *ngIf="p.dni"> - {{ p.dni }}</small>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <!-- Quirofano -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Quirófano</mat-label>
+      <input matInput formControlName="quirofanoId" type="number" />
+    </mat-form-field>
+
+    <!-- Servicio -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Servicio</mat-label>
+      <input matInput formControlName="servicio" />
+    </mat-form-field>
+
+    <!-- Fecha y Hora inicio (DOS COLUMNAS) -->
+    <div class="row two-columns">
+      <!-- Fecha: calendario -->
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Fecha inicio</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="fecha_inicio" placeholder="dd/MM/yyyy">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <!-- Hora: input tipo time (HH:MM) -->
+      <mat-form-field appearance="outline" class="time-width">
+        <mat-label>Hora inicio</mat-label>
+        <input matInput type="time" formControlName="hora_inicio" placeholder="HH:MM">
+      </mat-form-field>
+    </div>
+
+    <!-- Estado -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Estado</mat-label>
+      <input matInput formControlName="estado" />
+    </mat-form-field>
+
+    <!-- Prioridad -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Prioridad</mat-label>
+      <input matInput formControlName="prioridad" />
+    </mat-form-field>
+
+    <!-- Anestesia -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Anestesia</mat-label>
+      <input matInput formControlName="anestesia" />
+    </mat-form-field>
+
+    <!-- Tipo -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tipo</mat-label>
+      <input matInput formControlName="tipo" />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="guardar()">
+    {{ form.value.id ? 'Actualizar' : 'Guardar' }}
+  </button>
+</mat-dialog-actions>

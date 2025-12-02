@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api.service';
-import { IPersonal, IPersonalUpdate } from '../models/personal';
+import { IPersonal } from '../models/personal';
 import { IResponse } from '../models/iresponse';
 import { IApiResponse, IPaginatedResponse } from '../models/api-response';
 
@@ -8,7 +8,7 @@ import { IApiResponse, IPaginatedResponse } from '../models/api-response';
   providedIn: 'root',
 })
 export class PersonalService extends BaseApiService {
-  updatePersonal(personalData: IPersonalUpdate) {
+  updatePersonal(personalData: IPersonal) {
     return this.put<IApiResponse<IPersonal>>(`/personal/${personalData.id}`, personalData);
   }
 
@@ -23,5 +23,9 @@ export class PersonalService extends BaseApiService {
 
   deletePersonal(id: number) {
     return this.delete<IApiResponse>(`/personal/${id}`);
+  }
+
+  searchPersonal(q: string) {
+    return this.get<IApiResponse<IPersonal>>('/personal', { search: q });
   }
 }
