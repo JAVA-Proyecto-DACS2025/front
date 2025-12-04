@@ -15,6 +15,10 @@ import { IPaginatedResponse } from '../../../core/models/api-response';
 import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog';
 import { CirugiaDialog } from '../../cirugia-dialog/cirugia-dialog';
+import { EquipoMedicoDialog } from '../../equipo-medico-dialog/equipo-medico-dialog';
+
+
+
 
 export interface Solicitud {
   id: number;
@@ -147,6 +151,13 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit {
         // manejar respuesta: refrescar listado, mostrar notificación, etc.
         console.log('Cirugía guardada/actualizada:', result);
       }
+    });
+  }
+
+  openEquipoMedico(cirugiaId: number) {
+    const dialogRef = this.dialog.open(EquipoMedicoDialog, {
+      width: '600px',
+      data: { cirugiaId: this.dataSource.data.find(c => c.id === cirugiaId).id },
     });
   }
 

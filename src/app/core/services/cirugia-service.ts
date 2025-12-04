@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api.service';
 import { ICirugia } from '../models/cirugia';
 import { IApiResponse, IPaginatedResponse } from '../../core/models/api-response';
-import { IEquipoMedico } from '../models/equipo-medico';
+import { IMiembroEquipoMedico } from '../models/miembro-equipo';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +29,7 @@ export class CirugiaService extends BaseApiService {
   }
 
   getEquipoMedicoByCirugiaId(cirugiaId: number) {
-    return this.get<IApiResponse<IEquipoMedico[]>>(`/cirugia/${cirugiaId}/equipo-medico`);
+    return this.get<IApiResponse<IMiembroEquipoMedico[]>>(`/cirugia/${cirugiaId}/equipo-medico`);
   }
 
   removeMiembroFromEquipo(id: any, id1: any) {
@@ -37,10 +37,10 @@ export class CirugiaService extends BaseApiService {
   }
 
   addMiembroToEquipo(id: any, id1: number) {
-    return this.post<IApiResponse<IEquipoMedico>>(`/cirugia/${id}/equipo-medico`, { personalId: id1 });
+    return this.post<IApiResponse<IMiembroEquipoMedico[]>>(`/cirugia/${id}/equipo-medico`, { personalId: id1 });
   }
 
-  saveEquipoMedico(equipo: IEquipoMedico) {
-    return this.post<IApiResponse<IEquipoMedico>>(`/cirugia/equipo-medico`, equipo);
+  saveEquipoMedico(equipo: IMiembroEquipoMedico, cirugiaId: number) {
+    return this.post<IApiResponse<IMiembroEquipoMedico[]>>(`/cirugia/${cirugiaId}/equipo-medico`, equipo);
   }
 }

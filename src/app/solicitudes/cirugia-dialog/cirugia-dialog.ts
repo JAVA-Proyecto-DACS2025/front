@@ -28,13 +28,23 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, catchError, startWith, map } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+  catchError,
+  startWith,
+  map,
+} from 'rxjs/operators';
 import { PacienteService } from '../../core/services/paciente'; // ajusta la ruta si hace falta
 import { IPaciente } from '../../core/models/paciente'; // ajusta la ruta si hace falta
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Helpers } from '../../core/utils/helpers';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
+  standalone: true,
   selector: 'app-cirugia-dialog',
   templateUrl: './cirugia-dialog.html',
   styleUrls: ['./cirugia-dialog.css'],
@@ -49,7 +59,10 @@ import { Helpers } from '../../core/utils/helpers';
     MatButtonModule,
     MatIconModule,
     MatListModule,
-    MatDialogModule
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    
   ],
 })
 export class CirugiaDialog {
@@ -98,7 +111,7 @@ export class CirugiaDialog {
       startWith(''),
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(value => {
+      switchMap((value) => {
         const q = typeof value === 'string' ? value.trim() : '';
         return q ? this.pacienteService.searchPacientes(q).pipe(catchError(() => of([]))) : of([]);
       })
@@ -109,14 +122,16 @@ export class CirugiaDialog {
     const patch: any = {
       ...data,
       pacienteId: data.paciente?.id ?? null,
-      quirofanoId: data.quirofano?.id ?? null
+      quirofanoId: data.quirofano?.id ?? null,
     };
 
     if (data.fecha_hora_inicio) {
       const d = new Date(data.fecha_hora_inicio);
       if (!isNaN(d.getTime())) {
         patch.fecha_inicio = d;
-        patch.hora_inicio = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+        patch.hora_inicio = `${String(d.getHours()).padStart(2, '0')}:${String(
+          d.getMinutes()
+        ).padStart(2, '0')}`;
       }
     }
 
@@ -134,7 +149,9 @@ export class CirugiaDialog {
     const paciente: IPaciente = event.option.value;
     this.form.patchValue({
       pacienteId: paciente?.id ?? null,
-      pacienteNombre: paciente?.nombre ?? (typeof this.pacienteCtrl.value === 'string' ? this.pacienteCtrl.value : '')
+      pacienteNombre:
+        paciente?.nombre ??
+        (typeof this.pacienteCtrl.value === 'string' ? this.pacienteCtrl.value : ''),
     });
   }
 
@@ -206,5 +223,3 @@ export class CirugiaDialog {
     return !!this.form.value.id;
   }
 }
-
-

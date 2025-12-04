@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { KeycloakService } from 'keycloak-angular';
 import { keycloakInitOptions } from './core/config/keycloak.config';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 import { routes } from './app.routes';
 
@@ -22,6 +23,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(),
     provideBrowserGlobalErrorListeners(),
+    provideNativeDateAdapter(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     KeycloakService,

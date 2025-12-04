@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api.service';
-import { IPersonal } from '../models/personal';
+import { IPersonal, IPersonalLite } from '../models/personal';
 import { IResponse } from '../models/iresponse';
 import { IApiResponse, IPaginatedResponse } from '../models/api-response';
+import { IMiembroEquipoMedico } from '../models/miembro-equipo';
 
 @Injectable({
   providedIn: 'root',
@@ -27,5 +28,9 @@ export class PersonalService extends BaseApiService {
 
   searchPersonal(q: string) {
     return this.get<IApiResponse<IPersonal>>('/personal', { search: q });
+  }
+
+  searchPersonalLite(q: string) {
+    return this.get<IApiResponse<IPersonalLite[]>>('/personal/resumen', { param: q });
   }
 }

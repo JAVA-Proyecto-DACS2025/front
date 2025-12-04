@@ -84,7 +84,7 @@
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let s">
           <!-- pasar 'equipomedicos' para abrir esa pestaña -->
-          <button mat-icon-button color="primary" (click)="openCirugia(s)">
+          <button mat-icon-button color="primary" (click)="openEquipoMedico(s.id)">
             <mat-icon>person_add</mat-icon>
           </button>
         </td>

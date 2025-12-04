@@ -1,0 +1,190 @@
+.em-container {
+  padding: 18px 20px;
+  max-width: 760px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.em-header {
+  margin-bottom: 8px;
+}
+.em-header h2 {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+}
+.em-sub {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 13px;
+}
+
+.em-search-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 10px 0 0px;
+} /* reducido */
+.em-search-field {
+  flex: 1;
+  min-width: 160px;
+}
+.em-search-btn {
+  height: 40px;
+}
+.em-add-btn {
+  height: 40px;
+}
+
+.em-results {
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  padding: 4px;
+  max-height: 420px;
+  overflow: auto;
+  margin: -10px 0 40px;
+  background: #fafafa;
+} /* menos padding y margen superior */
+.em-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* antes: space-between; eso empujaba la meta a la derecha */
+  padding: 0px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+.em-result-item:last-child {
+  border-bottom: none;
+}
+.em-result-main {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* quitar width:100% para que el botón pueda usar margin-left:auto */
+}
+.em-name {
+  font-weight: 600;
+  flex: 0 1 auto; /* no fuerza toda la fila */
+  min-width: 0;
+}
+.em-meta {
+  padding-left: 10px;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.685);
+  flex: 0 0 auto; /* se queda junto al nombre */
+  white-space: nowrap;
+  opacity: 0.95;
+  margin-left: 8px;
+}
+
+.em-integrantes {
+  margin-top: 6px;
+}
+.em-empty {
+  color: rgba(0, 0, 0, 0.54);
+  margin-top: -10px;
+  max-height: 440px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0px; /* separación entre integrantes */
+  padding: 40px 40px;
+  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+  background-color: #f3f3f350;
+  text-align: center;
+}
+/* Contenedor de la lista: usar columna con gap para separar ítems */
+.em-list {
+  margin-top: -10px;
+  max-height: 440px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0px; /* separación entre integrantes */
+  padding: 4px 0px;
+  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+  background-color: #f3f3f350;
+}
+
+/* Cada item: layout horizontal con grid a la izquierda y botón a la derecha */
+.em-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 12px;
+  border-radius: 6px;
+}
+
+/* Grid interno: quitar margin-top, usar gap más pequeño */
+.em-list-grid {
+  display: grid;
+  grid-template-columns: minmax(120px, 190px) 140px minmax(100px, 140px) 45px; /* nombre | rol | legajo | acciones */
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  margin-top: 0;
+  min-width: 0;
+}
+
+/* Asegurar inputs ocupen todo el espacio de su columna */
+.em-list-grid .col input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: #fff;
+}
+
+/* evitar outline negro grueso al enfocar inputs y usar un borde/halo sutil */
+.em-list-grid .col input {
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+  outline: none;
+}
+
+.em-list-grid .col input:focus,
+.em-list-grid .col input:focus-visible {
+  outline: none;
+  border-width: 1px; /* aseguramos que no aumente el grosor */
+  border-color: rgba(112, 112, 112, 0.527); /* color de foco (ajustalo si querés) */
+  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.06); /* halo sutil */
+}
+
+/* si hay inputs dentro de mat-form-field también controlar su foco */
+.em-list .mat-form-field-appearance-outline .mat-form-field-outline {
+  transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline {
+  box-shadow: none; /* evita halo fuerte si lo provoca Material */
+}
+
+/* el botón de acción se empuja a la derecha de la fila */
+.em-result-item button[mat-icon-button] {
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+
+.em-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 14px;
+}
+@media (max-width: 600px) {
+  .em-list-grid {
+    grid-template-columns: 1fr;
+  }
+  .em-add-btn {
+    display: none;
+  } /* en móviles, se puede ocultar o cambiar */
+}
+
+/* responsive: en pantallas pequeñas apilar verticalmente */
+@media (max-width: 600px) {
+  .em-result-main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .em-meta {
+    white-space: normal;
+  }
+}

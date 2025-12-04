@@ -1,4 +1,3 @@
-import { IEquipoMedico } from './equipo-medico';
 import { IPaciente } from './paciente';
 import { IQuirofano } from './quirofano';
 

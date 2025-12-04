@@ -271,8 +271,8 @@ static buildCirugiaPayload(data: any): any {
   // mapear ids a objetos anidados
   const pacId = p.pacienteId != null ? Number(p.pacienteId) : null;
   const qId = p.quirofanoId != null ? Number(p.quirofanoId) : null;
-  p.paciente = pacId ? { id: pacId } : null;
-  p.quirofano = qId ? { id: qId } : null;
+  p.paciente =  pacId;
+  p.quirofano =  qId ;
   // formatear fecha/hora a ISO LocalDateTime string
   p.fecha_hora_inicio = Helpers.formatLocalDateTime(p.fecha_inicio, p.hora_inicio);
   // eliminar auxiliares/no requeridos
