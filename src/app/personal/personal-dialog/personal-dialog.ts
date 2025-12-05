@@ -32,13 +32,14 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
     MatTabsModule,
     MatDialogModule,
   ],
+  providers: [PersonalService],
 })
 export class PersonalDialogComponent {
   public form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private personalService: PersonalService,
+    @Inject(PersonalService) private personalService: PersonalService,
     private dialogRef: MatDialogRef<PersonalDialogComponent>,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: IPersonal
@@ -62,7 +63,8 @@ export class PersonalDialogComponent {
   }
 
   guardar() {
-    if (!this.form.valid) {} else {
+    if (!this.form.valid) {
+    } else {
       const personalData = this.form.value;
       if (personalData.id) {
         // Actualizar personal existente
@@ -91,7 +93,7 @@ export class PersonalDialogComponent {
 
         confirmDialogRef.afterClosed().subscribe((result) => {
           if (result) {
-            this.personalService.createPersonal(personalData).subscribe((response) => { 
+            this.personalService.createPersonal(personalData).subscribe((response) => {
               this.dialogRef.close(response);
             });
           }
@@ -101,5 +103,5 @@ export class PersonalDialogComponent {
   }
   cancelar() {
     this.dialogRef.close();
-  } 
+  }
 }
