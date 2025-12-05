@@ -8,6 +8,13 @@
       <mat-error *ngIf="form.get('nombre')?.hasError('required')"> </mat-error>
     </mat-form-field>
 
+    <!-- dni -->
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Dni</mat-label>
+      <input matInput formControlName="dni" required />
+      <mat-error *ngIf="form.get('dni')?.hasError('required')"> </mat-error>
+    </mat-form-field>
+
     <!-- legajo -->
     <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Legajo</mat-label>

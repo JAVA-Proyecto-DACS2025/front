@@ -11,6 +11,5 @@ export interface ICirugia {
   prioridad: string;
   anestesia: string;
   tipo: string;
-  
 }
 

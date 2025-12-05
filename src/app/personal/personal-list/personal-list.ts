@@ -41,7 +41,7 @@ export class PersonalList {
   constructor(private personalService: PersonalService, private dialog: MatDialog) {}
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['legajo', 'nombre', 'especialidad', 'rol', 'estado', 'telefono', 'editar', 'eliminar'];   //Agregar matricula (No todos estos son medicos)??
+  displayedColumns: string[] = ['legajo', 'nombre', 'dni', 'especialidad', 'rol', 'estado', 'telefono', 'editar', 'eliminar'];   //Agregar matricula (No todos estos son medicos)??
 
   ngOnInit() {
     this.loadPage(this.page, this.pageSize);
