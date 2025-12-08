@@ -101,7 +101,6 @@ export class CirugiaDialog {
     this.initPacienteAutocomplete();
     if (this.data) {
       this.form.patchValue(this.buildPatch(this.data));
-      this.pacienteCtrl.setValue(this.data.paciente ?? null, { emitEvent: false });
     }
   }
 
@@ -121,8 +120,6 @@ export class CirugiaDialog {
   private buildPatch(data: any): any {
     const patch: any = {
       ...data,
-      pacienteId: data.paciente?.id ?? null,
-      quirofanoId: data.quirofano?.id ?? null,
     };
 
     if (data.fecha_hora_inicio) {

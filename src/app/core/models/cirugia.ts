@@ -3,10 +3,14 @@ import { IQuirofano } from './quirofano';
 
 export interface ICirugia {
   id?: number ;
-  paciente: IPaciente;
-  quirofano: IQuirofano;
+  pacienteId: string;
+  paciente: string;
+  dni: string;
+  quirofano: string;
+  quirofanoId: string;
   servicio: string;
-  fecha_hora_inicio: string;
+  fechaInicio: string;
+  horaInicio: string;
   estado: string;
   prioridad: string;
   anestesia: string;

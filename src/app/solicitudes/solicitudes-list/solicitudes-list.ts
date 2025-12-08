@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -17,29 +17,11 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 import { CirugiaDialog } from '../cirugia-dialog/cirugia-dialog';
 import { EquipoMedicoDialog } from '../equipo-medico-dialog/equipo-medico-dialog';
 
-
-
-
-export interface Solicitud {
-  id: number;
-  fecha?: string;
-  paciente: string;
-  prioridad: string;
-  servicio: string;
-  sala?: string;
-  especialidad?: string;
-  intervencion?: string;
-  anestesia?: string;
-  cirujano?: string;
-  estado?: string;
-  quirofano?: string;
-}
-
 @Component({
   selector: 'app-solicitudes-list',
   templateUrl: './solicitudes-list.html',
   styleUrls: ['./solicitudes-list.css'],
-
+  standalone: true,
   imports: [
     CommonModule,
     MatPaginatorModule,
@@ -52,9 +34,10 @@ export interface Solicitud {
     MatDialogModule,
   ],
 })
-export class SolicitudesListComponent implements OnInit, AfterViewInit {
+export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestroy {
   displayedColumns: string[] = [
-    'fecha_hora_inicio',
+    'fechaInicio',
+    'horaInicio',
     'paciente',
     'dni',
     'servicio',
@@ -67,27 +50,43 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit {
     'medicos',
     'eliminar',
   ];
-  dataSource = new MatTableDataSource<any>([]);
+  dataSource = new MatTableDataSource<ICirugia>([]);
   page = 0;
   pageSize = 16;
   totalItems = 0;
+  private pageCache = new Map<string, { data: ICirugia[], total: number }>();
 
+  @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   private paginatorSub?: Subscription;
 
-  constructor(private cirugiaService: CirugiaService, private dialog: MatDialog) {}
+  constructor(
+    private cirugiaService: CirugiaService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadPage(this.page, this.pageSize);
   }
 
   ngAfterViewInit(): void {
-    // si quieres paginación cliente activar dataSource.paginator; para servidor no es necesario
-    // this.dataSource.paginator = this.paginato
+    // configurar sort por fecha + hora
+    this.dataSource.sortingDataAccessor = (item: any, prop: string) => {
+      if (prop === 'fechaInicio') {
+        return new Date(`${item.fechaInicio}T${item.horaInicio ?? '00:00:00'}`);
+      }
+      if (prop === 'horaInicio') {
+        return item.horaInicio;
+      }
+      return (item as any)[prop];
+    };
 
-    // opcional: subscribe para detectar cambios de pageSize desde UI
-    this.paginatorSub = this.paginator.page.subscribe((ev: PageEvent) => {
-      this.onPage(ev);
+    this.dataSource.sort = this.sort;
+    
+    // default: ordenar por fecha ascendente
+    setTimeout(() => {
+      this.sort.active = 'fechaInicio';
+      this.sort.direction = 'asc';
     });
   }
 
@@ -96,6 +95,24 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit {
   }
 
   loadPage(page: number, pageSize: number) {
+    const cacheKey = `${page}-${pageSize}`;
+    
+    // verificar si la página está en caché
+    if (this.pageCache.has(cacheKey)) {
+      const cached = this.pageCache.get(cacheKey)!;
+      this.dataSource.data = cached.data;
+      this.totalItems = cached.total;
+      this.page = page;
+      this.pageSize = pageSize;
+
+      if (this.paginator) {
+        this.paginator.pageIndex = this.page;
+        this.paginator.pageSize = this.pageSize;
+      }
+      return;
+    }
+
+    // si no está en caché, llamar al servidor
     this.cirugiaService.getCirugias(page, pageSize).subscribe(
       (resp: IPaginatedResponse<ICirugia>) => {
         this.dataSource.data = resp.data;
@@ -103,75 +120,49 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit {
         this.page = resp.pagination.page;
         this.pageSize = resp.pagination.pageSize;
 
-        // actualizar UI del paginator si existe
+        // guardar en caché
+        this.pageCache.set(cacheKey, {
+          data: resp.data,
+          total: resp.pagination.totalItems
+        });
+
         if (this.paginator) {
           this.paginator.pageIndex = this.page;
           this.paginator.pageSize = this.pageSize;
         }
       },
-      (err) => {
-        console.error('Error loading cirugias', err);
-      }
+      (err) => console.error('Error loading cirugias', err)
     );
   }
 
-  // llamado desde (page) del mat-paginator
-  onPage(event: PageEvent) {
-    const nextPage = event.pageIndex ?? 0;
-    const nextSize = event.pageSize ?? this.pageSize;
-
-    // mostrar inmediatamente la elección del usuario en el UI
-    this.page = nextPage;
-    this.pageSize = nextSize;
-
-    // recargar datos desde el backend con los nuevos parámetros
-    this.loadPage(nextPage, nextSize);
-  }
-
   applyFilter(filterValue: string) {
-    // si usas paginado en backend, deberías aplicar filtro en el servicio en vez de aqui
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  getCirugias() {
-    this.cirugiaService.getCirugias().subscribe((response) => {
-      console.log('Cirugías obtenidas:', response);
-    });
-    console.log('Obteniendo cirugías...');
+  onPage(event: PageEvent) {
+    this.loadPage(event.pageIndex, event.pageSize);
   }
 
   openCirugia(cirugia?: ICirugia) {
-    const dialogRef = this.dialog.open(CirugiaDialog, {
-      width: '400px',
-      data: cirugia, 
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
+    this.dialog.open(CirugiaDialog, { width: '400px', data: cirugia }).afterClosed().subscribe((result) => {
       if (result) {
-        // manejar respuesta: refrescar listado, mostrar notificación, etc.
-        console.log('Cirugía guardada/actualizada:', result);
+        this.pageCache.clear(); // limpiar caché cuando se modifica data
+        this.loadPage(this.page, this.pageSize);
       }
     });
   }
 
   openEquipoMedico(cirugiaId: number) {
-    const dialogRef = this.dialog.open(EquipoMedicoDialog, {
-      width: '600px',
-      data: { cirugiaId: this.dataSource.data.find(c => c.id === cirugiaId).id },
-    });
+    this.dialog.open(EquipoMedicoDialog, { width: '600px', data: { cirugiaId } });
   }
 
   deleteCirugia(cirugiaId: number) {
-    const ref = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Confirmar eliminación',
-        message: '¿Estás seguro de que deseas eliminar esta cirugía?',
-      },
-    });
-
-    ref.afterClosed().subscribe((confirmed) => {
+    this.dialog.open(ConfirmDialogComponent, {
+      data: { title: 'Confirmar eliminación', message: '¿Estás seguro de que deseas eliminar esta cirugía?' },
+    }).afterClosed().subscribe((confirmed) => {
       if (confirmed) {
         this.cirugiaService.deleteCirugia(cirugiaId).subscribe(() => {
+          this.pageCache.clear(); // limpiar caché cuando se elimina
           this.loadPage(this.page, this.pageSize);
         });
       }

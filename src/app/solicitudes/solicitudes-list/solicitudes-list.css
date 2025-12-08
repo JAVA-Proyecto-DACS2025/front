@@ -62,3 +62,21 @@
   /* box-shadow: 0 6px 18px rgba(0, 0, 0, 0.171); */
   border: 1px solid #e0e0e0;
 }
+
+:host ::ng-deep table {
+  table-layout: fixed; /* para respetar anchos fijos */
+}
+
+:host ::ng-deep .mat-column-fechaInicio { width: 120px; }
+:host ::ng-deep .mat-column-horaInicio  { width: 90px; }
+:host ::ng-deep .mat-column-paciente    { width: 180px; }
+:host ::ng-deep .mat-column-dni         { width: 100px; }
+:host ::ng-deep .mat-column-servicio    { width: 140px; }
+:host ::ng-deep .mat-column-estado      { width: 120px; }
+:host ::ng-deep .mat-column-tipo        { width: 110px; }
+:host ::ng-deep .mat-column-prioridad   { width: 110px; }
+:host ::ng-deep .mat-column-anestesia   { width: 110px; }
+:host ::ng-deep .mat-column-quirofano   { width: 110px; }
+:host ::ng-deep .mat-column-medicos     { width: 0px; }
+:host ::ng-deep .mat-column-acciones    { width: 0px; }
+:host ::ng-deep .mat-column-eliminar    { width: 0px; }

@@ -7,9 +7,10 @@ export const API_ENDPOINTS = {
     BASE_URL: 'bff',
     PING: 'ping',
     HEALTH: 'health',
-    PACIENT: 'pacient',
-    USER: 'user',
-    DASHBOARD: 'dashboard'
+    PACIENTE: '/paciente',
+    PACIENTES_EXTERNOS: '/paciente/hospital',
+    USER: '/user',
+    DASHBOARD: '/dashboard'
   },
   
   // Assets locales

@@ -1,0 +1,45 @@
+.table-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toolbar .spacer {
+  flex: 1;
+}
+
+.table-wrapper {
+  overflow: auto;
+  max-height: 60vh;
+}
+
+table {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 340px;
+}
+
+/* más aire en filas y celdas */
+.mat-mdc-header-row,
+.mat-mdc-row {
+  height: 52px;
+}
+
+.mat-mdc-cell,
+.mat-mdc-header-cell {
+  padding: 12px 16px;
+}
+
+/* separa el paginador de la tabla */
+mat-paginator {
+  padding: 4px 0 2px;
+}
