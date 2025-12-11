@@ -2,23 +2,39 @@ import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api.service';
 import { Observable } from 'rxjs';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
-import { HttpParams } from '@angular/common/http';
-import { IPaciente } from '../models/paciente';
+import { HttpParams, HttpSentEvent, HttpStatusCode } from '@angular/common/http';
+import { IPaciente, IPacienteLite } from '../models/paciente';
 import { IPacienteExterno } from '../models/paciente-externo';
+import { IPaginatedResponse } from '../models/api-response';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PacienteService extends BaseApiService {
   searchPacientes(q: string) {
-    return this.get<IPaciente[]>(API_ENDPOINTS.BFF.PACIENTE, { search: q });
+    return this.get<IPacienteLite[]>(API_ENDPOINTS.BFF.PACIENTE, { search: q });
   }
 
   // Se utiliza una api que genera datos de pacientes externos aleatorios
   getPacientesExternos(cantidad: number): Observable<IPacienteExterno[]> {
-    return this.get<IPacienteExterno[]>(
-      API_ENDPOINTS.BFF.PACIENTES_EXTERNOS,
-      { cantidad }
-    );
+    return this.get<IPacienteExterno[]>(API_ENDPOINTS.BFF.PACIENTES_EXTERNOS, { cantidad });
+  }
+
+  getPacientes(page = 0, pageSize = 16) {
+    const params = { page: String(page), size: String(pageSize) };
+    return this.get<IPaginatedResponse<IPaciente>>(API_ENDPOINTS.BFF.PACIENTE, params);
+  }
+
+  getPacientesLite(page = 0, pageSize = 16) {
+    const params = { page: String(page), size: String(pageSize) };
+    return this.get<IPaginatedResponse<IPacienteLite>>(API_ENDPOINTS.BFF.PACIENTE_LITE, params);
+  }
+
+  createPaciente(paciente: IPacienteExterno): Observable<IPacienteExterno> {
+    return this.post<IPacienteExterno>(API_ENDPOINTS.BFF.PACIENTE, paciente);
+  }
+
+  deletePaciente(id: number) {
+    return this.delete<HttpStatusCode>(`${API_ENDPOINTS.BFF.PACIENTE}/${id}`);
   }
 }

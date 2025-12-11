@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { PersonalService } from '../../core/services/personal-service';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -10,38 +9,19 @@ import {
 } from '@angular/material/dialog';
 import { ICirugia } from '../../core/models/cirugia';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatIcon } from '@angular/material/icon';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { CirugiaService } from '../../core/services/cirugia-service';
-import { MatOption } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  switchMap,
-  catchError,
-  startWith,
-  map,
-} from 'rxjs/operators';
-import { PacienteService } from '../../core/services/paciente'; // ajusta la ruta si hace falta
-import { IPaciente } from '../../core/models/paciente'; // ajusta la ruta si hace falta
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { IPacienteLite } from '../../core/models/paciente'; // ajusta la ruta si hace falta
 import { Helpers } from '../../core/utils/helpers';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PacienteListLite } from '../../shared/paciente-list-lite/paciente-list-lite';
 
 @Component({
   standalone: true,
@@ -53,29 +33,25 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatAutocompleteModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatButtonModule,
     MatIconModule,
-    MatListModule,
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    PacienteListLite,
     
   ],
 })
 export class CirugiaDialog {
   public form: FormGroup;
   // almacenar inicialmente el objeto paciente o null para evitar "undefined" en el display
-  public pacienteCtrl = new FormControl<IPaciente | string | null>(null);
-  public filteredPacientes$: Observable<IPaciente[]> = of([]);
+  public pacienteCtrl = new FormControl<string>('');
 
   constructor(
     private fb: FormBuilder,
-    private personalService: PersonalService,
     private cirugiaService: CirugiaService,
-    private pacienteService: PacienteService,
     private dialogRef: MatDialogRef<CirugiaDialog>,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: ICirugia
@@ -98,23 +74,13 @@ export class CirugiaDialog {
   }
 
   ngOnInit() {
-    this.initPacienteAutocomplete();
     if (this.data) {
       this.form.patchValue(this.buildPatch(this.data));
+      // mostrar en el input el label del paciente existente, si viene en los datos
+      this.pacienteCtrl.setValue(
+        this.formatPacienteDisplay({ nombre: (this.data as any)?.paciente, dni: (this.data as any)?.dni })
+      );
     }
-  }
-
-  // Inicializa el autocompletado de pacientes
-  private initPacienteAutocomplete(): void {
-    this.filteredPacientes$ = this.pacienteCtrl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap((value) => {
-        const q = typeof value === 'string' ? value.trim() : '';
-        return q ? this.pacienteService.searchPacientes(q).pipe(catchError(() => of([]))) : of([]);
-      })
-    );
   }
   // Construye un objeto parcheado para inicializar el formulario
   private buildPatch(data: any): any {
@@ -133,23 +99,6 @@ export class CirugiaDialog {
     }
 
     return patch;
-  }
-
-  // acepta IPaciente | string | null para evitar mostrar "undefined"
-  displayPaciente(value: IPaciente | string | null): string {
-    if (!value) return '';
-    if (typeof value === 'string') return value;
-    return `${value.nombre}${value.dni ? ' - ' + value.dni : ''}`;
-  }
-
-  onPacienteSelected(event: MatAutocompleteSelectedEvent) {
-    const paciente: IPaciente = event.option.value;
-    this.form.patchValue({
-      pacienteId: paciente?.id ?? null,
-      pacienteNombre:
-        paciente?.nombre ??
-        (typeof this.pacienteCtrl.value === 'string' ? this.pacienteCtrl.value : ''),
-    });
   }
 
   guardar() {
@@ -213,6 +162,35 @@ export class CirugiaDialog {
 
   cancelar() {
     this.dialogRef.close();
+  }
+
+  openPacienteListDialog() {
+    const ref = this.dialog.open(PacienteListLite, {
+      width: '900px',
+      maxHeight: '90vh'
+    });
+
+    ref.afterClosed().subscribe((paciente?: IPacienteLite) => {
+      if (!paciente) return;
+      this.pacienteCtrl.setValue(this.formatPacienteDisplay(paciente));
+      this.form.patchValue({
+        pacienteId: paciente?.id ?? null,
+        pacienteNombre: this.formatPacienteNombre(paciente)
+      });
+    });
+  }
+
+  private formatPacienteDisplay(paciente: Partial<IPacienteLite & { apellido?: string; dni?: string }>): string {
+    const nombre = paciente?.nombre ?? '';
+    const apellido = (paciente as any)?.apellido ?? '';
+    const dni = (paciente as any)?.dni ?? '';
+    return [nombre, apellido, dni ? `(${dni})` : ''].filter(Boolean).join(' ').trim();
+  }
+
+  private formatPacienteNombre(paciente: Partial<IPacienteLite & { apellido?: string }>): string {
+    const nombre = paciente?.nombre ?? '';
+    const apellido = (paciente as any)?.apellido ?? '';
+    return [nombre, apellido].filter(Boolean).join(' ').trim();
   }
 
   /** Getter para usar en el HTML */

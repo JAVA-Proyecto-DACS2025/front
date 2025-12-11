@@ -10,13 +10,11 @@
       <input type="text"
              matInput
              [formControl]="pacienteCtrl"
-             [matAutocomplete]="auto"
-             placeholder="Nombre o DNI">
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPaciente.bind(this)" (optionSelected)="onPacienteSelected($event)">
-        <mat-option *ngFor="let p of filteredPacientes$ | async" [value]="p">
-          {{ p.nombre }} <small *ngIf="p.dni"> - {{ p.dni }}</small>
-        </mat-option>
-      </mat-autocomplete>
+             placeholder="Seleccioná un paciente"
+             readonly>
+      <button mat-icon-button matSuffix type="button" (click)="openPacienteListDialog()" aria-label="Abrir selector de pacientes">
+        <mat-icon>list</mat-icon>
+      </button>
     </mat-form-field>
 
     <!-- Quirofano -->

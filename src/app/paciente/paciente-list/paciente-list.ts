@@ -15,6 +15,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
 import { PersonalDialogComponent } from '../../personal/personal-dialog/personal-dialog';
 import { PacienteHospitalListComponent } from '../paciente-hospital-list/paciente-hospital-list';
+import { PacienteService } from '../../core/services/paciente';
+import { IPaciente } from '../../core/models/paciente';
+import { PacienteDialog } from '../paciente-dialog/paciente-dialog';
 
 @Component({
   selector: 'app-paciente-list',
@@ -39,20 +42,21 @@ export class PacienteList {
   pageSize: number = 16;
   page: number = 0;
 
-  constructor(private personalService: PersonalService, private dialog: MatDialog) {}
+  constructor(private pacienteService: PacienteService, private dialog: MatDialog) {}
 
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns: string[] = [
-    'legajo',
     'nombre',
+    'apellido',
     'dni',
-    'especialidad',
-    'rol',
-    'estado',
+    'fecha_nacimiento',
+    'altura',
+    'peso',
+    'direccion',
     'telefono',
     'editar',
     'eliminar',
-  ]; //Agregar matricula (No todos estos son medicos)??
+  ];
 
   ngOnInit() {
     this.loadPage(this.page, this.pageSize);
@@ -72,11 +76,11 @@ export class PacienteList {
   }
 
   loadPage(page: number, pageSize: number) {
-    this.personalService.getPersonal(page, pageSize).subscribe((response: any) => {
+    this.pacienteService.getPacientes(page, pageSize).subscribe((response) => {
       this.dataSource.data = response.data;
-      this.totalItems = response.total;
-      this.pageSize = response.pageSize;
-      this.page = response.page;
+      this.totalItems = response.pagination.totalItems; // <-- usar pagination
+      this.pageSize = response.pagination.pageSize;
+      this.page = response.pagination.page;
     });
   }
 
@@ -87,23 +91,23 @@ export class PacienteList {
   deletePersonal(id: number) {
     const ref = this.dialog.open(ConfirmDialogComponent, {
       width: '320px',
-      data: { title: 'Eliminar personal', message: '¿Confirma eliminar este registro?' },
+      data: { title: 'Eliminar paciente', message: '¿Confirma eliminar este registro?' },
     });
 
     ref.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) {
-        this.personalService.deletePersonal(id).subscribe(() => {
+        this.pacienteService.deletePaciente(id).subscribe(() => {
           this.loadPage(this.page, this.pageSize);
         });
       }
     });
   }
 
-  openPersonal(IPersonal?: any) {
+  openPaciente(IPaciente?: any) {
     // pasar el componente como primer parámetro y los datos en `data`
-    const dialogRef = this.dialog.open(PersonalDialogComponent, {
+    const dialogRef = this.dialog.open(PacienteDialog, {
       width: '400px',
-      data: IPersonal || {},
+      data: IPaciente || {},
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
@@ -115,7 +119,7 @@ export class PacienteList {
   openPersonalHospitalList() {
     const dialogref = this.dialog.open(PacienteHospitalListComponent, {});
     dialogref.afterClosed().subscribe(() => {
-      // acciones si es necesario al cerrar el diálogo
+      this.loadPage(this.page, this.pageSize);
     });
   }
 }

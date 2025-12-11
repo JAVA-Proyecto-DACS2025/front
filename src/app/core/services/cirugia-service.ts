@@ -31,15 +31,7 @@ export class CirugiaService extends BaseApiService {
   getEquipoMedicoByCirugiaId(cirugiaId: number) {
     return this.get<IApiResponse<IMiembroEquipoMedico[]>>(`/cirugia/${cirugiaId}/equipo-medico`);
   }
-
-  removeMiembroFromEquipo(id: any, id1: any) {
-    return this.delete<IApiResponse>(`/cirugia/${id}/equipo-medico/${id1}`);
-  }
-
-  addMiembroToEquipo(id: any, id1: number) {
-    return this.post<IApiResponse<IMiembroEquipoMedico[]>>(`/cirugia/${id}/equipo-medico`, { personalId: id1 });
-  }
-
+  
   saveEquipoMedico(equipo: IMiembroEquipoMedico, cirugiaId: number) {
     return this.post<IApiResponse<IMiembroEquipoMedico[]>>(`/cirugia/${cirugiaId}/equipo-medico`, equipo);
   }

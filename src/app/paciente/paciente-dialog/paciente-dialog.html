@@ -1,0 +1,65 @@
+<div mat-dialog-content class="dialog-content" [formGroup]="form">
+  <h2 mat-dialog-title>Agregar paciente</h2>
+  <div class="content-dialog">
+    
+    <!-- nombre -->
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" required />
+      <mat-error *ngIf="form.get('nombre')?.hasError('required')">Campo requerido</mat-error>
+    </mat-form-field>
+
+    <!-- apellido -->
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Apellido</mat-label>
+      <input matInput formControlName="apellido" required />
+      <mat-error *ngIf="form.get('apellido')?.hasError('required')">Campo requerido</mat-error>
+    </mat-form-field>
+
+    <!-- dni -->
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>DNI</mat-label>
+      <input matInput formControlName="dni" required />
+      <mat-error *ngIf="form.get('dni')?.hasError('required')">Campo requerido</mat-error>
+    </mat-form-field>
+
+    <!-- fecha_nacimiento -->
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Fecha de Nacimiento</mat-label>
+      <input matInput formControlName="fecha_nacimiento" type="date" required />
+      <mat-error *ngIf="form.get('fecha_nacimiento')?.hasError('required')">Campo requerido</mat-error>
+    </mat-form-field>
+
+    <!-- direccion -->
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Dirección</mat-label>
+      <input matInput formControlName="direccion" required />
+      <mat-error *ngIf="form.get('direccion')?.hasError('required')">Campo requerido</mat-error>
+    </mat-form-field>
+
+    <!-- telefono -->
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Teléfono</mat-label>
+      <input matInput formControlName="telefono" inputmode="numeric" required />
+      <mat-error *ngIf="form.get('telefono')?.hasError('required')">Campo requerido</mat-error>
+    </mat-form-field>
+
+    <!-- peso (opcional) -->
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Peso (kg)</mat-label>
+      <input matInput formControlName="peso" type="number" required />
+    </mat-form-field>
+
+    <!-- altura (opcional) -->
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Altura (cm)</mat-label>
+      <input matInput formControlName="altura" type="number" required />
+    </mat-form-field>
+
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="primary" (click)="guardar()" [disabled]="form.invalid">Guardar</button>
+</div>

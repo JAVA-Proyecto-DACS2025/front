@@ -8,17 +8,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { PacienteService } from '../../core/services/paciente';
-
-interface Paciente {
-  id: number | null;
-  nombre: string;
-  apellido: string;
-  dni: string;
-  edad: number;
-  fecha_nacimiento: string;
-  direccion: string;
-  telefono: string;
-}
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { PacienteDialog } from '../paciente-dialog/paciente-dialog';
+import { IPacienteExterno } from '../../core/models/paciente-externo';
 
 @Component({
   selector: 'app-paciente-hospital-list',
@@ -34,6 +26,7 @@ interface Paciente {
     MatInputModule,
     MatIconModule,
     MatButtonModule,
+    MatDialogModule,
   ],
 })
 export class PacienteHospitalListComponent implements OnInit {
@@ -47,14 +40,19 @@ export class PacienteHospitalListComponent implements OnInit {
     'telefono',
     'accionAgregar',
   ];
-  dataSource = new MatTableDataSource<Paciente>([]);
+  dataSource = new MatTableDataSource<IPacienteExterno>([]);
   page = 0;
   pageSize = 16;
   totalItems = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private pacienteService: PacienteService) {}
+
+  constructor(
+    private pacienteService: PacienteService,
+    private dialog: MatDialog,
+    public dialogRef: MatDialogRef<PacienteHospitalListComponent>
+  ) {}
 
   ngOnInit(): void {
     this.loadPage(this.page, this.pageSize);
@@ -92,7 +90,17 @@ export class PacienteHospitalListComponent implements OnInit {
   }
 
   // Abrir el dialog de agregar paciente
-  agregarPaciente(_t113: any) {
-    
+  agregarPaciente(data: any) {
+    const dialogref = this.dialog.open(PacienteDialog, {width: '400px', data: data});
+    dialogref.afterClosed().subscribe((result: any) => {
+      if (result) {
+        // Cerrar el dialog padre con true para indicar que se guardó un paciente
+        this.dialogRef.close(true);
+      }
+    });
+  }
+
+  cerrar() {
+    this.dialogRef.close(false);
   }
 }

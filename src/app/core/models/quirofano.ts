@@ -1,4 +1,4 @@
-import { IPaciente } from './paciente';
+import { IPacienteLite } from './paciente';
 
 
 export interface IQuirofano {

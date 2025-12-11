@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
     PING: 'ping',
     HEALTH: 'health',
     PACIENTE: '/paciente',
+    PACIENTE_LITE: '/paciente/lite',
     PACIENTES_EXTERNOS: '/paciente/hospital',
     USER: '/user',
     DASHBOARD: '/dashboard'

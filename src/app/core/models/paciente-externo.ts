@@ -4,7 +4,7 @@ export interface IPacienteExterno {
   apellido: string;
   dni: string;
   edad: number;
-  fecha_nacimiento: string; // ISO yyyy-MM-dd
+  fecha_nacimiento: Date; // ISO yyyy-MM-dd
   direccion: string;
   telefono: string;
   peso?: number;

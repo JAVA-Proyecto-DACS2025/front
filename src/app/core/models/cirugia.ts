@@ -1,4 +1,4 @@
-import { IPaciente } from './paciente';
+import { IPacienteLite } from './paciente';
 import { IQuirofano } from './quirofano';
 
 export interface ICirugia {
@@ -9,7 +9,7 @@ export interface ICirugia {
   quirofano: string;
   quirofanoId: string;
   servicio: string;
-  fechaInicio: string;
+  fechaInicio: Date;
   horaInicio: string;
   estado: string;
   prioridad: string;

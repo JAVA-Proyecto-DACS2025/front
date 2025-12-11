@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IMiembroEquipoMedico } from '../../core/models/miembro-equipo';
@@ -6,7 +6,9 @@ import { CirugiaService } from '../../core/services/cirugia-service';
 import { PersonalService } from '../../core/services/personal-service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { MatListModule } from '@angular/material/list';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogContent } from '@angular/material/dialog';
 import { of, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, map, catchError, filter } from 'rxjs/operators';
+import { MatList } from "@angular/material/list";
 
 @Component({
   selector: 'app-equipo-medico-dialog',
@@ -23,15 +26,25 @@ import { debounceTime, distinctUntilChanged, switchMap, map, catchError, filter 
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatListModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
     MatDialogContent,
-  ],
+    MatList
+],
 })
 export class EquipoMedicoDialog implements OnInit, OnDestroy {
+  displayedColumns: string[] = ['nombre', 'rol', 'legajo', 'accionAgregar'];
+  dataSource = new MatTableDataSource<IMiembroEquipoMedico>([]);
+  totalItems = 0;
+  pageSize = 16;
+  page = 0;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   form: FormGroup;
   cirugiaId: number;
 
@@ -54,6 +67,9 @@ export class EquipoMedicoDialog implements OnInit, OnDestroy {
       equipoMedico: this.fb.array([]),
     });
     this.searchControl = new FormControl('');
+    this.page = 0;
+    this.pageSize = 10;
+    this.totalItems = 0;
   }
 
   ngOnInit(): void {
@@ -66,13 +82,15 @@ export class EquipoMedicoDialog implements OnInit, OnDestroy {
       debounceTime(300),
       distinctUntilChanged(),
       switchMap(q =>
-        this.personalService.searchPersonalLite(q).pipe(
+        this.personalService.searchPersonalLite(this.page, this.pageSize, q).pipe(
           map((resp: any) => (resp?.data ?? []) as IMiembroEquipoMedico[]),
           catchError(() => of([]))
         )
       )
     ).subscribe(results => {
       this.searchResults = results;
+      this.dataSource.data = results ?? [];
+      this.totalItems = this.dataSource.data.length;
       this.selectedPersonal = null;
     });
   }
@@ -82,21 +100,11 @@ export class EquipoMedicoDialog implements OnInit, OnDestroy {
       const integrantes = (resp?.data ?? []) as IMiembroEquipoMedico[];
       integrantes.forEach((p) => this.addIntegrante(p));
     });
-  }
-
-  // opcional: botón de búsqueda para disparar manualmente
-  onSearch(): void {
-    const q = String(this.searchControl.value ?? '').trim();
-    if (!q) {
-      this.searchResults = [];
-      return;
+    this.personalService.searchPersonalLite(this.page, this.pageSize, '').subscribe((resp: any) => {
+      this.dataSource.data = (resp?.data ?? []) as IMiembroEquipoMedico[];
+      this.totalItems = resp?.totalItems ?? 0;
     }
-    this.personalService.searchPersonalLite(q).subscribe((resp: any) => {
-      this.searchResults = (resp?.data ?? []) as IMiembroEquipoMedico[];
-      this.selectedPersonal = null;
-    }, () => {
-      this.searchResults = [];
-    });
+    );
   }
 
   ngOnDestroy(): void {
@@ -152,6 +160,7 @@ export class EquipoMedicoDialog implements OnInit, OnDestroy {
     // opcional: mantener resultados pero limpiar selección/terminar búsqueda
     this.searchControl.setValue('');
     this.searchResults = [];
+    this.dataSource.data = [];
     this.selectedPersonal = null;
   }
 
@@ -168,4 +177,14 @@ export class EquipoMedicoDialog implements OnInit, OnDestroy {
   cancel() {
     this.dialogRef.close(false);
   }
+
+  onPage(event: PageEvent) {
+    const nextPage = event.pageIndex ?? 0;
+    const nextSize = event.pageSize ?? this.pageSize;
+    this.page = nextPage;
+    this.pageSize = nextSize;
+    this.paginator.pageIndex = this.page;
+    this.paginator.pageSize = this.pageSize;
+  }
+
 }
