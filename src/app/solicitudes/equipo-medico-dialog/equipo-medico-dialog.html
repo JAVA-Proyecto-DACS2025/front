@@ -2,29 +2,21 @@
   <form [formGroup]="form" class="em-form">
     <header class="em-header">
       <h2>Equipo Médico</h2>
-      <p class="em-sub">Buscar personal</p>
+      <div class="em-subtitle-row">
+        <p class="em-sub">Asignar integrantes al equipo médico de la cirugía.</p>
+        <button mat-stroked-button color="primary" aria-label="Agregar integrante" (click)="openPersonalListDialog()">
+          <mat-icon>person_add</mat-icon>
+          Agregar
+        </button>
+      </div>
     </header>
 
-    <!-- BARRA DE BÚSQUEDA -->
-    <div class="em-search-row">
-      <mat-form-field appearance="outline" class="em-search-field">
-        <mat-icon matPrefix>search</mat-icon>
-        <input matInput placeholder="Ingresar nombre" [formControl]="searchControl" />
-      </mat-form-field>
-      <button mat-icon-button color="primary" aria-label="Abrir listado" (click)="openPersonalListDialog()">
-        <mat-icon>open_in_new</mat-icon>
-      </button>
-    </div>
-
     <div class="em-content">
-      <div class="em-left">
-        <div class="em-search-hint">Presioná el icono para abrir el listado completo de personal.</div>
-      </div>
 
       <aside class="em-right">
         <!-- LISTA DE INTEGRANTES SELECCIONADOS (tabla similar a resultados) -->
         <section class="em-integrantes">
-          <h3>Integrantes seleccionados</h3>
+          
           <div *ngIf="equipoMedico.length === 0" class="em-empty">No hay integrantes agregados todavía.</div>
 
           <div class="em-selected-table-wrapper" *ngIf="equipoMedico.length > 0">

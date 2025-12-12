@@ -8,16 +8,33 @@
   max-height: 95vh; /* prevent growing beyond viewport */
 }
 .em-header {
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 .em-header h2 {
-  margin: 0 0 4px 0;
+  margin: 0 0 0 0;
   font-size: 20px;
+}
+.em-subtitle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: 100%;
 }
 .em-sub {
   margin: 0;
   color: rgba(0, 0, 0, 0.54);
   font-size: 13px;
+  flex: 0 0 auto;
+}
+.em-subtitle-row button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  margin-left: auto;
+}
+.em-subtitle-row mat-icon {
+  margin-right: 6px;
 }
 
 .em-search-row {
@@ -26,18 +43,28 @@
   align-items: center;
   margin: 10px 0 0px;
 } /* reducido */
+
+/* fila de título con botón a la derecha */
+.em-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+.em-title-row h2 { margin: 0; flex: 0 0 auto; }
+.em-title-row button { flex: 0 0 auto; white-space: nowrap; }
+.em-title-row mat-icon { margin-right: 6px; }
+
 .em-search-field {
   flex: 1;
   min-width: 160px;
 }
-.em-name {
-  font-weight: 600;
-  flex: 0 1 auto; /* no fuerza toda la fila */
-  min-width: 0;
-}
 
-.em-integrantes {
-  margin-top: 6px;
+.em-integrantes-header mat-icon { margin-right: 6px; }
+.em-integrantes-header h3 {
+  margin: 0;
+  font-weight: 600;
 }
 .em-empty {
   color: rgba(0, 0, 0, 0.54);
@@ -46,7 +73,7 @@
   display: flex;
   flex-direction: column;
   gap: 0px; /* separación entre integrantes */
-  padding: 43px 40px;
+  padding: 46px 40px;
   border-radius: 5px;
   text-align: center;
 }
@@ -240,7 +267,7 @@
   flex: 0 1 auto; /* dejar que el contenido ocupe sólo lo necesario */
   max-height: calc(95vh - 160px); /* cuando crezca demasiado, permitir scroll interno */
   overflow: auto;
-  margin-top: 12px;
+  margin-top: 0px;
 }
 
 .em-left, .em-right {
