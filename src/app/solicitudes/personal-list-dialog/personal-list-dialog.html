@@ -1,0 +1,48 @@
+<div class="pl-container">
+  <header class="pl-header">
+    <h3>Listado de personal</h3>
+  </header>
+
+  <div class="pl-toolbar">
+    <mat-form-field appearance="outline" class="pl-search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput placeholder="Buscar" [formControl]="searchControl" />
+    </mat-form-field>
+    <button mat-stroked-button (click)="cancel()">Cerrar</button>
+  </div>
+
+  <div class="pl-table-wrapper">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+        <td mat-cell *matCellDef="let p">{{ p.nombre }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="legajo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Legajo</th>
+        <td mat-cell *matCellDef="let p">{{ p.legajo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="rol">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Rol</th>
+        <td mat-cell *matCellDef="let p">{{ p.rol }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="accionAgregar">
+        <th mat-header-cell *matHeaderCellDef>Acción</th>
+        <td mat-cell *matCellDef="let p">
+          <button mat-icon-button color="primary" (click)="accept(p)">
+            <mat-icon>person_add</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+
+  <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageIndex]="page" [pageSizeOptions]="[10,16,25,50]" (page)="onPage($event)">
+  </mat-paginator>
+</div>

@@ -9,108 +9,73 @@
     <div class="em-search-row">
       <mat-form-field appearance="outline" class="em-search-field">
         <mat-icon matPrefix>search</mat-icon>
-        <input
-          matInput
-          placeholder="Ingresar nombre"
-          [formControl]="searchControl"
-        />
+        <input matInput placeholder="Ingresar nombre" [formControl]="searchControl" />
       </mat-form-field>
-
-
-
+      <button mat-icon-button color="primary" aria-label="Abrir listado" (click)="openPersonalListDialog()">
+        <mat-icon>open_in_new</mat-icon>
+      </button>
     </div>
 
-    <!-- RESULTADOS EN TABLA (similar a paciente lite) -->
-    <div class="em-table-wrapper" *ngIf="dataSource?.data?.length">
-      <table mat-table [dataSource]="dataSource" matSort>
-
-        <ng-container matColumnDef="nombre">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-          <td mat-cell *matCellDef="let p">{{ p.nombre }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="rol">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Rol</th>
-          <td mat-cell *matCellDef="let p">{{ p.rol }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="legajo">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Legajo</th>
-          <td mat-cell *matCellDef="let p">{{ p.legajo }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="accionAgregar">
-          <th mat-header-cell *matHeaderCellDef>Acción</th>
-          <td mat-cell *matCellDef="let p">
-            <button mat-icon-button color="primary" (click)="acceptResult(p)">
-              <mat-icon>person_add</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </div>
-
-    <mat-paginator
-      *ngIf="totalItems > 0"
-      [length]="totalItems"
-      [pageSize]="pageSize"
-      [pageIndex]="page"
-      [pageSizeOptions]="[10,16,25,50]"
-      showFirstLastButtons
-      (page)="onPage($event)">
-    </mat-paginator>
-
-    <!-- LISTA DE INTEGRANTES SELECCIONADOS -->
-    <section class="em-integrantes">
-      <h3>Integrantes seleccionados</h3>
-      <div *ngIf="equipoMedico.length === 0" class="em-empty">
-        No hay integrantes agregados todavía.
+    <div class="em-content">
+      <div class="em-left">
+        <div class="em-search-hint">Presioná el icono para abrir el listado completo de personal.</div>
       </div>
-      <mat-list *ngIf="equipoMedico.length > 0" class="em-list">
-        <mat-list-item
-          *ngFor="let integrante of equipoMedico.controls; let i = index"
-          [formGroup]="$any(integrante)"
-          class="em-list-item"
-        >
-          <div class="em-list-grid">
-            <div class="col nombre">
-              <input matInput formControlName="nombre" placeholder="Nombre" readonly />
-            </div>
-            <div class="col rol">
-              <input matInput formControlName="rol" placeholder="Rol" />
-            </div>
-            <div class="col legajo">
-              <input matInput formControlName="legajo" placeholder="Legajo" readonly />
-            </div>
-            <div class="col acciones">
-              <button
-                mat-icon-button
-                color="warn"
-                (click)="removeIntegrante(i)"
-                aria-label="Eliminar integrante"
-              >
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
+
+      <aside class="em-right">
+        <!-- LISTA DE INTEGRANTES SELECCIONADOS (tabla similar a resultados) -->
+        <section class="em-integrantes">
+          <h3>Integrantes seleccionados</h3>
+          <div *ngIf="equipoMedico.length === 0" class="em-empty">No hay integrantes agregados todavía.</div>
+
+          <div class="em-selected-table-wrapper" *ngIf="equipoMedico.length > 0">
+            <table mat-table [dataSource]="dataSourceSelected" class="mat-elevation-z1">
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef class="col-nombre">Nombre</th>
+                <td mat-cell *matCellDef="let row" class="col-nombre">
+                  <div class="em-name">{{ row.nombre }}</div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="legajo">
+                <th mat-header-cell *matHeaderCellDef class="col-legajo">Legajo</th>
+                <td mat-cell *matCellDef="let row" class="col-legajo">{{ row.legajo }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="rol">
+                <th mat-header-cell *matHeaderCellDef class="col-rol">Rol</th>
+                <td mat-cell *matCellDef="let row; let i = index" class="col-rol">
+                  <div [formGroup]="$any(equipoMedico.at(i))">
+                    <input matInput formControlName="rol" placeholder="Rol" />
+                  </div>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="accionEliminar">
+                <th mat-header-cell *matHeaderCellDef class="col-accion"></th>
+                <td mat-cell *matCellDef="let row; let i = index" class="col-accion">
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="removeIntegrante(i)"
+                    aria-label="Eliminar integrante"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsSelected"></tr>
+              <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumnsSelected"></tr>
+            </table>
           </div>
-        </mat-list-item>
-      </mat-list>
-    </section>
+        </section>
+      </aside>
+    </div>
 
     <!-- FOOTER: cancelar / guardar -->
     <div class="em-actions">
       <button mat-stroked-button (click)="cancel()">Cancelar</button>
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="saveEquipoMedico()"
-        
-      >
-        Guardar Equipo
-      </button>
+      <button mat-raised-button color="primary" (click)="saveEquipoMedico()">Guardar Equipo</button>
     </div>
   </form>
 </mat-dialog-content>

@@ -40,7 +40,6 @@ import { PacienteListLite } from '../../shared/paciente-list-lite/paciente-list-
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    PacienteListLite,
     
   ],
 })

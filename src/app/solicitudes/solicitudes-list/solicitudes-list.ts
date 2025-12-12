@@ -54,16 +54,13 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
   page = 0;
   pageSize = 16;
   totalItems = 0;
-  private pageCache = new Map<string, { data: ICirugia[], total: number }>();
+  private pageCache = new Map<string, { data: ICirugia[]; total: number }>();
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   private paginatorSub?: Subscription;
 
-  constructor(
-    private cirugiaService: CirugiaService,
-    private dialog: MatDialog
-  ) {}
+  constructor(private cirugiaService: CirugiaService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.loadPage(this.page, this.pageSize);
@@ -82,7 +79,7 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
     };
 
     this.dataSource.sort = this.sort;
-    
+
     // default: ordenar por fecha ascendente
     setTimeout(() => {
       this.sort.active = 'fechaInicio';
@@ -96,7 +93,7 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
 
   loadPage(page: number, pageSize: number) {
     const cacheKey = `${page}-${pageSize}`;
-    
+
     // verificar si la página está en caché
     if (this.pageCache.has(cacheKey)) {
       const cached = this.pageCache.get(cacheKey)!;
@@ -123,7 +120,7 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
         // guardar en caché
         this.pageCache.set(cacheKey, {
           data: resp.data,
-          total: resp.pagination.totalItems
+          total: resp.pagination.totalItems,
         });
 
         if (this.paginator) {
@@ -144,28 +141,37 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   openCirugia(cirugia?: ICirugia) {
-    this.dialog.open(CirugiaDialog, { width: '400px', data: cirugia }).afterClosed().subscribe((result) => {
-      if (result) {
-        this.pageCache.clear(); // limpiar caché cuando se modifica data
-        this.loadPage(this.page, this.pageSize);
-      }
-    });
+    this.dialog
+      .open(CirugiaDialog, { width: '400px', data: cirugia })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.pageCache.clear(); // limpiar caché cuando se modifica data
+          this.loadPage(this.page, this.pageSize);
+        }
+      });
   }
 
   openEquipoMedico(cirugiaId: number) {
-    this.dialog.open(EquipoMedicoDialog, { width: '600px', data: { cirugiaId } });
+    this.dialog.open(EquipoMedicoDialog, { data: { cirugiaId } });
   }
 
   deleteCirugia(cirugiaId: number) {
-    this.dialog.open(ConfirmDialogComponent, {
-      data: { title: 'Confirmar eliminación', message: '¿Estás seguro de que deseas eliminar esta cirugía?' },
-    }).afterClosed().subscribe((confirmed) => {
-      if (confirmed) {
-        this.cirugiaService.deleteCirugia(cirugiaId).subscribe(() => {
-          this.pageCache.clear(); // limpiar caché cuando se elimina
-          this.loadPage(this.page, this.pageSize);
-        });
-      }
-    });
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: {
+          title: 'Confirmar eliminación',
+          message: '¿Estás seguro de que deseas eliminar esta cirugía?',
+        },
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.cirugiaService.deleteCirugia(cirugiaId).subscribe(() => {
+            this.pageCache.clear(); // limpiar caché cuando se elimina
+            this.loadPage(this.page, this.pageSize);
+          });
+        }
+      });
   }
 }

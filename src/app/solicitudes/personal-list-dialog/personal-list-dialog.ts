@@ -1,0 +1,97 @@
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { PersonalService } from '../../core/services/personal-service';
+import { IMiembroEquipoMedico } from '../../core/models/miembro-equipo';
+import { debounceTime, distinctUntilChanged, switchMap, catchError, map } from 'rxjs/operators';
+import { of } from 'rxjs';
+
+@Component({
+  selector: 'app-personal-list-dialog',
+  templateUrl: './personal-list-dialog.html',
+  styleUrls: ['./personal-list-dialog.css'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+  ],
+})
+export class PersonalListDialog implements OnInit {
+  displayedColumns: string[] = ['nombre', 'legajo', 'rol', 'accionAgregar'];
+  dataSource = new MatTableDataSource<IMiembroEquipoMedico>([]);
+  totalItems = 0;
+  pageSize = 16;
+  page = 0;
+  searchControl = new FormControl('');
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  constructor(
+    private personalService: PersonalService,
+    private dialogRef: MatDialogRef<PersonalListDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: { q?: string }
+  ) {
+    if (data?.q) {
+      this.searchControl.setValue(data.q);
+    }
+  }
+
+  ngOnInit(): void {
+    this.loadPage(this.page, this.pageSize, this.searchControl.value ?? '');
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((q) => this.personalService.searchPersonalLite(this.page, this.pageSize, (q ?? '').trim()).pipe(
+        map((r: any) => r ?? {}),
+        catchError(() => of({ data: [], totalItems: 0 }))
+      ))
+    ).subscribe((resp: any) => {
+      this.dataSource.data = resp?.data ?? [];
+      this.totalItems = resp?.totalItems ?? (this.dataSource.data.length || 0);
+      if (this.paginator) {
+        this.paginator.pageIndex = this.page;
+        this.paginator.pageSize = this.pageSize;
+      }
+    });
+  }
+
+  loadPage(page: number, pageSize: number, q: string) {
+    this.personalService.searchPersonalLite(page, pageSize, q ?? '').subscribe((resp: any) => {
+      this.dataSource.data = resp?.data ?? [];
+      this.totalItems = resp?.totalItems ?? this.dataSource.data.length;
+      if (this.paginator) {
+        this.paginator.pageIndex = page;
+        this.paginator.pageSize = pageSize;
+      }
+    });
+  }
+
+  onPage(event: PageEvent) {
+    this.page = event.pageIndex ?? 0;
+    this.pageSize = event.pageSize ?? this.pageSize;
+    this.loadPage(this.page, this.pageSize, this.searchControl.value ?? '');
+  }
+
+  accept(p: IMiembroEquipoMedico) {
+    this.dialogRef.close(p);
+  }
+
+  cancel() {
+    this.dialogRef.close(null);
+  }
+}
