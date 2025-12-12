@@ -30,50 +30,10 @@
   flex: 1;
   min-width: 160px;
 }
-.em-search-btn {
-  height: 40px;
-}
-.em-add-btn {
-  height: 40px;
-}
-
-.em-results {
-  border-radius: 6px;
-  border: 1px solid #e0e0e0;
-  padding: 4px;
-  max-height: 420px;
-  overflow: auto;
-  margin: -10px 0 40px;
-  background: #fafafa;
-} /* menos padding y margen superior */
-.em-result-item {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* antes: space-between; eso empujaba la meta a la derecha */
-  padding: 0px 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-.em-result-item:last-child {
-  border-bottom: none;
-}
-.em-result-main {
-  display: flex;
-  align-items: center;
-  gap: 12px; /* quitar width:100% para que el botón pueda usar margin-left:auto */
-}
 .em-name {
   font-weight: 600;
   flex: 0 1 auto; /* no fuerza toda la fila */
   min-width: 0;
-}
-.em-meta {
-  padding-left: 10px;
-  font-size: 15px;
-  color: rgba(0, 0, 0, 0.685);
-  flex: 0 0 auto; /* se queda junto al nombre */
-  white-space: nowrap;
-  opacity: 0.95;
-  margin-left: 8px;
 }
 
 .em-integrantes {
@@ -81,30 +41,16 @@
 }
 .em-empty {
   color: rgba(0, 0, 0, 0.54);
-  margin-top: -10px;
   max-height: 440px;
   overflow: auto;
   display: flex;
   flex-direction: column;
   gap: 0px; /* separación entre integrantes */
-  padding: 40px 40px;
+  padding: 43px 40px;
   border-radius: 5px;
   text-align: center;
 }
-/* Contenedor de la lista: usar columna con gap para separar ítems */
-.em-list {
-  margin-top: -10px;
-  max-height: 440px;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0px; /* separación entre integrantes */
-  padding: 4px 0px;
-  border-radius: 5px;
-  border: 1px solid #e0e0e0;
-  background-color: #f3f3f350;
-}
-
+/* legacy list styles removed (not used in current dialog) */
 /* Tabla de seleccionados: estilo similar a resultados */
 .em-selected-table-wrapper {
   margin-top: 6px;
@@ -157,37 +103,7 @@
   border-bottom: 1px solid rgba(63,81,181,0.25);
 }
 
-/* Adoptar estilos del listado de personal (paciente-list-lite.css) */
-.em-table-wrapper {
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 8px;
-  overflow: auto;
-  background: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  flex: 1;
-  min-height: 0;
-}
-
-.em-table-wrapper table {
-  width: 100%;
-  table-layout: fixed;
-}
-
-.em-table-wrapper th.mat-header-cell {
-  font-weight: 600;
-  color: #374151;
-  background: #f9fafb;
-}
-
-.em-table-wrapper td.mat-cell,
-.em-table-wrapper th.mat-header-cell {
-  padding: 12px 16px;
-}
-
-.em-table-wrapper tr.mat-row:hover td.mat-cell {
-  background: #f3f4f6;
-}
-
+.em-table-wrapper { display: none; }
 .em-selected-table-wrapper {
   /* make selected table visually match results but a bit lighter */
   border: 1px solid rgba(0, 0, 0, 0.04);
@@ -232,10 +148,7 @@
   color: #dc2626; /* rojo para eliminar */
 }
 
-.em-left mat-paginator {
-  margin-top: 8px;
-  padding: 0 4px;
-}
+.em-left mat-paginator { display: none; } /* paginator not used in this dialog */
 
 .mat-sort-header-button {
   text-transform: none;
@@ -264,40 +177,7 @@
   border-radius: 6px;
 }
 
-/* Grid interno: quitar margin-top, usar gap más pequeño */
-.em-list-grid {
-  display: grid;
-  grid-template-columns: minmax(120px, 190px) 140px minmax(100px, 140px) 45px; /* nombre | rol | legajo | acciones */
-  gap: 8px;
-  align-items: center;
-  width: 100%;
-  margin-top: 0;
-  min-width: 0;
-}
-
-/* Asegurar inputs ocupen todo el espacio de su columna */
-.em-list-grid .col input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 6px 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.18);
-  background: #fff;
-}
-
-/* evitar outline negro grueso al enfocar inputs y usar un borde/halo sutil */
-.em-list-grid .col input {
-  transition: border-color 0.12s ease, box-shadow 0.12s ease;
-  outline: none;
-}
-
-.em-list-grid .col input:focus,
-.em-list-grid .col input:focus-visible {
-  outline: none;
-  border-width: 1px; /* aseguramos que no aumente el grosor */
-  border-color: rgba(112, 112, 112, 0.527); /* color de foco (ajustalo si querés) */
-  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.06); /* halo sutil */
-}
+/* legacy grid inputs removed (not used) */
 
 /* si hay inputs dentro de mat-form-field también controlar su foco */
 .em-list .mat-form-field-appearance-outline .mat-form-field-outline {

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IMiembroEquipoMedico } from '../../core/models/miembro-equipo';
@@ -7,23 +7,13 @@ import { PersonalService } from '../../core/services/personal-service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogContent, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PersonalListDialog } from '../personal-list-dialog/personal-list-dialog';
-import { of, Subscription } from 'rxjs';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  switchMap,
-  map,
-  catchError,
-  filter,
-} from 'rxjs/operators';
+// rxjs operators removed; no streaming search in this dialog
 import { MatListModule } from '@angular/material/list';
 
 @Component({
@@ -35,8 +25,7 @@ import { MatListModule } from '@angular/material/list';
     CommonModule,
     ReactiveFormsModule,
     MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
+    /* MatSortModule and MatPaginatorModule removed (not used) */
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -47,28 +36,14 @@ import { MatListModule } from '@angular/material/list';
   ],
 })
 export class EquipoMedicoDialog implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['nombre', 'legajo', 'rol', 'accionAgregar'];
-  dataSource = new MatTableDataSource<IMiembroEquipoMedico>([]);
   // seleccionado (lista de integrantes actuales)
   displayedColumnsSelected: string[] = ['nombre', 'legajo', 'rol', 'accionEliminar'];
   dataSourceSelected = new MatTableDataSource<any>([]);
-  totalItems = 0;
-  pageSize = 16;
-  page = 0;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
   form: FormGroup;
   cirugiaId: number;
 
   // nuevos
   searchControl: FormControl;
-  searchResults: IMiembroEquipoMedico[] = [];
-  selectedPersonal: IMiembroEquipoMedico | null = null;
-  private searchSub: Subscription | null = null;
-  private teamSub: Subscription | null = null;
-
-  // altura dinámica del contenedor (en px)
-  containerHeight = 600;
 
   constructor(
     private fb: FormBuilder,
@@ -83,9 +58,6 @@ export class EquipoMedicoDialog implements OnInit, OnDestroy {
       equipoMedico: this.fb.array([]),
     });
     this.searchControl = new FormControl('');
-    this.page = 0;
-    this.pageSize = 10;
-    this.totalItems = 0;
   }
 
   openPersonalListDialog() {
@@ -115,8 +87,7 @@ export class EquipoMedicoDialog implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.searchSub?.unsubscribe();
-    this.teamSub?.unsubscribe();
+    // no active subscriptions to clean up
   }
 
   // getter de conveniencia
@@ -150,20 +121,13 @@ export class EquipoMedicoDialog implements OnInit, OnDestroy {
   }
 
   selectPersonal(p: IMiembroEquipoMedico) {
-    this.selectedPersonal = p;
+    // helper kept for potential future use
     this.searchControl.setValue(p.nombre);
-    this.searchResults = [];
   }
 
   // agregar la selección actual
   addSelectedPersonal() {
-    if (!this.selectedPersonal) {
-      return;
-    }
-    this.addIntegrante(this.selectedPersonal);
-    this.selectedPersonal = null;
-    this.searchControl.setValue('');
-    this.dataSourceSelected.data = this.equipoMedico.value ?? [];
+    // not used in current UI
   }
 
   // agregar directamente desde la lista de resultados
@@ -171,9 +135,7 @@ export class EquipoMedicoDialog implements OnInit, OnDestroy {
     this.addIntegrante(p);
     // opcional: mantener resultados pero limpiar selección/terminar búsqueda
     this.searchControl.setValue('');
-    this.searchResults = [];
-    this.dataSource.data = [];
-    this.selectedPersonal = null;
+    // clear any temporary selections
     this.dataSourceSelected.data = this.equipoMedico.value ?? [];
   }
 
@@ -191,12 +153,4 @@ export class EquipoMedicoDialog implements OnInit, OnDestroy {
     this.dialogRef.close(false);
   }
 
-  onPage(event: PageEvent) {
-    const nextPage = event.pageIndex ?? 0;
-    const nextSize = event.pageSize ?? this.pageSize;
-    this.page = nextPage;
-    this.pageSize = nextSize;
-    this.paginator.pageIndex = this.page;
-    this.paginator.pageSize = this.pageSize;
-  }
 }
