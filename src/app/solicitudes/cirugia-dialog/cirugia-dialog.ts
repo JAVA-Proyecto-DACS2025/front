@@ -63,8 +63,8 @@ export class CirugiaDialog {
       quirofanoId: [null],
       servicio: [''],
       // fecha como Date y hora como string "HH:MM"
-      fecha_inicio: [null],
-      hora_inicio: [''],
+      fechaInicio: [null],
+      horaInicio: [''],
       estado: [''],
       prioridad: [''],
       anestesia: [''],

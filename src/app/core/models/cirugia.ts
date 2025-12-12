@@ -9,7 +9,7 @@ export interface ICirugia {
   quirofano: string;
   quirofanoId: string;
   servicio: string;
-  fechaInicio: Date;
+  fechanicio: Date;
   horaInicio: string;
   estado: string;
   prioridad: string;

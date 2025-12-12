@@ -38,6 +38,20 @@
 .table-list-container .button-add {
   background: #6a60ff;
   color: white;
+  height: 56px; /* igual alto que mat-form-field outline */
+  min-height: 56px;
+  box-sizing: border-box;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  font:  600 16px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+.table-list-container .button-add mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
 }
 
 
@@ -45,6 +59,20 @@
   display: flex;
   align-items: center;
   gap: 22px;
+  margin-bottom: 12px;
+}
+
+.toolbar .mat-mdc-form-field {
+  margin: 0; /* alinear verticalmente con el botón */
+  height: 56px;
+}
+.toolbar .mat-mdc-text-field-wrapper {
+  height: 100%;
+  align-items: center;
+}
+.toolbar .mat-mdc-form-field-infix {
+  padding-top: 14px;
+  padding-bottom: 14px;
 }
 
 /* el campo de búsqueda ocupa el espacio disponible */
@@ -63,20 +91,31 @@
   border: 1px solid #e0e0e0;
 }
 
-:host ::ng-deep table {
-  table-layout: fixed; /* para respetar anchos fijos */
+.tabla-solicitudes {
+  width: 100%;
+  table-layout: fixed !important; /* forzar anchos fijos */
 }
 
-:host ::ng-deep .mat-column-fechaInicio { width: 120px; }
-:host ::ng-deep .mat-column-horaInicio  { width: 90px; }
-:host ::ng-deep .mat-column-paciente    { width: 180px; }
-:host ::ng-deep .mat-column-dni         { width: 100px; }
-:host ::ng-deep .mat-column-servicio    { width: 140px; }
-:host ::ng-deep .mat-column-estado      { width: 120px; }
-:host ::ng-deep .mat-column-tipo        { width: 110px; }
-:host ::ng-deep .mat-column-prioridad   { width: 110px; }
-:host ::ng-deep .mat-column-anestesia   { width: 110px; }
-:host ::ng-deep .mat-column-quirofano   { width: 110px; }
-:host ::ng-deep .mat-column-medicos     { width: 0px; }
-:host ::ng-deep .mat-column-acciones    { width: 0px; }
-:host ::ng-deep .mat-column-eliminar    { width: 0px; }
+/* Anchos fijos para cada columna */
+.mat-column-fechaInicio { width: 80px !important; min-width: 80px; max-width: 80px; }
+.mat-column-horaInicio  { width: 75px !important; min-width: 75px; max-width: 75px; }
+.mat-column-paciente    { width: 100px !important; min-width: 100px; max-width: 100px; }
+.mat-column-dni         { width: 90px !important; min-width: 90px; max-width: 90px; }
+.mat-column-servicio    { width: 90px !important; min-width: 90px; max-width: 90px; }
+.mat-column-estado      { width: 90px !important; min-width: 90px; max-width: 90px; }
+.mat-column-tipo        { width: 90px !important; min-width: 90px; max-width: 90px; }
+.mat-column-prioridad   { width: 90px !important; min-width: 90px; max-width: 90px; }
+.mat-column-anestesia   { width: 90px !important; min-width: 90px; max-width: 90px; }
+.mat-column-quirofano   { width: 90px !important; min-width: 90px; max-width: 90px; }
+.mat-column-medicos     { width: 30px !important; min-width: 30px; max-width: 30px; }
+.mat-column-acciones    { width: 30px !important; min-width: 30px; max-width: 30px; }
+.mat-column-eliminar    { width: 40px !important; min-width: 40px; max-width: 40px; }
+
+/* Evitar que el texto desborde las celdas */
+.tabla-solicitudes th,
+.tabla-solicitudes td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
