@@ -20,7 +20,11 @@
     <!-- Quirofano -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Quirófano</mat-label>
-      <input matInput formControlName="quirofanoId" type="number" />
+      <mat-select formControlName="quirofanoId" >  
+        <mat-option *ngFor="let q of quirofanos" [value]="q.id">
+          {{ q.nombre }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
 
     <!-- Servicio -->

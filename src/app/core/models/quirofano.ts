@@ -5,4 +5,4 @@ export interface IQuirofano {
   id: number;
   nombre: string;
   estado: string;
-}
+} 

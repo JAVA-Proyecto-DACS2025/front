@@ -17,11 +17,14 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { IPacienteLite } from '../../core/models/paciente'; // ajusta la ruta si hace falta
 import { Helpers } from '../../core/utils/helpers';
 import { PacienteListLite } from '../../shared/paciente-list-lite/paciente-list-lite';
+import { QuirofanoService } from '../../core/services/quirofano-service';
+import { IQuirofano } from '../../core/models/quirofano';
 
 @Component({
   standalone: true,
@@ -40,17 +43,18 @@ import { PacienteListLite } from '../../shared/paciente-list-lite/paciente-list-
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    
+    MatSelectModule,
   ],
 })
 export class CirugiaDialog {
   public form: FormGroup;
-  // almacenar inicialmente el objeto paciente o null para evitar "undefined" en el display
   public pacienteCtrl = new FormControl<string>('');
+  public quirofanos: IQuirofano[] = [];
 
   constructor(
     private fb: FormBuilder,
     private cirugiaService: CirugiaService,
+    private quirofanoService: QuirofanoService,
     private dialogRef: MatDialogRef<CirugiaDialog>,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: ICirugia
@@ -59,7 +63,7 @@ export class CirugiaDialog {
       id: [null],
       pacienteId: [null],
       pacienteNombre: [''],
-      quirofanoNombre: [''],
+      quirofano: [''],
       quirofanoId: [null],
       servicio: [''],
       // fecha como Date y hora como string "HH:MM"
@@ -74,31 +78,34 @@ export class CirugiaDialog {
 
   ngOnInit() {
     if (this.data) {
-      this.form.patchValue(this.buildPatch(this.data));
-      // mostrar en el input el label del paciente existente, si viene en los datos
+      this.form.patchValue(this.data);
       this.pacienteCtrl.setValue(
-        this.formatPacienteDisplay({ nombre: (this.data as any)?.paciente, dni: (this.data as any)?.dni })
+        this.formatPacienteDisplay({
+          nombre: (this.data as any)?.paciente,
+          dni: (this.data as any)?.dni,
+        })
       );
     }
+    this.onQuirofanoOpened();
   }
-  // Construye un objeto parcheado para inicializar el formulario
-  private buildPatch(data: any): any {
-    const patch: any = {
-      ...data,
-    };
+  // // Construye un objeto parcheado para inicializar el formulario
+  // private buildPatch(data: any): any {
+  //   const patch: any = {
+  //     ...data,
+  //   };
 
-    if (data.fecha_hora_inicio) {
-      const d = new Date(data.fecha_hora_inicio);
-      if (!isNaN(d.getTime())) {
-        patch.fecha_inicio = d;
-        patch.hora_inicio = `${String(d.getHours()).padStart(2, '0')}:${String(
-          d.getMinutes()
-        ).padStart(2, '0')}`;
-      }
-    }
+  //   if (data.fecha_hora_inicio) {
+  //     const d = new Date(data.fecha_hora_inicio);
+  //     if (!isNaN(d.getTime())) {
+  //       patch.fecha_inicio = d;
+  //       patch.hora_inicio = `${String(d.getHours()).padStart(2, '0')}:${String(
+  //         d.getMinutes()
+  //       ).padStart(2, '0')}`;
+  //     }
+  //   }
 
-    return patch;
-  }
+  //   return patch;
+  // }
 
   guardar() {
     if (!this.form.valid) {
@@ -166,7 +173,7 @@ export class CirugiaDialog {
   openPacienteListDialog() {
     const ref = this.dialog.open(PacienteListLite, {
       width: '900px',
-      maxHeight: '90vh'
+      maxHeight: '90vh',
     });
 
     ref.afterClosed().subscribe((paciente?: IPacienteLite) => {
@@ -174,12 +181,23 @@ export class CirugiaDialog {
       this.pacienteCtrl.setValue(this.formatPacienteDisplay(paciente));
       this.form.patchValue({
         pacienteId: paciente?.id ?? null,
-        pacienteNombre: this.formatPacienteNombre(paciente)
+        pacienteNombre: this.formatPacienteNombre(paciente),
       });
     });
   }
 
-  private formatPacienteDisplay(paciente: Partial<IPacienteLite & { apellido?: string; dni?: string }>): string {
+  onQuirofanoOpened() {
+    if (this.quirofanos.length > 0) {
+      return;
+    }
+    this.quirofanoService.getQuirofanos().subscribe((resp: any) => {
+      this.quirofanos = resp;
+    });
+  }
+
+  private formatPacienteDisplay(
+    paciente: Partial<IPacienteLite & { apellido?: string; dni?: string }>
+  ): string {
     const nombre = paciente?.nombre ?? '';
     const apellido = (paciente as any)?.apellido ?? '';
     const dni = (paciente as any)?.dni ?? '';

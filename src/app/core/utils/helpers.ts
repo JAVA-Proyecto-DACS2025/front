@@ -274,14 +274,14 @@ static buildCirugiaPayload(data: any): any {
   p.paciente =  pacId;
   p.quirofano =  qId ;
   // formatear fecha/hora a ISO LocalDateTime string
-  p.fecha_hora_inicio = Helpers.formatLocalDateTime(p.fecha_inicio, p.hora_inicio);
+  p.fecha_hora_inicio = Helpers.formatLocalDateTime(p.fechaInicio, p.horaInicio);
   // eliminar auxiliares/no requeridos
   delete p.pacienteId;
   delete p.quirofanoId;
   delete p.pacienteNombre;
   delete p.quirofanoNombre;
-  delete p.fecha_inicio;
-  delete p.hora_inicio;
+  delete p.fechaInicio;
+  delete p.horaInicio;
   return p;
 }
 
