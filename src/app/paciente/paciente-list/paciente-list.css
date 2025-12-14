@@ -38,6 +38,11 @@
 .table-list-container .button-add {
   background: #6a60ff;
   color: white;
+  height: 56px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  font-size: 16px;
 }
 
 
@@ -45,6 +50,87 @@
   display: flex;
   align-items: center;
   gap: 22px;
+  margin-bottom: 15px;
+}
+
+/* Alinear altura del campo de búsqueda con el botón */
+.toolbar .mat-mdc-form-field {
+  margin: 0;
+  height: 56px;
+}
+
+
+.toolbar .mat-mdc-text-field-wrapper {
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+}
+.toolbar .mat-mdc-form-field-infix {
+  padding-block: 16px; /* equilibra la altura total a ~56px */
+}
+
+/* Tabla de pacientes: fijar layout y anchos de columnas */
+.tabla-pacientes {
+  table-layout: fixed !important;
+  width: 100%;
+}
+
+.tabla-pacientes .mat-mdc-header-cell,
+.tabla-pacientes .mat-mdc-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tabla-pacientes .mat-column-nombre {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+}
+.tabla-pacientes .mat-column-apellido {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+}
+.tabla-pacientes .mat-column-dni {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+}
+.tabla-pacientes .mat-column-fecha_nacimiento {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+}
+.tabla-pacientes .mat-column-altura {
+  width: 65px;
+  min-width: 65px;
+  max-width: 65px;
+}
+.tabla-pacientes .mat-column-peso {
+  width: 90px;
+  min-width: 90px;
+  max-width: 90px;
+}
+.tabla-pacientes .mat-column-direccion {
+  width: 130px;
+  min-width: 130px;
+  max-width: 130px;
+}
+.tabla-pacientes .mat-column-telefono {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+}
+.tabla-pacientes .mat-column-editar,
+.tabla-pacientes .mat-column-eliminar {
+  width: 30px;
+  min-width: 30px;
+  max-width: 30px;
+  text-align: center;
+}
+.tabla-pacientes .mat-column-eliminar {
+  padding-right: 35px;
 }
 
 /* el campo de búsqueda ocupa el espacio disponible */

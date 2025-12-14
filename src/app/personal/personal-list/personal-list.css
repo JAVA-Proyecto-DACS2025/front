@@ -38,6 +38,11 @@
 .table-list-container .button-add {
   background: #6a60ff;
   color: white;
+  height: 56px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  font-size: 16px;
 }
 
 
@@ -45,6 +50,21 @@
   display: flex;
   align-items: center;
   gap: 22px;
+  margin-bottom: 15px;
+}
+
+/* Alinear altura del campo de búsqueda con el botón */
+.toolbar .mat-mdc-form-field {
+  margin: 0;
+  height: 56px;
+}
+.toolbar .mat-mdc-text-field-wrapper {
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+}
+.toolbar .mat-mdc-form-field-infix {
+  padding-block: 16px; /* equilibra la altura total a ~56px */
 }
 
 /* el campo de búsqueda ocupa el espacio disponible */
@@ -61,4 +81,74 @@
   border-radius: 8px;
   /* box-shadow: 0 6px 18px rgba(0, 0, 0, 0.171); */
   border: 1px solid #e0e0e0;
+}
+
+/* Tabla de personal: fijar layout y anchos de columnas */
+.tabla-personal {
+  table-layout: fixed !important;
+  width: 100%;
+}
+
+/* Evitar que el contenido mueva columnas; truncar con ellipsis */
+.tabla-personal .mat-mdc-header-cell,
+.tabla-personal .mat-mdc-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Anchos fijos por columna */
+.tabla-personal .mat-column-legajo {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+}
+
+.tabla-personal .mat-column-nombre {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+}
+
+.tabla-personal .mat-column-dni {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+}
+
+.tabla-personal .mat-column-especialidad {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+}
+
+.tabla-personal .mat-column-rol {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+}
+
+.tabla-personal .mat-column-estado {
+  width: 120px;
+  min-width: 120px;
+  max-width: 120px;
+}
+
+.tabla-personal .mat-column-telefono {
+  width: 100px;
+  min-width: 100px;
+  max-width: 100px;
+}
+  
+.tabla-personal .mat-column-editar,
+.tabla-personal .mat-column-eliminar {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  text-align: center;
+
+}
+
+.tabla-personal .mat-column-eliminar {
+  padding-right:30px; /* separa el botón del borde de la columna */
 }
