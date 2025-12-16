@@ -248,23 +248,37 @@ export class Helpers {
   }
 
   static formatLocalDateTime(fecha: any, hora?: string): string | null {
-  if (!fecha) return null;
-  const d = fecha instanceof Date ? new Date(fecha) : new Date(fecha);
-  if (isNaN(d.getTime())) return null;
-  let hh = '00', mm = '00';
-  if (hora && typeof hora === 'string') {
-    const parts = hora.split(':');
-    if (parts.length >= 1) hh = parts[0].padStart(2, '0');
-    if (parts.length >= 2) mm = parts[1].padStart(2, '0');
+    if (!fecha) return null;
+    
+    let d: Date;
+    
+    // Si es string en formato dd/MM/yyyy o dd/MM/yyyy (con o sin HS)
+    if (typeof fecha === 'string' && fecha.includes('/')) {
+      const partes = fecha.split(' ')[0]; // Remover " HS" si existe
+      const [dd, mm, yyyy] = partes.split('/');
+      d = new Date(parseInt(yyyy), parseInt(mm) - 1, parseInt(dd));
+    } else {
+      // Si es Date o string ISO
+      d = fecha instanceof Date ? new Date(fecha) : new Date(fecha);
+    }
+    
+    if (isNaN(d.getTime())) return null;
+    
+    let hh = '00', mm = '00';
+    if (hora && typeof hora === 'string') {
+      const parts = hora.replace(' HS', '').split(':'); // Remover " HS" si existe
+      if (parts.length >= 1) hh = parts[0].padStart(2, '0');
+      if (parts.length >= 2) mm = parts[1].padStart(2, '0');
+    }
+    
+    d.setHours(parseInt(hh, 10) || 0, parseInt(mm, 10) || 0, 0, 0);
+    const Y = d.getFullYear();
+    const M = String(d.getMonth() + 1).padStart(2, '0');
+    const D = String(d.getDate()).padStart(2, '0');
+    const H = String(d.getHours()).padStart(2, '0');
+    const Min = String(d.getMinutes()).padStart(2, '0');
+    return `${Y}-${M}-${D}T${H}:${Min}:00`;
   }
-  d.setHours(parseInt(hh, 10) || 0, parseInt(mm, 10) || 0, 0, 0);
-  const Y = d.getFullYear();
-  const M = String(d.getMonth() + 1).padStart(2, '0');
-  const D = String(d.getDate()).padStart(2, '0');
-  const H = String(d.getHours()).padStart(2, '0');
-  const Min = String(d.getMinutes()).padStart(2, '0');
-  return `${Y}-${M}-${D}T${H}:${Min}:00`;
-}
 
 static buildCirugiaPayload(data: any): any {
   const p: any = { ...data };
@@ -276,6 +290,7 @@ static buildCirugiaPayload(data: any): any {
   // formatear fecha/hora a ISO LocalDateTime string
   p.fecha_hora_inicio = Helpers.formatLocalDateTime(p.fechaInicio, p.horaInicio);
   // eliminar auxiliares/no requeridos
+  delete p.servicioNombre
   delete p.pacienteId;
   delete p.quirofanoId;
   delete p.pacienteNombre;

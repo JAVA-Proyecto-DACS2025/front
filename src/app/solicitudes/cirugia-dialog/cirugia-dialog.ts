@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
@@ -7,6 +7,7 @@ import {
   MatDialogActions,
   MatDialogContent,
 } from '@angular/material/dialog';
+import { MatSelect } from '@angular/material/select';
 import { ICirugia } from '../../core/models/cirugia';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
 import { CirugiaService } from '../../core/services/cirugia-service';
@@ -48,6 +49,9 @@ import { SeleccionTurnos } from '../seleccion-turnos/seleccion-turnos';
   ],
 })
 export class CirugiaDialog {
+  @ViewChild('servicioSelect') servicioSelect!: MatSelect;
+  @ViewChild('quirofanoSelect') quirofanoSelect!: MatSelect;
+
   public form: FormGroup;
   public pacienteCtrl = new FormControl<string>('');
   public quirofanos: IQuirofano[] = [];
@@ -65,10 +69,10 @@ export class CirugiaDialog {
       id: [null],
       pacienteId: [null],
       pacienteNombre: [''],
-      quirofano: [''],
       quirofanoId: [null],
-      servicio: [''],
+      quirofanoNombre: [''],
       servicioId: [null],
+      servicioNombre: [''],
       // fecha como Date y hora como string "HH:MM"
       fechaInicio: [null],
       horaInicio: [''],
@@ -89,8 +93,11 @@ export class CirugiaDialog {
           dni: (this.data as any)?.dni,
         })
       );
+    } else {
+      // En modo creación, cargar quirófanos y servicios automáticamente
+      this.onQuirofanoOpened();
+      this.openSeleccionServicios();
     }
-    this.onQuirofanoOpened();
   }
 
   // Construye un objeto parcheado para inicializar el formulario
@@ -98,6 +105,17 @@ export class CirugiaDialog {
     const patch: any = {
       ...data,
     };
+    console.log('🔵 buildPatch data:', data);
+
+    // Guardar el nombre del servicio para mostrarlo sin necesidad de cargar la lista
+    if (data.servicio) {
+      patch.servicioNombre = data.servicio;
+    }
+
+    // Guardar el nombre del quirófano para mostrarlo sin necesidad de cargar la lista
+    if (data.quirofano) {
+      patch.quirofanoNombre = data.quirofano;
+    }
 
     // Formatear horaInicio a HH:MM hs si viene en otro formato
     if (data.horaInicio) {
@@ -212,16 +230,35 @@ export class CirugiaDialog {
     });
   }
 
+  switchToSelectAndLoad() {
+    // Cargar servicios y luego abrir el select
+    this.openSeleccionServicios();
+    // Esperar un tick para que se renderice el select y luego abrirlo
+    setTimeout(() => {
+      if (this.servicioSelect) {
+        this.servicioSelect.open();
+      }
+    }, 100);
+  }
+
+  switchToSelectAndLoadQuirofano() {
+    // Cargar quirófanos y luego abrir el select
+    this.onQuirofanoOpened();
+    // Esperar un tick para que se renderice el select y luego abrirlo
+    setTimeout(() => {
+      if (this.quirofanoSelect) {
+        this.quirofanoSelect.open();
+      }
+    }, 100);
+  }
+
   openSeleccionServicios() {
-    console.log('🔵 openSeleccionServicios disparado!', 'servicios.length:', this.servicios.length);
     if (this.servicios.length > 0) {
-      console.log('⚠️ Ya hay servicios cargados, no se hace request');
       return;
     }
-    console.log('📡 Cargando servicios desde backend...');
+
     this.cirugiaService.getServicios().subscribe((resp: any) => {
       this.servicios = resp?.data || resp || [];
-      console.log('✅ Servicios cargados:', this.servicios);
     });
   }
 
@@ -230,12 +267,12 @@ export class CirugiaDialog {
     const ref = this.dialog.open(SeleccionTurnos, {
       width: '960px',
       maxHeight: '90vh',
-      data: { 
-        days: 7, 
-        startHour: '08:00', 
-        endHour: '17:30', 
+      data: {
+        days: 7,
+        startHour: '08:00',
+        endHour: '17:30',
         intervalMinutes: 30,
-        servicioId: servicioId || 0
+        servicioId: servicioId || 0,
       },
     });
 
@@ -245,7 +282,7 @@ export class CirugiaDialog {
       const mm = (result.date.getMonth() + 1).toString().padStart(2, '0');
       const yyyy = result.date.getFullYear();
       const fechaFormateada = `${dd}/${mm}/${yyyy}`;
-      
+
       this.form.patchValue({
         fechaInicio: fechaFormateada,
         horaInicio: `${result.time} HS`,
@@ -273,4 +310,3 @@ export class CirugiaDialog {
     return !!this.form.value.id;
   }
 }
-  

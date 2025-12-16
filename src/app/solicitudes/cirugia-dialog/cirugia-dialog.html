@@ -20,7 +20,25 @@
     <!-- Quirofano -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Quirófano</mat-label>
-      <mat-select formControlName="quirofanoId" >  
+      <!-- Mostrar input readonly cuando hay ID pero quirófanos no están cargados -->
+      <input *ngIf="form.get('quirofanoId')?.value && quirofanos.length === 0" 
+             matInput 
+             [value]="form.get('quirofanoNombre')?.value"
+             (click)="switchToSelectAndLoadQuirofano()"
+             style="cursor: pointer;"
+             readonly>
+      <button *ngIf="form.get('quirofanoId')?.value && quirofanos.length === 0"
+              mat-icon-button 
+              matSuffix 
+              type="button"
+              (click)="switchToSelectAndLoadQuirofano()" 
+              aria-label="Cambiar quirófano">
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <!-- Mostrar select cuando quirófanos están cargados o no hay ID preseleccionado -->
+      <mat-select #quirofanoSelect
+                  *ngIf="!form.get('quirofanoId')?.value || quirofanos.length > 0"
+                  formControlName="quirofanoId">  
         <mat-option *ngFor="let q of quirofanos" [value]="q.id">
           {{ q.nombre }}
         </mat-option>
@@ -28,9 +46,27 @@
     </mat-form-field>
 
     <!-- Servicio -->
-    <mat-form-field appearance="outline" class="full-width" (click)="openSeleccionServicios()">
+    <mat-form-field appearance="outline" class="full-width">
       <mat-label>Servicio</mat-label>
-      <mat-select formControlName="servicioId">  
+      <!-- Mostrar input readonly cuando hay ID pero servicios no están cargados -->
+      <input *ngIf="form.get('servicioId')?.value && servicios.length === 0" 
+             matInput 
+             [value]="form.get('servicioNombre')?.value"
+             (click)="switchToSelectAndLoad()"
+             style="cursor: pointer;"
+             readonly>
+      <button *ngIf="form.get('servicioId')?.value && servicios.length === 0"
+              mat-icon-button 
+              matSuffix 
+              type="button"
+              (click)="switchToSelectAndLoad()" 
+              aria-label="Cambiar servicio">
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <!-- Mostrar select cuando servicios están cargados o no hay ID preseleccionado -->
+      <mat-select #servicioSelect
+                  *ngIf="!form.get('servicioId')?.value || servicios.length > 0"
+                  formControlName="servicioId">  
         <mat-option *ngFor="let s of servicios" [value]="s.id">
           {{ s.nombre }}
         </mat-option> 
