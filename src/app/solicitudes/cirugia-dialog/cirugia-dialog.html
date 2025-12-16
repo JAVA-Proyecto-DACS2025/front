@@ -28,28 +28,33 @@
     </mat-form-field>
 
     <!-- Servicio -->
-    <mat-form-field appearance="outline" class="full-width">
+    <mat-form-field appearance="outline" class="full-width" (click)="openSeleccionServicios()">
       <mat-label>Servicio</mat-label>
-      <input matInput formControlName="servicio" />
+      <mat-select formControlName="servicioId">  
+        <mat-option *ngFor="let s of servicios" [value]="s.id">
+          {{ s.nombre }}
+        </mat-option> 
+      </mat-select>
     </mat-form-field>
 
     <!-- Fecha y Hora inicio (DOS COLUMNAS) -->
     <div class="row two-columns">
-      <!-- Fecha: calendario -->
+      <!-- Fecha: completada desde selector de turnos -->
       <mat-form-field appearance="outline" class="half-width">
         <mat-label>Fecha inicio</mat-label>
-        <!-- abrir al focus/click como fallback de debug -->
-        <input matInput [matDatepicker]="picker" formControlName="fechaInicio" placeholder="dd/MM/yyyy"
-               (focus)="picker.open()" (click)="picker.open()">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+        <input matInput formControlName="fechaInicio" placeholder="dd/MM/yyyy" readonly>
       </mat-form-field>
 
-      <!-- Hora: input tipo time (HH:MM) -->
+      <!-- Hora: input completado desde selector de turnos (formato 24h) -->
       <mat-form-field appearance="outline" class="time-width">
         <mat-label>Hora inicio</mat-label>
-        <input matInput type="time" formControlName="horaInicio" placeholder="HH:MM">
+        <input matInput type="text" formControlName="horaInicio" placeholder="HH:MM" readonly>
       </mat-form-field>
+
+      <!-- Botón externo para seleccionar turno -->
+      <button mat-icon-button class="turno-button" type="button" (click)="openSeleccionTurnos()" aria-label="Seleccionar turno">
+        <mat-icon>calendar_today</mat-icon>
+      </button>
     </div>
 
     <!-- Estado -->

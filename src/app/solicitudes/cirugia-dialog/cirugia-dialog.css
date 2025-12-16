@@ -1,7 +1,7 @@
 /* disposición: dos columnas para fecha+hora, resto en columna */
 .row.two-columns {
   display: flex;
-  gap: 16px;
+  gap: 10px;
   align-items: flex-start;
   margin-bottom: 8px;
 }
@@ -16,6 +16,30 @@
 .time-width {
   flex: 0 0 120px;
   min-width: 100px;
+}
+
+/* Botón externo del selector de turnos */
+.turno-button {
+  flex: 0 0 auto;
+  height: 56px; /* alineado con la altura del mat-form-field outline */
+  width: 56px;
+  box-sizing: border-box;
+  border: 1px solid rgba(0,0,0,0.38); /* similar al borde de outline */
+  border-radius: 4px;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+}
+
+.turno-button:hover {
+  background: #f6f6f6;
+}
+
+.turno-button:focus-visible {
+  outline: 2px solid rgba(25,118,210,0.6);
+  outline-offset: 1px;
 }
 
 /* campos que deben ocupar el ancho total (ambas columnas) */

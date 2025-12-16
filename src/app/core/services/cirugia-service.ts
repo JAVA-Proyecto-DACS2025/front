@@ -36,4 +36,13 @@ export class CirugiaService extends BaseApiService {
       equipo
     );
   }
+
+  getTurnosDisponibles(servicioId: number, cantidadProximosDias: number) {
+    const params = { servicioId, cantidadProximosDias };
+    return this.get<IApiResponse<any>>('/cirugia/horarios-disponibles', params);
+  }
+
+  getServicios() {
+    return this.get<IApiResponse<any>>('/cirugia/servicios');
+  }
 }

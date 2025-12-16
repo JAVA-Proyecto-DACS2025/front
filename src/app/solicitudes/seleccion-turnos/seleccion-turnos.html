@@ -1,0 +1,23 @@
+<div class="turnos-container">
+	<div class="layout">
+		<aside class="sidebar">
+			<div class="days-list">
+				<button mat-button class="day-item" *ngFor="let col of columns; index as i"
+								[class.active]="i === selectedIndex" (click)="selectDay(i)">
+					{{ col.title }}
+				</button>
+			</div>
+		</aside>
+		<section class="content">
+			<div class="day-header">{{ columns[selectedIndex].title }}</div>
+			<div class="slots">
+				<button mat-stroked-button class="slot-btn"
+								*ngFor="let s of columns[selectedIndex]?.slots"
+								(click)="select(s)">
+					{{ s.label }}
+				</button>
+			</div>
+		</section>
+	</div>
+	<div class="legend">Seleccioná un día y un horario para autocompletar fecha y hora.</div>
+</div>

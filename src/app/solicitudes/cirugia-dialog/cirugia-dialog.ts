@@ -25,6 +25,7 @@ import { Helpers } from '../../core/utils/helpers';
 import { PacienteListLite } from '../../shared/paciente-list-lite/paciente-list-lite';
 import { QuirofanoService } from '../../core/services/quirofano-service';
 import { IQuirofano } from '../../core/models/quirofano';
+import { SeleccionTurnos } from '../seleccion-turnos/seleccion-turnos';
 
 @Component({
   standalone: true,
@@ -50,6 +51,7 @@ export class CirugiaDialog {
   public form: FormGroup;
   public pacienteCtrl = new FormControl<string>('');
   public quirofanos: IQuirofano[] = [];
+  public servicios: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -66,6 +68,7 @@ export class CirugiaDialog {
       quirofano: [''],
       quirofanoId: [null],
       servicio: [''],
+      servicioId: [null],
       // fecha como Date y hora como string "HH:MM"
       fechaInicio: [null],
       horaInicio: [''],
@@ -78,7 +81,8 @@ export class CirugiaDialog {
 
   ngOnInit() {
     if (this.data) {
-      this.form.patchValue(this.data);
+      const patchData = this.buildPatch(this.data);
+      this.form.patchValue(patchData);
       this.pacienteCtrl.setValue(
         this.formatPacienteDisplay({
           nombre: (this.data as any)?.paciente,
@@ -88,24 +92,37 @@ export class CirugiaDialog {
     }
     this.onQuirofanoOpened();
   }
-  // // Construye un objeto parcheado para inicializar el formulario
-  // private buildPatch(data: any): any {
-  //   const patch: any = {
-  //     ...data,
-  //   };
 
-  //   if (data.fecha_hora_inicio) {
-  //     const d = new Date(data.fecha_hora_inicio);
-  //     if (!isNaN(d.getTime())) {
-  //       patch.fecha_inicio = d;
-  //       patch.hora_inicio = `${String(d.getHours()).padStart(2, '0')}:${String(
-  //         d.getMinutes()
-  //       ).padStart(2, '0')}`;
-  //     }
-  //   }
+  // Construye un objeto parcheado para inicializar el formulario
+  private buildPatch(data: any): any {
+    const patch: any = {
+      ...data,
+    };
 
-  //   return patch;
-  // }
+    // Formatear horaInicio a HH:MM hs si viene en otro formato
+    if (data.horaInicio) {
+      const timeStr = String(data.horaInicio);
+      // Si tiene formato HH:MM:SS, extraer solo HH:MM
+      const match = timeStr.match(/^(\d{1,2}):(\d{2})/);
+      if (match) {
+        const hh = match[1].padStart(2, '0');
+        const mm = match[2];
+        patch.horaInicio = `${hh}:${mm} HS`;
+      } else if (!timeStr.includes('HS')) {
+        patch.horaInicio = `${timeStr} HS`;
+      }
+    }
+
+    // Formatear fechaInicio a dd/MM/yyyy si viene como Date
+    if (data.fechaInicio && data.fechaInicio instanceof Date) {
+      const dd = data.fechaInicio.getDate().toString().padStart(2, '0');
+      const mm = (data.fechaInicio.getMonth() + 1).toString().padStart(2, '0');
+      const yyyy = data.fechaInicio.getFullYear();
+      patch.fechaInicio = `${dd}/${mm}/${yyyy}`;
+    }
+
+    return patch;
+  }
 
   guardar() {
     if (!this.form.valid) {
@@ -195,6 +212,47 @@ export class CirugiaDialog {
     });
   }
 
+  openSeleccionServicios() {
+    console.log('🔵 openSeleccionServicios disparado!', 'servicios.length:', this.servicios.length);
+    if (this.servicios.length > 0) {
+      console.log('⚠️ Ya hay servicios cargados, no se hace request');
+      return;
+    }
+    console.log('📡 Cargando servicios desde backend...');
+    this.cirugiaService.getServicios().subscribe((resp: any) => {
+      this.servicios = resp?.data || resp || [];
+      console.log('✅ Servicios cargados:', this.servicios);
+    });
+  }
+
+  openSeleccionTurnos() {
+    const servicioId = this.form.get('servicioId')?.value;
+    const ref = this.dialog.open(SeleccionTurnos, {
+      width: '960px',
+      maxHeight: '90vh',
+      data: { 
+        days: 7, 
+        startHour: '08:00', 
+        endHour: '17:30', 
+        intervalMinutes: 30,
+        servicioId: servicioId || 0
+      },
+    });
+
+    ref.afterClosed().subscribe((result?: { date: Date; time: string }) => {
+      if (!result) return;
+      const dd = result.date.getDate().toString().padStart(2, '0');
+      const mm = (result.date.getMonth() + 1).toString().padStart(2, '0');
+      const yyyy = result.date.getFullYear();
+      const fechaFormateada = `${dd}/${mm}/${yyyy}`;
+      
+      this.form.patchValue({
+        fechaInicio: fechaFormateada,
+        horaInicio: `${result.time} HS`,
+      });
+    });
+  }
+
   private formatPacienteDisplay(
     paciente: Partial<IPacienteLite & { apellido?: string; dni?: string }>
   ): string {
@@ -215,3 +273,4 @@ export class CirugiaDialog {
     return !!this.form.value.id;
   }
 }
+  

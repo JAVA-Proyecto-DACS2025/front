@@ -1,0 +1,42 @@
+:host {
+	display: block;
+}
+
+.turnos-container {
+	padding: 12px;
+	min-width: 720px;
+}
+
+.layout { display: flex; gap: 16px; }
+.sidebar {
+	width: 220px;
+	border-right: 1px solid #e0e0e0;
+	padding-right: 12px;
+}
+.content { flex: 1; min-width: 0; }
+
+.days-list { display: flex; flex-direction: column; gap: 6px; }
+.day-item { justify-content: flex-start; width: 100%; }
+.day-item.active { background: #efefff; }
+
+.day-header {
+	font-weight: 600;
+	color: #333;
+	margin-bottom: 8px;
+}
+
+.slots {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.slot-btn {
+	min-width: 84px;
+}
+
+.legend {
+	margin-top: 12px;
+	color: #666;
+	font-size: 12px;
+}

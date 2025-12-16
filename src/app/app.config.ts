@@ -1,11 +1,16 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, APP_INITIALIZER } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, APP_INITIALIZER, LOCALE_ID } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { KeycloakService } from 'keycloak-angular';
 import { keycloakInitOptions } from './core/config/keycloak.config';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es-AR';
 
 import { routes } from './app.routes';
+
+// Registrar locale español argentino
+registerLocaleData(localeEs);
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () => {
@@ -24,6 +29,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideBrowserGlobalErrorListeners(),
     provideNativeDateAdapter(),
+    { provide: LOCALE_ID, useValue: 'es-AR' },
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     KeycloakService,
