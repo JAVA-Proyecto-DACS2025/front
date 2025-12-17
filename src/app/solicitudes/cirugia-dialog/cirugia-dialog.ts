@@ -98,6 +98,14 @@ export class CirugiaDialog {
       this.onQuirofanoOpened();
       this.openSeleccionServicios();
     }
+    
+    // Escuchar cambios en servicioId para limpiar fecha y hora
+    this.form.get('servicioId')?.valueChanges.subscribe(() => {
+      this.form.patchValue({
+        fechaInicio: null,
+        horaInicio: ''
+      });
+    });
   }
 
   // Construye un objeto parcheado para inicializar el formulario

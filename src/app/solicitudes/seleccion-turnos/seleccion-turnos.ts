@@ -17,6 +17,8 @@ export class SeleccionTurnos {
   columns: DayColumn[] = [];
   selectedIndex = 0;
   servicioId = 0;
+  selectedDays = 7;
+  readonly daysOptions = [7, 14, 30, 60];
 
   constructor(
     private dialogRef: MatDialogRef<SeleccionTurnos>,
@@ -35,15 +37,27 @@ export class SeleccionTurnos {
     const endHour = data?.endHour ?? '17:30';
     const interval = data?.intervalMinutes ?? 30;
     this.servicioId = data?.servicioId ?? 0;
+    this.selectedDays = days;
+    // Prebuild a local skeleton while the backend responde
     this.columns = this.buildColumns(days, startHour, endHour, interval);
 
   }
 
   ngOnInit(): void {
-    this.cirugiaService.getTurnosDisponibles(this.servicioId, this.data?.days ?? 7).subscribe({
+    this.loadTurnos(this.selectedDays);
+  }
+
+  changeDays(days: number): void {
+    if (days === this.selectedDays) return;
+    this.loadTurnos(days);
+  }
+
+  private loadTurnos(days: number): void {
+    this.selectedDays = days;
+    this.selectedIndex = 0;
+    this.cirugiaService.getTurnosDisponibles(this.servicioId, days).subscribe({
       next: (resp) => {
-        // Handle both cases: resp.data or resp directly
-        const horarios = resp.data || resp;
+        const horarios = resp?.data ?? resp;
         if (Array.isArray(horarios) && horarios.length > 0) {
           this.buildColumnsFromBackend(horarios);
         } else {
