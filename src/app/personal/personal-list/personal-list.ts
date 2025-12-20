@@ -64,10 +64,16 @@ export class PersonalList {
     this.personalService
       .getPersonal(page, pageSize)
       .subscribe((response: any) => {
-        this.dataSource.data = response.data;
-        this.totalItems = response.total;
-        this.pageSize = response.pageSize;
-        this.page = response.page;
+        // Adaptar a la nueva estructura de paginación
+        const content = response?.data?.content || [];
+        const totalItems = response?.data?.totalElements || 0;
+        const pageNumber = response?.data?.number || page;
+        const pageSizeResp = response?.data?.size || pageSize;
+
+        this.dataSource.data = content;
+        this.totalItems = totalItems;
+        this.pageSize = pageSizeResp;
+        this.page = pageNumber;
       });
   }
 

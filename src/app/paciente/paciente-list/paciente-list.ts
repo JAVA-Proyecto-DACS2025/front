@@ -76,11 +76,17 @@ export class PacienteList {
   }
 
   loadPage(page: number, pageSize: number) {
-    this.pacienteService.getPacientes(page, pageSize).subscribe((response) => {
-      this.dataSource.data = response.data;
-      this.totalItems = response.pagination.totalItems; // <-- usar pagination
-      this.pageSize = response.pagination.pageSize;
-      this.page = response.pagination.page;
+    this.pacienteService.getPacientes(page, pageSize).subscribe((response: any) => {
+      // Adaptar a la nueva estructura de paginación
+      const content = response?.data?.content || [];
+      const totalItems = response?.data?.totalElements || 0;
+      const pageNumber = response?.data?.number || page;
+      const pageSizeResp = response?.data?.size || pageSize;
+
+      this.dataSource.data = content;
+      this.totalItems = totalItems;
+      this.pageSize = pageSizeResp;
+      this.page = pageNumber;
     });
   }
 

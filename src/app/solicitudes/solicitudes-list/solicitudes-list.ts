@@ -38,14 +38,14 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
   displayedColumns: string[] = [
     'fechaInicio',
     'horaInicio',
-    'paciente',
+    'pacienteNombre',
     'dni',
-    'servicio',
+    'servicioNombre',
     'estado',
     'tipo',
     'prioridad',
     'anestesia',
-    'quirofano',
+    'quirofanoNombre',
     'acciones',
     'medicos',
     'eliminar',
@@ -111,16 +111,23 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
 
     // si no está en caché, llamar al servidor
     this.cirugiaService.getCirugias(page, pageSize).subscribe(
-      (resp: IPaginatedResponse<ICirugia>) => {
-        this.dataSource.data = resp.data;
-        this.totalItems = resp.pagination.totalItems;
-        this.page = resp.pagination.page;
-        this.pageSize = resp.pagination.pageSize;
+      (resp: any) => {
+        // Adaptar a la nueva estructura de paginación
+        const content = resp?.data?.content || [];
+        const totalItems = resp?.data?.totalElements || 0;
+        const totalPages = resp?.data?.totalPages || 1;
+        const pageNumber = resp?.data?.number || page;
+        const pageSizeResp = resp?.data?.size || pageSize;
+
+        this.dataSource.data = content;
+        this.totalItems = totalItems;
+        this.page = pageNumber;
+        this.pageSize = pageSizeResp;
 
         // guardar en caché
         this.pageCache.set(cacheKey, {
-          data: resp.data,
-          total: resp.pagination.totalItems,
+          data: content,
+          total: totalItems,
         });
 
         if (this.paginator) {

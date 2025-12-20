@@ -99,17 +99,17 @@
 /* Anchos fijos para cada columna */
 .mat-column-fechaInicio { width: 80px !important; min-width: 80px; max-width: 80px; }
 .mat-column-horaInicio  { width: 75px !important; min-width: 75px; max-width: 75px; }
-.mat-column-paciente    { width: 100px !important; min-width: 100px; max-width: 100px; }
+.mat-column-pacienteNombre    { width: 100px !important; min-width: 100px; max-width: 100px; }
 .mat-column-dni         { width: 90px !important; min-width: 90px; max-width: 90px; }
-.mat-column-servicio    { width: 90px !important; min-width: 90px; max-width: 90px; }
+.mat-column-servicioNombre    { width: 100px !important; min-width: 100px; max-width: 100px; }
 .mat-column-estado      { width: 90px !important; min-width: 90px; max-width: 90px; }
 .mat-column-tipo        { width: 90px !important; min-width: 90px; max-width: 90px; }
 .mat-column-prioridad   { width: 90px !important; min-width: 90px; max-width: 90px; }
 .mat-column-anestesia   { width: 90px !important; min-width: 90px; max-width: 90px; }
-.mat-column-quirofano   { width: 90px !important; min-width: 90px; max-width: 90px; }
-.mat-column-medicos     { width: 30px !important; min-width: 30px; max-width: 30px; }
-.mat-column-acciones    { width: 30px !important; min-width: 30px; max-width: 30px; }
-.mat-column-eliminar    { width: 40px !important; min-width: 40px; max-width: 40px; }
+.mat-column-quirofanoNombre   { width: 90px !important; min-width: 90px; max-width: 90px; }
+.mat-column-medicos     { width: 33px !important; min-width: 33px; max-width: 33px; }
+.mat-column-acciones    { width: 33px !important; min-width: 33px; max-width: 33px; }
+.mat-column-eliminar    { width: 33px !important; min-width: 33px; max-width: 33px; }
 
 /* Evitar que el texto desborde las celdas */
 .tabla-solicitudes th,
