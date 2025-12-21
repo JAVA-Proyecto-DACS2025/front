@@ -87,9 +87,9 @@ export class PacienteListLite implements OnInit, AfterViewInit {
     }
 
     this.pacienteService.getPacientesLite(0, this.pageSize, this.filterText).subscribe((resp) => {
-      const content = resp?.data?.content ?? [];
+      const content = Array.isArray(resp?.data) ? resp.data : [];
       this.dataSource.data = content;
-      this.totalItems = resp?.data?.totalElements ?? content.length;
+      this.totalItems = content.length;
       if (this.paginator) {
         this.paginator.pageIndex = 0;
       }
@@ -103,11 +103,9 @@ export class PacienteListLite implements OnInit, AfterViewInit {
 
   private loadPage(page: number, pageSize: number) {
     this.pacienteService.getPacientesLite(page, pageSize, this.filterText).subscribe((resp) => {
-      const content = resp?.data?.content ?? [];
+      const content = Array.isArray(resp?.data) ? resp.data : [];
       this.dataSource.data = content;
-      this.totalItems = resp?.data?.totalElements ?? content.length;
-      this.pageSize = resp?.data?.size ?? pageSize;
-      this.page = resp?.data?.number ?? page;
+      this.totalItems = content.length;
       // Sincronizar paginator después de cargar
       if (this.paginator) {
         this.paginator.pageIndex = this.page;

@@ -11,6 +11,7 @@ import { PacienteService } from '../../core/services/paciente';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { PacienteDialog } from '../paciente-dialog/paciente-dialog';
 import { IPacienteExterno } from '../../core/models/paciente-externo';
+import { IApiResponse } from '../../core/models/api-response';
 
 @Component({
   selector: 'app-paciente-hospital-list',
@@ -59,14 +60,13 @@ export class PacienteHospitalListComponent implements OnInit {
   }
 
   loadPage(page: number, pageSize: number) {
-    // TODO: reemplaza con llamada a tu servicio
     this.pacienteService.getPacientesExternos(pageSize).subscribe((data) => {
-      this.dataSource.data = data;
-      this.totalItems = data.length;
+      this.dataSource.data = data.data;
+      this.totalItems = data.data.length;
       this.page = page;
       this.pageSize = pageSize;
     });
-
+    
     if (this.paginator) {
       this.paginator.pageIndex = this.page;
       this.paginator.pageSize = this.pageSize;

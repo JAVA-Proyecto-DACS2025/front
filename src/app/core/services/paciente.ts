@@ -5,7 +5,7 @@ import { API_ENDPOINTS } from '../constants/api-endpoints';
 import { HttpParams, HttpSentEvent, HttpStatusCode } from '@angular/common/http';
 import { IPaciente, IPacienteLite } from '../models/paciente';
 import { IPacienteExterno } from '../models/paciente-externo';
-import { IPaginatedResponse } from '../models/api-response';
+import { IApiResponse, IPaginatedResponse } from '../models/api-response';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +16,8 @@ export class PacienteService extends BaseApiService {
   }
 
   // Se utiliza una api que genera datos de pacientes externos aleatorios
-  getPacientesExternos(cantidad: number): Observable<IPacienteExterno[]> {
-    return this.get<IPacienteExterno[]>(API_ENDPOINTS.BFF.PACIENTES_EXTERNOS, { cantidad });
+  getPacientesExternos(cantidad: number): Observable<IApiResponse<IPacienteExterno[]>> {
+    return this.get<IApiResponse<IPacienteExterno[]>>(API_ENDPOINTS.BFF.PACIENTES_EXTERNOS, { cantidad });
   }
 
   getPacientes(page = 0, pageSize = 16) {
