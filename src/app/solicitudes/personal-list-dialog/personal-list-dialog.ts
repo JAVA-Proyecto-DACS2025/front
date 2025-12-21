@@ -72,11 +72,15 @@ export class PersonalListDialog implements OnInit {
 
   loadPage(page: number, pageSize: number, q: string) {
     this.personalService.searchPersonalLite(page, pageSize, q ?? '').subscribe((resp: any) => {
-      this.dataSource.data = resp?.data ?? [];
-      this.totalItems = resp?.totalItems ?? this.dataSource.data.length;
+      // Adaptar a la estructura paginada del backend
+      const data = resp?.data;
+      const content = Array.isArray(data?.content) ? data.content : [];
+      const totalItems = typeof data?.totalElements === 'number' ? data.totalElements : content.length;
+      this.dataSource.data = content;
+      this.totalItems = totalItems;
       if (this.paginator) {
-        this.paginator.pageIndex = page;
-        this.paginator.pageSize = pageSize;
+        this.paginator.pageIndex = typeof data?.number === 'number' ? data.number : page;
+        this.paginator.pageSize = typeof data?.size === 'number' ? data.size : pageSize;
       }
     });
   }

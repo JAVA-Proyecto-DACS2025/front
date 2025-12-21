@@ -14,7 +14,7 @@ export class Helpers {
    */
   static formatDate(date: Date | string, format: string = 'DD/MM/YYYY'): string {
     const d = new Date(date);
-    
+
     if (isNaN(d.getTime())) {
       return '';
     }
@@ -41,7 +41,7 @@ export class Helpers {
   static formatNumber(value: number, decimals: number = 0): string {
     return new Intl.NumberFormat('es-ES', {
       minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals
+      maximumFractionDigits: decimals,
     }).format(value);
   }
 
@@ -51,7 +51,7 @@ export class Helpers {
   static formatCurrency(value: number, currency: string = 'EUR'): string {
     return new Intl.NumberFormat('es-ES', {
       style: 'currency',
-      currency: currency
+      currency: currency,
     }).format(value);
   }
 
@@ -68,7 +68,10 @@ export class Helpers {
    */
   static capitalizeWords(str: string): string {
     if (!str) return '';
-    return str.split(' ').map(word => this.capitalize(word)).join(' ');
+    return str
+      .split(' ')
+      .map((word) => this.capitalize(word))
+      .join(' ');
   }
 
   /**
@@ -116,11 +119,11 @@ export class Helpers {
    */
   static formatFileSize(bytes: number): string {
     if (bytes === 0) return '0 Bytes';
-    
+
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
+
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
@@ -150,7 +153,7 @@ export class Helpers {
       if (!inThrottle) {
         func.apply(this, args);
         inThrottle = true;
-        setTimeout(() => inThrottle = false, limit);
+        setTimeout(() => (inThrottle = false), limit);
       }
     };
   }
@@ -161,7 +164,7 @@ export class Helpers {
   static deepClone<T>(obj: T): T {
     if (obj === null || typeof obj !== 'object') return obj;
     if (obj instanceof Date) return new Date(obj.getTime()) as any;
-    if (obj instanceof Array) return obj.map(item => this.deepClone(item)) as any;
+    if (obj instanceof Array) return obj.map((item) => this.deepClone(item)) as any;
     if (typeof obj === 'object') {
       const clonedObj = {} as any;
       for (const key in obj) {
@@ -181,21 +184,21 @@ export class Helpers {
     if (obj1 === obj2) return true;
     if (obj1 == null || obj2 == null) return false;
     if (typeof obj1 !== typeof obj2) return false;
-    
+
     if (typeof obj1 === 'object') {
       const keys1 = Object.keys(obj1);
       const keys2 = Object.keys(obj2);
-      
+
       if (keys1.length !== keys2.length) return false;
-      
+
       for (const key of keys1) {
         if (!keys2.includes(key)) return false;
         if (!this.isEqual(obj1[key], obj2[key])) return false;
       }
-      
+
       return true;
     }
-    
+
     return obj1 === obj2;
   }
 
@@ -233,25 +236,27 @@ export class Helpers {
    */
   static hexToRgb(hex: string): { r: number; g: number; b: number } | null {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
+    return result
+      ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        }
+      : null;
   }
 
   /**
    * Convierte RGB a hex
    */
   static rgbToHex(r: number, g: number, b: number): string {
-    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   }
 
   static formatLocalDateTime(fecha: any, hora?: string): string | null {
     if (!fecha) return null;
-    
+
     let d: Date;
-    
+
     // Si es string en formato dd/MM/yyyy o dd/MM/yyyy (con o sin HS)
     if (typeof fecha === 'string' && fecha.includes('/')) {
       const partes = fecha.split(' ')[0]; // Remover " HS" si existe
@@ -261,16 +266,17 @@ export class Helpers {
       // Si es Date o string ISO
       d = fecha instanceof Date ? new Date(fecha) : new Date(fecha);
     }
-    
+
     if (isNaN(d.getTime())) return null;
-    
-    let hh = '00', mm = '00';
+
+    let hh = '00',
+      mm = '00';
     if (hora && typeof hora === 'string') {
       const parts = hora.replace(' HS', '').split(':'); // Remover " HS" si existe
       if (parts.length >= 1) hh = parts[0].padStart(2, '0');
       if (parts.length >= 2) mm = parts[1].padStart(2, '0');
     }
-    
+
     d.setHours(parseInt(hh, 10) || 0, parseInt(mm, 10) || 0, 0, 0);
     const Y = d.getFullYear();
     const M = String(d.getMonth() + 1).padStart(2, '0');
@@ -280,27 +286,19 @@ export class Helpers {
     return `${Y}-${M}-${D}T${H}:${Min}:00`;
   }
 
-static buildCirugiaPayload(data: any): any {
-  const p: any = { ...data };
-  // mapear ids a objetos anidados
-  const pacId = p.pacienteId != null ? Number(p.pacienteId) : null;
-  const qId = p.quirofanoId != null ? Number(p.quirofanoId) : null;
-  p.paciente =  pacId;
-  p.quirofano =  qId ;
-  // formatear fecha/hora a ISO LocalDateTime string
-  p.fecha_hora_inicio = Helpers.formatLocalDateTime(p.fechaInicio, p.horaInicio);
-  // eliminar auxiliares/no requeridos
-  delete p.servicioNombre
-  delete p.pacienteId;
-  delete p.quirofanoId;
-  delete p.pacienteNombre;
-  delete p.quirofanoNombre;
-  delete p.fechaInicio;
-  delete p.horaInicio;
-  return p;
-}
-
-  // Uso al guardar:
-  // const fechaSql = this.toSqlTimestamp(raw.fecha_hora_inicio, raw.hora);
-  // enviar payload.fecha_hora_inicio = fechaSql;
+  static buildCirugiaPayload(data: any): any {
+    // Crear un nuevo objeto solo con los campos de FrontResponse
+    return {
+      id: data.id ?? null,
+      pacienteId: data.pacienteId ?? null,
+      servicioId: data.servicioId ?? null,
+      prioridad: data.prioridad ?? '',
+      fechaInicio: data.fechaInicio ?? '',
+      horaInicio: data.horaInicio ?? '',
+      estado: data.estado ?? '',
+      anestesia: data.anestesia ?? '',
+      tipo: data.tipo ?? '',
+      quirofanoId: data.quirofanoId ?? null,
+    };
+  }
 }

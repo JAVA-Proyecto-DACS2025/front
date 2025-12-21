@@ -86,10 +86,10 @@ export class PacienteListLite implements OnInit, AfterViewInit {
       return;
     }
 
-    // Cuando hay filtro, carga búsqueda (cliente-side)
-    this.pacienteService.searchPacientes(this.filterText).subscribe((lista) => {
-      this.dataSource.data = lista ?? [];
-      this.totalItems = this.dataSource.data.length;
+    this.pacienteService.getPacientesLite(0, this.pageSize, this.filterText).subscribe((resp) => {
+      const content = resp?.data?.content ?? [];
+      this.dataSource.data = content;
+      this.totalItems = resp?.data?.totalElements ?? content.length;
       if (this.paginator) {
         this.paginator.pageIndex = 0;
       }
@@ -102,12 +102,12 @@ export class PacienteListLite implements OnInit, AfterViewInit {
   }
 
   private loadPage(page: number, pageSize: number) {
-    this.pacienteService.getPacientesLite(page, pageSize).subscribe((resp) => {
-      this.dataSource.data = resp?.data ?? [];
-      this.totalItems = resp?.pagination?.totalItems ?? this.dataSource.data.length;
-      this.pageSize = resp?.pagination?.pageSize ?? pageSize;
-      this.page = resp?.pagination?.page ?? page;
-      
+    this.pacienteService.getPacientesLite(page, pageSize, this.filterText).subscribe((resp) => {
+      const content = resp?.data?.content ?? [];
+      this.dataSource.data = content;
+      this.totalItems = resp?.data?.totalElements ?? content.length;
+      this.pageSize = resp?.data?.size ?? pageSize;
+      this.page = resp?.data?.number ?? page;
       // Sincronizar paginator después de cargar
       if (this.paginator) {
         this.paginator.pageIndex = this.page;

@@ -89,7 +89,7 @@ export class CirugiaDialog {
       this.form.patchValue(patchData);
       this.pacienteCtrl.setValue(
         this.formatPacienteDisplay({
-          nombre: (this.data as any)?.paciente,
+          nombre: (this.data as any)?.pacienteNombre,
           dni: (this.data as any)?.dni,
         })
       );
@@ -234,7 +234,9 @@ export class CirugiaDialog {
       return;
     }
     this.quirofanoService.getQuirofanos().subscribe((resp: any) => {
-      this.quirofanos = resp;
+      // Adaptar a la estructura de IApiResponse con data como array
+      const data = resp?.data ?? resp ?? [];
+      this.quirofanos = Array.isArray(data) ? data : [];
     });
   }
 
@@ -266,7 +268,9 @@ export class CirugiaDialog {
     }
 
     this.cirugiaService.getServicios().subscribe((resp: any) => {
-      this.servicios = resp?.data || resp || [];
+      // Asegurar que siempre sea un array
+      const data = resp?.data ?? resp ?? [];
+      this.servicios = Array.isArray(data) ? data : [];
     });
   }
 

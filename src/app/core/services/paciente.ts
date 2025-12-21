@@ -25,9 +25,10 @@ export class PacienteService extends BaseApiService {
     return this.get<IPaginatedResponse<IPaciente>>(API_ENDPOINTS.BFF.PACIENTE, params);
   }
 
-  getPacientesLite(page = 0, pageSize = 16) {
-    const params = { page: String(page), size: String(pageSize) };
-    return this.get<IPaginatedResponse<IPacienteLite>>(API_ENDPOINTS.BFF.PACIENTE_LITE, params);
+  getPacientesLite(page = 0, pageSize = 16, filter: string = '') {
+    const params: any = { page: String(page), size: String(pageSize) };
+    if (filter) params['search'] = filter;
+    return this.get<any>(API_ENDPOINTS.BFF.PACIENTE_LITE, params);
   }
 
   createPaciente(paciente: IPacienteExterno): Observable<IPacienteExterno> {

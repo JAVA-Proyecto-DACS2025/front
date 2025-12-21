@@ -1,4 +1,5 @@
 <div class="pl-container">
+
   <header class="pl-header">
     <h3>Listado de personal</h3>
   </header>
@@ -8,11 +9,11 @@
       <mat-icon matPrefix>search</mat-icon>
       <input matInput placeholder="Buscar" [formControl]="searchControl" />
     </mat-form-field>
-    <button mat-stroked-button (click)="cancel()">Cerrar</button>
+    <button mat-stroked-button color="primary" (click)="cancel()">Cerrar</button>
   </div>
 
   <div class="pl-table-wrapper">
-    <table mat-table [dataSource]="dataSource" matSort>
+    <table mat-table [dataSource]="dataSource" matSort class="tabla-personal">
 
       <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
