@@ -149,7 +149,7 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
 
   openCirugia(cirugia?: ICirugia) {
     this.dialog
-      .open(CirugiaDialog, { width: '400px', data: cirugia })
+      .open(CirugiaDialog, {data: cirugia })
       .afterClosed()
       .subscribe((result) => {
         if (result) {

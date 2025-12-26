@@ -17,7 +17,7 @@
 /* Título */
 h2[mat-dialog-title] {
   font-size: 2rem;
-  font-weight: 400;
+  font-weight: 300;
   color: #ffffff;
   margin-bottom: 18px;
   letter-spacing: 0.5px;
@@ -29,7 +29,7 @@ h2[mat-dialog-title] {
 .content-dialog {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 4px;
 }
 
 mat-form-field {
@@ -54,8 +54,7 @@ mat-error {
 
 /* Acciones del diálogo */
 [mat-dialog-actions] {
-  padding: 12px 16px 16px 16px;
-  background: transparent;
+  padding: 0px 16px 16px 16px;
 }
 
 button[mat-button],
@@ -79,7 +78,76 @@ button[mat-raised-button]:hover {
 }
 
 button[mat-button]:hover {
-  background: #f0f0f7;
+  background: transparent !important;
 }
+
+/* Forzar estilos globales en el diálogo de Angular Material */
+::ng-deep .mat-mdc-dialog-container {
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  box-shadow: 0 8px 32px rgba(60, 60, 120, 0.13) !important;
+}
+
+::ng-deep .mat-mdc-dialog-container h2[mat-dialog-title] {
+  background: #6663ff;
+  display: block;
+  margin: -28px -22px 22px -28px;
+  padding: 22px 0 28px 0;
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+  color: #ffffff;
+  width: 452px;
+}
+
+/* Inputs y selects más compactos como en el otro diálogo */
+::ng-deep .mat-mdc-form-field-flex {
+  min-height: 60px !important;
+  height: 60px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+
+input[matInput], mat-select {
+  padding: 0px 0 !important;
+  font-size: 0.98rem;
+}
+
+/* Eliminar fondo gris de la barra de acciones y de los botones */
+::ng-deep .mat-mdc-dialog-actions,
+::ng-deep .mdc-dialog__actions,
+::ng-deep .mat-mdc-dialog-actions-align-end,
+::ng-deep .mat-mdc-dialog-actions.mdc-dialog__actions,
+::ng-deep .mat-mdc-dialog-actions.mdc-dialog__actions.mat-mdc-dialog-actions-align-end {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  filter: none !important;
+}
+
+::ng-deep .mat-mdc-dialog-actions::before,
+::ng-deep .mat-mdc-dialog-actions::after,
+::ng-deep .mdc-dialog__actions::before,
+::ng-deep .mdc-dialog__actions::after,
+::ng-deep .mat-mdc-dialog-actions-align-end::before,
+::ng-deep .mat-mdc-dialog-actions-align-end::after {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  filter: none !important;
+  display: none !important;
+  content: none !important;
+}
+
+::ng-deep .mat-mdc-dialog-actions button[mat-button]:hover,
+::ng-deep .mat-mdc-dialog-actions .mat-mdc-button:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+
 
 

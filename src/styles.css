@@ -7,20 +7,3 @@ body {
   background: linear-gradient(135deg, #4663e4 0%, #764ba2 100%);
 }
 
-.mat-mdc-dialog-container {
-  border-radius: 18px !important;
-  overflow: hidden !important;
-  box-shadow: 0 8px 32px rgba(60, 60, 120, 0.13) !important;
-}
-
-/* Fondo especial para el título del diálogo Angular Material */
-.mat-mdc-dialog-container h2[mat-dialog-title] {
-  background: #6663ff;
-  display: block;
-  margin: -28px -22px 22px -28px;
-  padding: 22px 0 28px 0;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  color: #35357a;
-  width: 452px;
-}
