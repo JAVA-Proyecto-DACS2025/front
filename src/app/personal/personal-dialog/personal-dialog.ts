@@ -47,6 +47,7 @@ export class PersonalDialogComponent {
     this.form = this.fb.group({
       id: [null],
       nombre: [''],
+      apellido: [''],
       dni: [''],
       legajo: [''],
       especialidad: [''],

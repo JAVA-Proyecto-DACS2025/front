@@ -41,7 +41,18 @@ export class PersonalList {
   constructor(private personalService: PersonalService, private dialog: MatDialog) {}
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['legajo', 'nombre', 'dni', 'especialidad', 'rol', 'estado', 'telefono', 'editar', 'eliminar'];   //Agregar matricula (No todos estos son medicos)??
+  displayedColumns: string[] = [
+    'legajo',
+    'nombre',
+    'apellido',
+    'dni',
+    'especialidad',
+    'rol',
+    'estado',
+    'telefono',
+    'editar',
+    'eliminar',
+  ];
 
   ngOnInit() {
     this.loadPage(this.page, this.pageSize);
@@ -61,20 +72,18 @@ export class PersonalList {
   }
 
   loadPage(page: number, pageSize: number) {
-    this.personalService
-      .getPersonal(page, pageSize)
-      .subscribe((response: any) => {
-        // Adaptar a la nueva estructura de paginación
-        const content = response?.data?.content || [];
-        const totalItems = response?.data?.totalElements || 0;
-        const pageNumber = response?.data?.number || page;
-        const pageSizeResp = response?.data?.size || pageSize;
+    this.personalService.getPersonal(page, pageSize).subscribe((response: any) => {
+      // Adaptar a la nueva estructura de paginación
+      const content = response?.data?.content || [];
+      const totalItems = response?.data?.totalElements || 0;
+      const pageNumber = response?.data?.number || page;
+      const pageSizeResp = response?.data?.size || pageSize;
 
-        this.dataSource.data = content;
-        this.totalItems = totalItems;
-        this.pageSize = pageSizeResp;
-        this.page = pageNumber;
-      });
+      this.dataSource.data = content;
+      this.totalItems = totalItems;
+      this.pageSize = pageSizeResp;
+      this.page = pageNumber;
+    });
   }
 
   applyFilter(arg0: any) {
@@ -84,7 +93,7 @@ export class PersonalList {
   deletePersonal(id: number) {
     const ref = this.dialog.open(ConfirmDialogComponent, {
       width: '320px',
-      data: { title: 'Eliminar personal', message: '¿Confirma eliminar este registro?' }
+      data: { title: 'Eliminar personal', message: '¿Confirma eliminar este registro?' },
     });
 
     ref.afterClosed().subscribe((confirmed: boolean) => {
@@ -99,13 +108,12 @@ export class PersonalList {
   openPersonal(IPersonal?: any) {
     // pasar el componente como primer parámetro y los datos en `data`
     const dialogRef = this.dialog.open(PersonalDialogComponent, {
-      width: '400px',
-      data: IPersonal || {}
+      data: IPersonal || {},
     });
-     dialogRef.afterClosed().subscribe((result: any) => {
-       if (result) {
-         this.loadPage(this.page, this.pageSize);
-       }
-     });
-   }
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.loadPage(this.page, this.pageSize);
+      }
+    });
+  }
 }

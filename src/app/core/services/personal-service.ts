@@ -26,9 +26,9 @@ export class PersonalService extends BaseApiService {
     return this.delete<IApiResponse>(`/personal/${id}`);
   }
 
-  searchPersonal(q: string) {          //BORRAR
-    return this.get<IApiResponse<IPersonal>>('/personal', { search: q });
-  }
+  // searchPersonal(q: string) {          //BORRAR
+  //   return this.get<IApiResponse<IPersonal>>('/personal', { search: q });
+  // }
 
   searchPersonalLite(page=0, pageSize=10, q: string) {
     return this.get<IPaginatedResponse<IPersonalLite[]>>('/personal/resumen', { page: Number(page), size: Number(pageSize), search: q });

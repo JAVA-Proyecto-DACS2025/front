@@ -287,18 +287,60 @@ export class Helpers {
   }
 
   static buildCirugiaPayload(data: any): any {
-    // Crear un nuevo objeto solo con los campos de FrontResponse
-    return {
-      id: data.id ?? null,
-      pacienteId: data.pacienteId ?? null,
-      servicioId: data.servicioId ?? null,
-      prioridad: data.prioridad ?? '',
-      fechaInicio: data.fechaInicio ?? '',
-      horaInicio: data.horaInicio ?? '',
-      estado: data.estado ?? '',
-      anestesia: data.anestesia ?? '',
-      tipo: data.tipo ?? '',
-      quirofanoId: data.quirofanoId ?? null,
-    };
+      // Usar el mapeo avanzado para normalizar fecha/hora y campos, eliminando fechaInicio y horaInicio
+      const payload = Helpers.toFrontRequest(data);
+      if (payload) {
+        delete payload.fechaInicio;
+        delete payload.horaInicio;
+      }
+      return payload;
+    }
+
+    /**
+     * Mapea un objeto FrontResponse a FrontRequest, normalizando fecha y hora en fecha_hora_inicio
+     */
+    static toFrontRequest(front: any): any {
+      if (!front) return null;
+      const nuevo: any = {
+        id: front.id,
+        prioridad: front.prioridad,
+        estado: front.estado,
+        anestesia: front.anestesia,
+        tipo: front.tipo,
+        servicioId: front.servicioId,
+        pacienteId: front.pacienteId,
+        quirofanoId: front.quirofanoId,
+        // ...agrega aquí cualquier otro campo que tenga tu FrontRequest...
+      };
+
+      if (front.fechaInicio && front.horaInicio) {
+        try {
+          // Normalizar fecha: de dd/MM/yyyy a yyyy-MM-dd
+          let fechaStr = String(front.fechaInicio).trim();
+          if (fechaStr.includes('/')) {
+            const [d, m, y] = fechaStr.split('/');
+            fechaStr = `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+          }
+          // Normalizar hora: quitar " HS", asegurar formato HH:mm:ss
+          let horaStr = String(front.horaInicio).replace(' HS', '').trim();
+          const partes = horaStr.split(':');
+          if (partes.length === 2 && partes[0].length === 1) {
+            horaStr = '0' + horaStr;
+          }
+          if (horaStr.length === 5) {
+            horaStr += ':00';
+          }
+          // Combinar fecha y hora en formato ISO string (yyyy-MM-ddTHH:mm:ss)
+          const fechaHoraStr = `${fechaStr}T${horaStr}`;
+          nuevo.fecha_hora_inicio = fechaHoraStr;
+        } catch (e) {
+          console.error('Error combinando fechaInicio y horaInicio:', front.fechaInicio, front.horaInicio, e);
+          nuevo.fecha_hora_inicio = null;
+        }
+      } else {
+        nuevo.fecha_hora_inicio = null;
+      }
+      console.log('toFrontRequest - front:', front, '-> nuevo:', nuevo);
+      return nuevo;
   }
 }

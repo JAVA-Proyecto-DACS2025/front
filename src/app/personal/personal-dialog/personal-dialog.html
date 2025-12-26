@@ -3,9 +3,16 @@
   <div class="content-dialog">
     <!-- nombre -->
     <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Nombre y apellido</mat-label>
+      <mat-label>Nombre</mat-label>
       <input matInput formControlName="nombre" required />
       <mat-error *ngIf="form.get('nombre')?.hasError('required')"> </mat-error>
+    </mat-form-field>
+
+    <!-- apellido -->
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Apellido</mat-label>
+      <input matInput formControlName="apellido" required />
+      <mat-error *ngIf="form.get('apellido')?.hasError('required')"> </mat-error>
     </mat-form-field>
 
     <!-- dni -->

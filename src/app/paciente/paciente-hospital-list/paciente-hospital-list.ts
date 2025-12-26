@@ -43,7 +43,7 @@ export class PacienteHospitalListComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource<IPacienteExterno>([]);
   page = 0;
-  pageSize = 16;
+  pageSize = 10;
   totalItems = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
