@@ -9,13 +9,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { PersonalService } from '../../core/services/personal-service';
+import { PersonalService } from '../../core/services/personal.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
 import { PersonalDialogComponent } from '../../personal/personal-dialog/personal-dialog';
 import { PacienteHospitalListComponent } from '../paciente-hospital-list/paciente-hospital-list';
-import { PacienteService } from '../../core/services/paciente';
+import { PacienteService } from '../../core/services/paciente.service';
 import { IPaciente } from '../../core/models/paciente';
 import { PacienteDialog } from '../paciente-dialog/paciente-dialog';
 

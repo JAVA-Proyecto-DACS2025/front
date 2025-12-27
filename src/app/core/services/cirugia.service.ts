@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api.service';
 import { ICirugia } from '../models/cirugia';
-import { IApiResponse, IPaginatedResponse } from '../../core/models/api-response';
+import { IApiResponse, IPaginatedResponse } from '../models/api-response';
 import { IMiembroEquipoMedico } from '../models/miembro-equipo';
 import { IQuirofano } from '../models/quirofano';
 
@@ -21,6 +21,11 @@ export class CirugiaService extends BaseApiService {
     const params = { page: String(page), size: String(pageSize) };
     return this.get<IPaginatedResponse<ICirugia>>('/cirugia', params);
   }
+
+  getCirugiasPorFechas(fechaInicio: string, fechaFin: string) {
+    const params = { fechaInicio, fechaFin };
+    return this.get<IApiResponse<ICirugia[]>>('/cirugia/por-fechas', params);
+  }   
 
   deleteCirugia(cirugiaId: number) {
     return this.delete<void>(`/cirugia/${cirugiaId}`);

@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { PacienteService } from '../../core/services/paciente';
+import { PacienteService } from '../../core/services/paciente.service';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { PacienteDialog } from '../paciente-dialog/paciente-dialog';
 import { IPacienteExterno } from '../../core/models/paciente-externo';

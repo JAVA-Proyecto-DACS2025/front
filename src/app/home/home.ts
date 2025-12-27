@@ -4,11 +4,12 @@ import { RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { KeycloakService } from '../core/services/keycloak.service';
+import { Agenda } from "../shared/agenda/agenda";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, Agenda],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })

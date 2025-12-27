@@ -1,0 +1,35 @@
+<div class="agenda-kanban">
+  <div class="agenda-kanban-header">
+    <div class="agenda-title">
+      <span class="agenda-title-text">Cirugías programadas </span>
+    </div>
+   
+    <div class="agenda-nav">
+      <button mat-icon-button (click)="previousWeek()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+	   <div class="agenda-subtitle">{{ weekLabel }}</div>
+      <button mat-icon-button (click)="nextWeek()">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="agenda-kanban-body">
+    <div class="agenda-day-col" *ngFor="let day of weekDates; let i = index">
+      <div class="agenda-day-header">
+        <span class="agenda-day-title">{{ weekDays[i] }}</span>
+        <span class="agenda-day-date">{{ day | date : 'dd/MM' }}</span>
+      </div>
+      <div class="agenda-turnos-list">
+        <div
+          *ngFor="let turno of getTurnosForDay(day)"
+          class="agenda-turno-card"
+          [ngClass]="turno.color"
+        >
+          <div class="turno-hora">{{ turno.hora }}</div>
+          <div class="turno-paciente">{{ turno.descripcion }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

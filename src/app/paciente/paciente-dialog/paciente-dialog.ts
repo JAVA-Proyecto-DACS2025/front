@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { IPacienteExterno } from '../../core/models/paciente-externo';
-import { PacienteService } from '../../core/services/paciente';
+import { PacienteService } from '../../core/services/paciente.service';
 
 @Component({
   selector: 'app-paciente-dialog',

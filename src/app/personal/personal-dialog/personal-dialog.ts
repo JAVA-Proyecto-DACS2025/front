@@ -3,7 +3,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { PersonalService } from '../../core/services/personal-service';
+import { PersonalService } from '../../core/services/personal.service';
 import {
   MAT_DIALOG_DATA,
   MatDialog,

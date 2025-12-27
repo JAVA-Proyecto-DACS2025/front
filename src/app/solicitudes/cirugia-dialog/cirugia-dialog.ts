@@ -10,7 +10,7 @@ import {
 import { MatSelect } from '@angular/material/select';
 import { ICirugia } from '../../core/models/cirugia';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
-import { CirugiaService } from '../../core/services/cirugia-service';
+import { CirugiaService } from '../../core/services/cirugia.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -24,7 +24,7 @@ import { FormControl } from '@angular/forms';
 import { IPacienteLite } from '../../core/models/paciente'; // ajusta la ruta si hace falta
 import { Helpers } from '../../core/utils/helpers';
 import { PacienteListLite } from '../../shared/paciente-list-lite/paciente-list-lite';
-import { QuirofanoService } from '../../core/services/quirofano-service';
+import { QuirofanoService } from '../../core/services/quirofano.service';
 import { IQuirofano } from '../../core/models/quirofano';
 import { SeleccionTurnos } from '../seleccion-turnos/seleccion-turnos';
 

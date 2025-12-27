@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { PersonalService } from '../../core/services/personal-service';
+import { PersonalService } from '../../core/services/personal.service';
 import { MatDialog } from '@angular/material/dialog';
 import { PersonalDialogComponent } from '../personal-dialog/personal-dialog';
 import { MatDialogModule } from '@angular/material/dialog';

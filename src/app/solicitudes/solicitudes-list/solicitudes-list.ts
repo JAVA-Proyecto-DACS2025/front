@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { CirugiaService } from '../../core/services/cirugia-service';
+import { CirugiaService } from '../../core/services/cirugia.service';
 import { ICirugia } from '../../core/models/cirugia';
 import { IPaginatedResponse } from '../../core/models/api-response';
 import { Subscription } from 'rxjs';

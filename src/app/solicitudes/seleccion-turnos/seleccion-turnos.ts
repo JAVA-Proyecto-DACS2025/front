@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CirugiaService } from '../../core/services/cirugia-service';
+import { CirugiaService } from '../../core/services/cirugia.service';
 
 type Slot = { label: string; time: string; date: Date };
 type DayColumn = { date: Date; title: string; slots: Slot[] };

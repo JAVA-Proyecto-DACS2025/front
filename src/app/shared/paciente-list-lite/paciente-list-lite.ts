@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { PacienteService } from '../../core/services/paciente';
+import { PacienteService } from '../../core/services/paciente.service';
 import { IPacienteLite } from '../../core/models/paciente';
 
 @Component({
