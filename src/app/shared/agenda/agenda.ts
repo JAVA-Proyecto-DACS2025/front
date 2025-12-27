@@ -16,40 +16,7 @@ export class Agenda {
   weekDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   weekDates: Date[] = [];
   weekLabel = '';
-
-  // Mock de turnos: deberías reemplazar esto por tu fuente real de datos
-  turnos = [
-    {
-      fecha: this.getDateString(this.addDays(this.getStartOfWeek(new Date()), 0)),
-      hora: '08:00',
-      descripcion: 'Juan Martínez\nOrtopedia\nQuirófano A',
-      color: 'green',
-    },
-    {
-      fecha: this.getDateString(this.addDays(this.getStartOfWeek(new Date()), 0)),
-      hora: '10:30',
-      descripcion: 'Laura Sánchez\nOftalmología\nQuirófano C',
-      color: 'green',
-    },
-    {
-      fecha: this.getDateString(this.addDays(this.getStartOfWeek(new Date()), 1)),
-      hora: '09:00',
-      descripcion: 'Roberto Díaz\nCirugía General\nQuirófano B',
-      color: 'blue',
-    },
-    {
-      fecha: this.getDateString(this.addDays(this.getStartOfWeek(new Date()), 2)),
-      hora: '14:00',
-      descripcion: 'Ana García\nUrología\nQuirófano A',
-      color: 'yellow',
-    },
-    {
-      fecha: this.getDateString(this.addDays(this.getStartOfWeek(new Date()), 4)),
-      hora: '11:00',
-      descripcion: 'Carlos Ruiz\nTraumatología\nQuirófano D',
-      color: 'green',
-    },
-  ];
+  turnos: Array<{ fecha: string; hora: string; descripcion: string; color: string }> = [];
 
   constructor(private cirugiaService: CirugiaService) {
     this.currentWeekStart = this.getStartOfWeek(this.today);
