@@ -10,21 +10,21 @@ import { IQuirofano } from '../models/quirofano';
 })
 export class CirugiaService extends BaseApiService {
   createCirugia(data: ICirugia) {
-    return this.post<IApiResponse<ICirugia>>('/cirugia', data);
+    return this.post<IApiResponse<ICirugia>>('/cirugias', data);
   }
 
   updateCirugia(data: ICirugia) {
-    return this.put<IApiResponse<ICirugia>>(`/cirugia/${data.id}`, data);
+    return this.put<IApiResponse<ICirugia>>(`/cirugias/${data.id}`, data);
   }
 
   getCirugias(page = 0, pageSize = 16) {
-    const params = { page: String(page), size: String(pageSize) };
-    return this.get<IPaginatedResponse<ICirugia>>('/cirugia', params);
+    const params = { pagina: String(page), tamaño: String(pageSize) };
+    return this.get<IPaginatedResponse<ICirugia>>('/cirugias', params);
   }
 
   getCirugiasPorFechas(fechaInicio: string, fechaFin: string) {
     const params = { fechaInicio, fechaFin };
-    return this.get<IApiResponse<ICirugia[]>>('/cirugia/por-fechas', params);
+    return this.get<IApiResponse<ICirugia[]>>('/cirugias', params);
   }   
 
   deleteCirugia(cirugiaId: number) {

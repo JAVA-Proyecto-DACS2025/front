@@ -31,10 +31,11 @@ export class Agenda {
 
     this.cirugiaService
       .getCirugiasPorFechas(this.getDateString(start), this.getDateString(end))
-      .subscribe((response) => {
+      .subscribe((response: any) => {
         if (response && response.data) {
           console.log('Cirugías de la semana:', response.data);
-          this.turnos = response.data.map((cirugia) => {
+          const cirugias = (response.data.contenido || response.data || []);
+          this.turnos = cirugias.map((cirugia: any) => {
             return {
               fecha: this.getDateString(new Date(cirugia.fechaInicio)),
               hora: cirugia.horaInicio,

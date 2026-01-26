@@ -112,12 +112,12 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
     // si no está en caché, llamar al servidor
     this.cirugiaService.getCirugias(page, pageSize).subscribe(
       (resp: any) => {
-        // Adaptar a la nueva estructura de paginación
-        const content = resp?.data?.content || [];
-        const totalItems = resp?.data?.totalElements || 0;
-        const totalPages = resp?.data?.totalPages || 1;
-        const pageNumber = resp?.data?.number || page;
-        const pageSizeResp = resp?.data?.size || pageSize;
+        // Adaptar a la estructura real de la respuesta del backend
+        const content = resp?.data?.contenido || [];
+        const totalItems = resp?.data?.totalElementos || 0;
+        const totalPages = resp?.data?.totalPaginas || 1;
+        const pageNumber = resp?.data?.pagina || page;
+        const pageSizeResp = resp?.data?.tamaño || pageSize;
 
         this.dataSource.data = content;
         this.totalItems = totalItems;

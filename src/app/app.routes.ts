@@ -18,7 +18,7 @@ export const routes: Routes = [
   },
   {
     path: 'solicitudes',
-    loadComponent: () => import('./solicitudes/solicitudes').then((m) => m.SolicitudesComponent),
+    loadComponent: () => import('./cirugia/solicitudes').then((m) => m.SolicitudesComponent),
     canActivate: [RoleBGuard],
   },
   {
