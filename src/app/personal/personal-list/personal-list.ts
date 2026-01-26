@@ -73,11 +73,11 @@ export class PersonalList {
 
   loadPage(page: number, pageSize: number) {
     this.personalService.getPersonal(page, pageSize).subscribe((response: any) => {
-      // Adaptar a la nueva estructura de paginación
-      const content = response?.data?.content || [];
-      const totalItems = response?.data?.totalElements || 0;
-      const pageNumber = response?.data?.number || page;
-      const pageSizeResp = response?.data?.size || pageSize;
+      // Adaptar a la estructura real de la respuesta del backend
+      const content = response?.data?.contenido || [];
+      const totalItems = response?.data?.totalElementos || 0;
+      const pageNumber = response?.data?.pagina || page;
+      const pageSizeResp = response?.data?.tamaño || pageSize;
 
       this.dataSource.data = content;
       this.totalItems = totalItems;
