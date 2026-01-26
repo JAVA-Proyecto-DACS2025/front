@@ -76,12 +76,16 @@ export class SeleccionTurnos {
     const estado = 'DISPONIBLE';
     const quirofanoId = this.selectedQuirofanoId ?? 0;
     this.cirugiaService.getTurnosDisponibles(quirofanoId, this.getDateString(this.fechaHoy), this.getDateString(fechaLimite), 0, 300, estado).subscribe({
-      next: (resp) => {
-        const horarios = resp?.data ?? resp;
-        if (Array.isArray(horarios) && horarios.length > 0) {
+      next: (resp: any) => {
+        // La respuesta viene directamente con contenido (sin data wrapper)
+        const contenido = resp?.contenido ?? resp?.data?.contenido ?? [];
+        if (Array.isArray(contenido) && contenido.length > 0) {
+          // Extraer fechaHoraInicio de cada turno
+          const horarios = contenido.map((turno: any) => turno.fechaHoraInicio);
           this.buildColumnsFromBackend(horarios);
         } else {
           console.warn('No turnos available or invalid response format');
+          this.columns = [];
         }
       },
       error: (err) => {

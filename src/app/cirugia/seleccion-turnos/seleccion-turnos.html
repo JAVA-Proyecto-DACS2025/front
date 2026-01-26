@@ -28,7 +28,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="layout">
+	<div class="layout" *ngIf="columns.length > 0">
 		<aside class="sidebar">
 			<div class="days-list">
 				<button mat-button class="day-item" *ngFor="let col of columns; index as i"
@@ -38,7 +38,7 @@
 			</div>
 		</aside>
 		<section class="content">
-			<div class="day-header">{{ columns[selectedIndex].title }}</div>
+			<div class="day-header">{{ columns[selectedIndex]?.title }}</div>
 			<div class="slots">
 				<button mat-stroked-button class="slot-btn"
 								*ngFor="let s of columns[selectedIndex]?.slots"
@@ -47,6 +47,9 @@
 				</button>
 			</div>
 		</section>
+	</div>
+	<div class="no-data" *ngIf="columns.length === 0">
+		<p>No hay turnos disponibles para los filtros seleccionados.</p>
 	</div>
 	<div class="legend">Seleccioná un día y un horario para autocompletar fecha y hora.</div>
 </div>
