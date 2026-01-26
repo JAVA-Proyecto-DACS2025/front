@@ -285,6 +285,7 @@ export class CirugiaDialog {
         endHour: '17:30',
         intervalMinutes: 30,
         servicioId: servicioId || 0,
+        quirofanos: this.quirofanos,
       },
     });
 

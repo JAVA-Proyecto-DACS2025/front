@@ -1,16 +1,31 @@
 <h2 mat-dialog-title>Seleccionar Turno</h2>
 <div class="turnos-container">
 	<div class="filters">
-		<div class="filter-label">Próximos días:</div>
-		<div class="day-options">
-			<button mat-stroked-button
-					*ngFor="let d of daysOptions"
-					class="day-chip"
-					[color]="d === selectedDays ? 'primary' : undefined"
-					[class.active]="d === selectedDays"
-					(click)="changeDays(d)">
-				{{ d }} días
-			</button>
+		<div class="filter-row">
+			<div class="filter-label">Próximos días:</div>
+			<div class="day-options">
+				<button mat-stroked-button
+						*ngFor="let d of daysOptions"
+						class="day-chip"
+						[color]="d === selectedDays ? 'primary' : undefined"
+						[class.active]="d === selectedDays"
+						(click)="changeDays(d)">
+					{{ d }} días
+				</button>
+			</div>
+		</div>
+		<div class="filter-row" *ngIf="quirofanos.length > 0">
+			<div class="filter-label">Quirófano:</div>
+			<div class="day-options">
+				<button mat-stroked-button
+						*ngFor="let q of quirofanos"
+						class="day-chip"
+						[color]="q.id === selectedQuirofanoId ? 'primary' : undefined"
+						[class.active]="q.id === selectedQuirofanoId"
+						(click)="changeQuirofano(q.id)">
+					{{ q.nombre }}
+				</button>
+			</div>
 		</div>
 	</div>
 	<div class="layout">

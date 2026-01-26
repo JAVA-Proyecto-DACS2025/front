@@ -23,6 +23,8 @@ export class SeleccionTurnos {
     return d;
   })();
   selectedDays = 7;
+  quirofanos: any[] = [];
+  selectedQuirofanoId: number | null = null;
   readonly daysOptions = [7, 14, 30, 60];
 
   constructor(
@@ -35,6 +37,7 @@ export class SeleccionTurnos {
       endHour?: string;
       intervalMinutes?: number;
       servicioId?: number;
+      quirofanos?: any[];
     } | null
   ) {
     const days = data?.days ?? 7;
@@ -44,7 +47,10 @@ export class SeleccionTurnos {
     this.servicioId = data?.servicioId ?? 0;
     // Prebuild a local skeleton while the backend responde
     this.columns = this.buildColumns(days, startHour, endHour, interval);
-
+    this.quirofanos = data?.quirofanos ?? [];
+    if (this.quirofanos.length > 0) {
+      this.selectedQuirofanoId = this.quirofanos[0].id;
+    }
   }
 
   ngOnInit(): void {
@@ -56,13 +62,20 @@ export class SeleccionTurnos {
     this.loadTurnos(days);
   }
 
+  changeQuirofano(quirofanoId: number): void {
+    if (quirofanoId === this.selectedQuirofanoId) return;
+    this.selectedQuirofanoId = quirofanoId;
+    this.loadTurnos(this.selectedDays);
+  }
+
   private loadTurnos(days: number): void {
     this.selectedDays = days;
     this.selectedIndex = 0;
     var fechaLimite = new Date();
     fechaLimite.setDate(this.fechaHoy.getDate() + days);
     const estado = 'DISPONIBLE';
-    this.cirugiaService.getTurnosDisponibles(this.servicioId, this.getDateString(this.fechaHoy), this.getDateString(fechaLimite), 0, 16, estado).subscribe({
+    const quirofanoId = this.selectedQuirofanoId ?? 0;
+    this.cirugiaService.getTurnosDisponibles(quirofanoId, this.getDateString(this.fechaHoy), this.getDateString(fechaLimite), 0, 300, estado).subscribe({
       next: (resp) => {
         const horarios = resp?.data ?? resp;
         if (Array.isArray(horarios) && horarios.length > 0) {
