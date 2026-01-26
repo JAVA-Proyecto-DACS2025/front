@@ -28,26 +28,26 @@ export class CirugiaService extends BaseApiService {
   }   
 
   deleteCirugia(cirugiaId: number) {
-    return this.delete<void>(`/cirugia/${cirugiaId}`);
+    return this.delete<void>(`/cirugias/${cirugiaId}`);
   }
 
   getEquipoMedicoByCirugiaId(cirugiaId: number) {
-    return this.get<IApiResponse<IMiembroEquipoMedico[]>>(`/cirugia/${cirugiaId}/equipo-medico`);
+    return this.get<IApiResponse<IMiembroEquipoMedico[]>>(`/cirugias/${cirugiaId}/equipo-medico`);
   }
 
   saveEquipoMedico(equipo: IMiembroEquipoMedico, cirugiaId: number) {
     return this.post<IApiResponse<IMiembroEquipoMedico[]>>(
-      `/cirugia/${cirugiaId}/equipo-medico`,
+      `/cirugias/${cirugiaId}/equipo-medico`,
       equipo
     );
   }
 
-  getTurnosDisponibles(servicioId: number, cantidadProximosDias: number) {
-    const params = { servicioId, cantidadProximosDias };
-    return this.get<IApiResponse<any>>('/cirugia/horarios-disponibles', params);
+  getTurnosDisponibles(quirofanoId: number, fechaInicio: string, fechaFin: string, pagina: number, tamano: number, estado: string = '') {
+    const params = { fechaInicio, fechaFin, pagina, tamano, quirofanoId, estado };
+    return this.get<IApiResponse<any>>('/turnos', params);
   }
 
   getServicios() {
-    return this.get<IApiResponse<any>>('/cirugia/servicios');
+    return this.get<IApiResponse<any>>('/cirugias/servicios');
   }
 }

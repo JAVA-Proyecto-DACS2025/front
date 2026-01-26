@@ -297,7 +297,7 @@ export class Helpers {
     }
 
     /**
-     * Mapea un objeto FrontResponse a FrontRequest, normalizando fecha y hora en fecha_hora_inicio
+     * Mapea un objeto FrontResponse a FrontRequest, normalizando fecha y hora en fechaHoraInicio
      */
     static toFrontRequest(front: any): any {
       if (!front) return null;
@@ -332,13 +332,13 @@ export class Helpers {
           }
           // Combinar fecha y hora en formato ISO string (yyyy-MM-ddTHH:mm:ss)
           const fechaHoraStr = `${fechaStr}T${horaStr}`;
-          nuevo.fecha_hora_inicio = fechaHoraStr;
+          nuevo.fechaHoraInicio = fechaHoraStr;
         } catch (e) {
           console.error('Error combinando fechaInicio y horaInicio:', front.fechaInicio, front.horaInicio, e);
-          nuevo.fecha_hora_inicio = null;
+          nuevo.fechaHoraInicio = null;
         }
       } else {
-        nuevo.fecha_hora_inicio = null;
+        nuevo.fechaHoraInicio = null;
       }
       console.log('toFrontRequest - front:', front, '-> nuevo:', nuevo);
       return nuevo;

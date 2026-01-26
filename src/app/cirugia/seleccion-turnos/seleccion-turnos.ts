@@ -17,6 +17,11 @@ export class SeleccionTurnos {
   columns: DayColumn[] = [];
   selectedIndex = 0;
   servicioId = 0;
+  fechaHoy: Date = (() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  })();
   selectedDays = 7;
   readonly daysOptions = [7, 14, 30, 60];
 
@@ -37,7 +42,6 @@ export class SeleccionTurnos {
     const endHour = data?.endHour ?? '17:30';
     const interval = data?.intervalMinutes ?? 30;
     this.servicioId = data?.servicioId ?? 0;
-    this.selectedDays = days;
     // Prebuild a local skeleton while the backend responde
     this.columns = this.buildColumns(days, startHour, endHour, interval);
 
@@ -55,7 +59,10 @@ export class SeleccionTurnos {
   private loadTurnos(days: number): void {
     this.selectedDays = days;
     this.selectedIndex = 0;
-    this.cirugiaService.getTurnosDisponibles(this.servicioId, days).subscribe({
+    var fechaLimite = new Date();
+    fechaLimite.setDate(this.fechaHoy.getDate() + days);
+    const estado = 'DISPONIBLE';
+    this.cirugiaService.getTurnosDisponibles(this.servicioId, this.getDateString(this.fechaHoy), this.getDateString(fechaLimite), 0, 16, estado).subscribe({
       next: (resp) => {
         const horarios = resp?.data ?? resp;
         if (Array.isArray(horarios) && horarios.length > 0) {
@@ -165,5 +172,15 @@ export class SeleccionTurnos {
     const mm = (d.getMonth() + 1).toString().padStart(2, '0');
     const yyyy = d.getFullYear();
     return `${dd}/${mm}/${yyyy}`;
+  }
+
+  private getDateString(date: Date): string {
+    const yyyy = date.getFullYear();
+    const mm = (date.getMonth() + 1).toString().padStart(2, '0');
+    const dd = date.getDate().toString().padStart(2, '0');
+    const hh = date.getHours().toString().padStart(2, '0');
+    const min = date.getMinutes().toString().padStart(2, '0');
+    const ss = date.getSeconds().toString().padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}`;
   }
 }
