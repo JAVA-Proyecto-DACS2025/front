@@ -69,7 +69,7 @@
 .quirofano-filter {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
   flex-wrap: wrap;
 }
 
@@ -83,6 +83,14 @@
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+  flex: 1;
+}
+
+.agenda-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-left: auto;
 }
 
 .quirofano-chip {
@@ -109,13 +117,14 @@
 /* Grilla de agenda */
 .agenda-grid-container {
   overflow-x: auto;
+  overflow-y: visible;
   margin-top: 1rem;
 }
 
 .agenda-grid {
   width: 100%;
   border-collapse: collapse;
-  min-width: 900px;
+  table-layout: fixed;
 }
 
 .agenda-grid th,
@@ -129,17 +138,18 @@
   background: #f5f6fa;
   color: #444;
   font-weight: 600;
-  font-size: 0.85rem;
-  padding: 0.6rem 0.3rem;
+  font-size: 0.8rem;
+  padding: 0.5rem 0.2rem;
   text-align: center;
-  min-width: 70px;
+  width: calc((100% - 90px) / 11);
   position: sticky;
   top: 0;
 }
 
 .day-header-cell {
   background: #f5f6fa;
-  min-width: 100px;
+  width: 90px;
+  min-width: 90px;
   position: sticky;
   left: 0;
   z-index: 2;
@@ -155,37 +165,36 @@
   position: sticky;
   left: 0;
   z-index: 1;
-  min-width: 100px;
-  width: 100px;
-  padding: 0.5rem;
+  width: 90px;
+  min-width: 90px;
+  padding: 0.4rem;
   vertical-align: middle;
+  text-align: center;
 }
 
 .day-label {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.2rem;
+  align-items: center;
+  gap: 0.1rem;
 }
 
 .day-name {
   font-weight: 700;
   color: #333;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
 }
 
 .day-date {
   color: #666;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
 /* Celdas de horas */
 .hour-cell {
   vertical-align: top;
   padding: 0;
-  min-width: 80px;
-  width: 80px;
-  max-width: 80px;
+  width: calc((100% - 90px) / 11);
   height: 70px;
   background: #fff;
   transition: background 0.15s;

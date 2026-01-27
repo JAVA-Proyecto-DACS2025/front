@@ -2,22 +2,34 @@ import { Component } from '@angular/core';
 import { DatePipe, CommonModule, NgFor, NgClass } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { CirugiaService } from '../../core/services/cirugia.service';
 import { QuirofanoService } from '../../core/services/quirofano.service';
 import { IQuirofano } from '../../core/models/quirofano';
+import { CirugiaDialog } from '../../cirugia/cirugia-dialog/cirugia-dialog';
 
 interface TurnoAgenda {
+  id: number; // ID de la cirugía
   fecha: string;
   hora: string;
   horaFin: string;
   horaInicioNum: number; // hora inicio en formato numérico (8, 9, 10...)
+  minInicio: number; // minutos de inicio (0 o 30)
   horaFinNum: number; // hora fin en formato numérico
-  duracionHoras: number; // cantidad de columnas que ocupa
+  minFin: number; // minutos de fin (0 o 30)
+  duracionEnMedias: number; // duración en medias horas (ej: 1.5h = 3)
   descripcion: string;
   paciente: string;
+  pacienteId: number;
   servicio: string;
+  servicioId: number;
   quirofano: string;
   quirofanoId: number;
+  estado: string;
+  prioridad: string;
+  anestesia: string;
+  tipo: string;
+  dni: string;
   color: string;
 }
 
@@ -46,7 +58,8 @@ export class Agenda {
 
   constructor(
     private cirugiaService: CirugiaService,
-    private quirofanoService: QuirofanoService
+    private quirofanoService: QuirofanoService,
+    private dialog: MatDialog
   ) {
     this.currentWeekStart = this.getStartOfWeek(this.today);
     this.generateHorasJornada();
@@ -65,6 +78,10 @@ export class Agenda {
     this.quirofanoService.getQuirofanos().subscribe((resp: any) => {
       const data = resp?.data ?? resp ?? [];
       this.quirofanos = Array.isArray(data) ? data : [];
+      // Seleccionar el primer quirófano por defecto
+      if (this.quirofanos.length > 0 && this.selectedQuirofanoId === null) {
+        this.selectedQuirofanoId = this.quirofanos[0].id;
+      }
     });
   }
 
@@ -93,22 +110,36 @@ export class Agenda {
           this.turnos = cirugias.map((cirugia: any) => {
             const horaInicioStr = cirugia.horaInicio || '08:00';
             const horaFinStr = cirugia.horaFin || '09:00';
-            const [hhInicio] = horaInicioStr.split(':').map(Number);
-            const [hhFin] = horaFinStr.split(':').map(Number);
-            const duracion = Math.max(1, hhFin - hhInicio);
+            const [hhInicio, mmInicio] = horaInicioStr.split(':').map(Number);
+            const [hhFin, mmFin] = horaFinStr.split(':').map(Number);
+            
+            // Calcular duración en medias horas
+            const inicioEnMedias = hhInicio * 2 + (mmInicio >= 30 ? 1 : 0);
+            const finEnMedias = hhFin * 2 + (mmFin >= 30 ? 1 : 0);
+            const duracionEnMedias = Math.max(1, finEnMedias - inicioEnMedias);
             
             return {
+              id: cirugia.id,
               fecha: this.getDateString(new Date(cirugia.fechaInicio)),
               hora: horaInicioStr.substring(0, 5),
               horaFin: horaFinStr.substring(0, 5),
               horaInicioNum: hhInicio,
+              minInicio: mmInicio,
               horaFinNum: hhFin,
-              duracionHoras: duracion,
+              minFin: mmFin,
+              duracionEnMedias: duracionEnMedias,
               descripcion: `${cirugia.pacienteNombre}\n${cirugia.servicioNombre}\n${cirugia.quirofanoNombre}`,
               paciente: cirugia.pacienteNombre || '',
+              pacienteId: cirugia.pacienteId,
               servicio: cirugia.servicioNombre || '',
+              servicioId: cirugia.servicioId,
               quirofano: cirugia.quirofanoNombre || '',
               quirofanoId: cirugia.quirofanoId || 0,
+              estado: cirugia.estado || '',
+              prioridad: cirugia.prioridad || '',
+              anestesia: cirugia.anestesia || '',
+              tipo: cirugia.tipo || '',
+              dni: cirugia.dni || '',
               color: 'green',
             };
           });
@@ -158,16 +189,58 @@ export class Agenda {
     });
   }
 
-  // Calcula el ancho del turno basado en su duración
-  // Cada columna tiene 80px de ancho + 1px de borde
+  // Calcula el offset left del turno (50% si empieza a :30)
+  getTurnoLeft(turno: TurnoAgenda): string {
+    return turno.minInicio >= 30 ? '50%' : '0';
+  }
+
+  // Calcula el ancho del turno basado en su duración en medias horas
   getTurnoWidth(turno: TurnoAgenda): string {
-    const columnWidth = 81; // 80px + 1px border
-    const width = (turno.duracionHoras * columnWidth) - 4; // -4 para margen interno
-    return `${width}px`;
+    // Cada media hora = 50% de una columna
+    const widthPercent = turno.duracionEnMedias * 50;
+    // Ajustar para bordes entre celdas
+    const columnsCrossed = Math.ceil(turno.duracionEnMedias / 2);
+    return `calc(${widthPercent}% + ${Math.max(0, columnsCrossed - 1)}px)`;
   }
 
   getTurnosForDay(date: Date): TurnoAgenda[] {
     const dateStr = this.getDateString(date);
     return this.filteredTurnos.filter((t) => t.fecha === dateStr);
+  }
+
+  openCirugiaDialog(turno: TurnoAgenda) {
+    // Formatear fecha para el dialog
+    const [yyyy, mm, dd] = turno.fecha.split('-');
+    const fechaFormateada = `${dd}/${mm}/${yyyy}`;
+    
+    const dialogData = {
+      id: turno.id,
+      pacienteId: turno.pacienteId,
+      pacienteNombre: turno.paciente,
+      dni: turno.dni,
+      quirofanoId: turno.quirofanoId,
+      quirofano: turno.quirofano,
+      servicioId: turno.servicioId,
+      servicio: turno.servicio,
+      fechaInicio: fechaFormateada,
+      horaInicio: `${turno.hora} HS`,
+      estado: turno.estado,
+      prioridad: turno.prioridad,
+      anestesia: turno.anestesia,
+      tipo: turno.tipo,
+    };
+
+    const dialogRef = this.dialog.open(CirugiaDialog, {
+      width: '500px',
+      maxHeight: '90vh',
+      data: dialogData,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        // Si se guardó/actualizó, recargar la agenda
+        this.updateWeek();
+      }
+    });
   }
 }

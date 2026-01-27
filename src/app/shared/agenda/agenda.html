@@ -1,8 +1,20 @@
 <div class="agenda-kanban">
   <div class="agenda-kanban-header">
-    <div class="agenda-header-top">
-      <div class="agenda-title">
-        <span class="agenda-title-text">Cirugías programadas</span>
+    <div class="agenda-title">
+      <span class="agenda-title-text">Cirugías programadas</span>
+    </div>
+    
+    <!-- Filtro por quirófano + navegación semana -->
+    <div class="quirofano-filter">
+      <span class="filter-label">Quirófano:</span>
+      <div class="quirofano-buttons">
+        <button mat-stroked-button 
+                *ngFor="let q of quirofanos"
+                class="quirofano-chip"
+                [class.active]="selectedQuirofanoId === q.id"
+                (click)="selectQuirofano(q.id)">
+          {{ q.nombre }}
+        </button>
       </div>
       <div class="agenda-nav">
         <button mat-icon-button (click)="previousWeek()">
@@ -11,26 +23,6 @@
         <div class="agenda-subtitle">{{ weekLabel }}</div>
         <button mat-icon-button (click)="nextWeek()">
           <mat-icon>arrow_forward</mat-icon>
-        </button>
-      </div>
-    </div>
-    
-    <!-- Filtro por quirófano -->
-    <div class="quirofano-filter">
-      <span class="filter-label">Quirófano:</span>
-      <div class="quirofano-buttons">
-        <button mat-stroked-button 
-                class="quirofano-chip"
-                [class.active]="selectedQuirofanoId === null"
-                (click)="selectQuirofano(null)">
-          Todos
-        </button>
-        <button mat-stroked-button 
-                *ngFor="let q of quirofanos"
-                class="quirofano-chip"
-                [class.active]="selectedQuirofanoId === q.id"
-                (click)="selectQuirofano(q.id)">
-          {{ q.nombre }}
         </button>
       </div>
     </div>
@@ -60,8 +52,10 @@
               <div *ngFor="let turno of getTurnosForDayAndHour(day, hora)"
                    class="turno-chip"
                    [ngClass]="turno.color"
+                   [style.left]="getTurnoLeft(turno)"
                    [style.width]="getTurnoWidth(turno)"
-                   [title]="turno.paciente + ' - ' + turno.servicio + ' - ' + turno.quirofano + ' (' + turno.hora + ' - ' + turno.horaFin + ')'">
+                   [title]="turno.paciente + ' - ' + turno.servicio + ' - ' + turno.quirofano + ' (' + turno.hora + ' - ' + turno.horaFin + ')'"
+                   (click)="openCirugiaDialog(turno)">
                 <span class="turno-time">{{ turno.hora }} - {{ turno.horaFin }}</span>
                 <span class="turno-info">{{ turno.paciente }}</span>
                 <span class="turno-servicio">{{ turno.servicio }}</span>
