@@ -147,7 +147,7 @@
 
 /* Filas de días */
 .day-row {
-  height: 80px;
+  height: 70px;
 }
 
 .day-label-cell {
@@ -156,7 +156,9 @@
   left: 0;
   z-index: 1;
   min-width: 100px;
+  width: 100px;
   padding: 0.5rem;
+  vertical-align: middle;
 }
 
 .day-label {
@@ -180,9 +182,11 @@
 /* Celdas de horas */
 .hour-cell {
   vertical-align: top;
-  padding: 0.25rem;
+  padding: 0;
   min-width: 80px;
   width: 80px;
+  max-width: 80px;
+  height: 70px;
   background: #fff;
   transition: background 0.15s;
   position: relative;
@@ -190,37 +194,43 @@
 }
 
 .hour-cell:hover {
-  background: #f9f9ff;
+  background: #fafaff;
 }
 
 .turnos-in-cell {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-  position: relative;
+  gap: 2px;
 }
 
-/* Chips de turnos - ahora se extienden según duración */
+/* Chips de turnos - posicionados absolutos para extenderse sobre otras celdas */
 .turno-chip {
   border-radius: 6px;
-  padding: 0.4rem 0.5rem;
-  font-size: 0.75rem;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.72rem;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition: box-shadow 0.15s, z-index 0s;
   overflow: hidden;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
   z-index: 5;
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-  min-height: 50px;
+  gap: 0.1rem;
   box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
 }
 
 .turno-chip:hover {
-  transform: scale(1.01);
-  box-shadow: 0 3px 12px rgba(0,0,0,0.2);
-  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  z-index: 100;
 }
 
 .turno-chip.green {

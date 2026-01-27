@@ -159,10 +159,11 @@ export class Agenda {
   }
 
   // Calcula el ancho del turno basado en su duración
+  // Cada columna tiene 80px de ancho + 1px de borde
   getTurnoWidth(turno: TurnoAgenda): string {
-    // Cada columna tiene un ancho base, el turno se extiende según duración
-    // Usamos calc() para que se adapte al ancho de las columnas
-    return `calc(${turno.duracionHoras * 100}% + ${(turno.duracionHoras - 1) * 1}px)`;
+    const columnWidth = 81; // 80px + 1px border
+    const width = (turno.duracionHoras * columnWidth) - 4; // -4 para margen interno
+    return `${width}px`;
   }
 
   getTurnosForDay(date: Date): TurnoAgenda[] {
