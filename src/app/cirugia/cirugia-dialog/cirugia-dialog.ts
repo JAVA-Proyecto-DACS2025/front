@@ -19,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { IPacienteLite } from '../../core/models/paciente'; // ajusta la ruta si hace falta
@@ -46,11 +47,11 @@ import { SeleccionTurnos } from '../seleccion-turnos/seleccion-turnos';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
+    MatTooltipModule,
   ],
 })
 export class CirugiaDialog {
   @ViewChild('servicioSelect') servicioSelect!: MatSelect;
-  @ViewChild('quirofanoSelect') quirofanoSelect!: MatSelect;
 
   public form: FormGroup;
   public pacienteCtrl = new FormControl<string>('');
@@ -84,6 +85,9 @@ export class CirugiaDialog {
   }
 
   ngOnInit() {
+    // Cargar quirófanos siempre (necesario para el selector de turnos)
+    this.onQuirofanoOpened();
+    
     if (this.data) {
       const patchData = this.buildPatch(this.data);
       this.form.patchValue(patchData);
@@ -94,16 +98,17 @@ export class CirugiaDialog {
         })
       );
     } else {
-      // En modo creación, cargar quirófanos y servicios automáticamente
-      this.onQuirofanoOpened();
+      // En modo creación, cargar servicios automáticamente
       this.openSeleccionServicios();
     }
     
-    // Escuchar cambios en servicioId para limpiar fecha y hora
+    // Escuchar cambios en servicioId para limpiar fecha, hora y quirófano
     this.form.get('servicioId')?.valueChanges.subscribe(() => {
       this.form.patchValue({
         fechaInicio: null,
-        horaInicio: ''
+        horaInicio: '',
+        quirofanoId: null,
+        quirofanoNombre: ''
       });
     });
   }
@@ -251,17 +256,6 @@ export class CirugiaDialog {
     }, 100);
   }
 
-  switchToSelectAndLoadQuirofano() {
-    // Cargar quirófanos y luego abrir el select
-    this.onQuirofanoOpened();
-    // Esperar un tick para que se renderice el select y luego abrirlo
-    setTimeout(() => {
-      if (this.quirofanoSelect) {
-        this.quirofanoSelect.open();
-      }
-    }, 100);
-  }
-
   openSeleccionServicios() {
     if (this.servicios.length > 0) {
       return;
@@ -289,7 +283,7 @@ export class CirugiaDialog {
       },
     });
 
-    ref.afterClosed().subscribe((result?: { date: Date; time: string }) => {
+    ref.afterClosed().subscribe((result?: { date: Date; time: string; quirofanoId: number; quirofanoNombre: string }) => {
       if (!result) return;
       const dd = result.date.getDate().toString().padStart(2, '0');
       const mm = (result.date.getMonth() + 1).toString().padStart(2, '0');
@@ -299,6 +293,8 @@ export class CirugiaDialog {
       this.form.patchValue({
         fechaInicio: fechaFormateada,
         horaInicio: `${result.time} HS`,
+        quirofanoId: result.quirofanoId,
+        quirofanoNombre: result.quirofanoNombre,
       });
     });
   }

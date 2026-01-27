@@ -17,34 +17,6 @@
       </button>
     </mat-form-field>
 
-    <!-- Quirofano -->
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Quirófano</mat-label>
-      <!-- Mostrar input readonly cuando hay ID pero quirófanos no están cargados -->
-      <input *ngIf="form.get('quirofanoId')?.value && quirofanos.length === 0" 
-             matInput 
-             [value]="form.get('quirofanoNombre')?.value"
-             (click)="switchToSelectAndLoadQuirofano()"
-             style="cursor: pointer;"
-             readonly>
-      <button *ngIf="form.get('quirofanoId')?.value && quirofanos.length === 0"
-              mat-icon-button 
-              matSuffix 
-              type="button"
-              (click)="switchToSelectAndLoadQuirofano()" 
-              aria-label="Cambiar quirófano">
-        <mat-icon>arrow_drop_down</mat-icon>
-      </button>
-      <!-- Mostrar select cuando quirófanos están cargados o no hay ID preseleccionado -->
-      <mat-select #quirofanoSelect
-                  *ngIf="!form.get('quirofanoId')?.value || quirofanos.length > 0"
-                  formControlName="quirofanoId">  
-        <mat-option *ngFor="let q of quirofanos" [value]="q.id">
-          {{ q.nombre }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
     <!-- Servicio -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Servicio</mat-label>
@@ -74,7 +46,7 @@
     </mat-form-field>
 
     <!-- Fecha y Hora inicio (DOS COLUMNAS) -->
-    <div class="row two-columns">
+    <div class="row two-columns" [class.disabled]="!form.get('servicioId')?.value">
       <!-- Fecha: completada desde selector de turnos -->
       <mat-form-field appearance="outline" class="half-width">
         <mat-label>Fecha inicio</mat-label>
@@ -87,11 +59,27 @@
         <input matInput type="text" formControlName="horaInicio" placeholder="HH:MM" readonly>
       </mat-form-field>
 
-      <!-- Botón externo para seleccionar turno -->
-      <button mat-icon-button class="turno-button" type="button" (click)="openSeleccionTurnos()" aria-label="Seleccionar turno">
+      <!-- Botón externo para seleccionar turno (deshabilitado si no hay servicio) -->
+      <button mat-icon-button 
+              class="turno-button" 
+              type="button" 
+              (click)="openSeleccionTurnos()" 
+              [disabled]="!form.get('servicioId')?.value"
+              [matTooltip]="!form.get('servicioId')?.value ? 'Seleccioná un servicio primero' : 'Seleccionar turno'"
+              aria-label="Seleccionar turno">
         <mat-icon>calendar_today</mat-icon>
       </button>
     </div>
+
+    <!-- Quirofano (solo lectura, se selecciona desde el selector de turnos) -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Quirófano</mat-label>
+      <input matInput 
+             [value]="form.get('quirofanoNombre')?.value || 'Se autocompleta al elegir turno'"
+             readonly
+             [style.color]="form.get('quirofanoNombre')?.value ? 'inherit' : '#999'">
+      <mat-icon matSuffix style="color: #999; font-size: 18px;">info_outline</mat-icon>
+    </mat-form-field>
 
     <!-- Estado -->
     <mat-form-field appearance="outline" class="full-width">

@@ -18,12 +18,12 @@ export class CirugiaService extends BaseApiService {
   }
 
   getCirugias(page = 0, pageSize = 16) {
-    const params = { pagina: String(page), tamaño: String(pageSize) };
+    const params = { pagina: String(page), tamano: String(pageSize) };
     return this.get<IPaginatedResponse<ICirugia>>('/cirugias', params);
   }
 
-  getCirugiasPorFechas(fechaInicio: string, fechaFin: string) {
-    const params = { fechaInicio, fechaFin };
+  getCirugiasPorFechas(fechaInicio: string, fechaFin: string, pagina=0, tamano=1000) {
+    const params = { fechaInicio, fechaFin, pagina: String(pagina), tamano: String(tamano) };
     return this.get<IApiResponse<ICirugia[]>>('/cirugias', params);
   }   
 

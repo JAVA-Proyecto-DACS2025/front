@@ -171,7 +171,13 @@ export class SeleccionTurnos {
   }
 
   select(slot: Slot) {
-    this.dialogRef.close({ date: slot.date, time: slot.time });
+    const quirofano = this.quirofanos.find(q => q.id === this.selectedQuirofanoId);
+    this.dialogRef.close({ 
+      date: slot.date, 
+      time: slot.time,
+      quirofanoId: this.selectedQuirofanoId,
+      quirofanoNombre: quirofano?.nombre ?? ''
+    });
   }
 
   selectDay(index: number) {
