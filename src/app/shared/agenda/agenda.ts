@@ -1,12 +1,29 @@
 import { Component } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { CommonModule } from '@angular/common';
+import { DatePipe, CommonModule, NgFor, NgClass } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { CirugiaService } from '../../core/services/cirugia.service';
+import { QuirofanoService } from '../../core/services/quirofano.service';
+import { IQuirofano } from '../../core/models/quirofano';
+
+interface TurnoAgenda {
+  fecha: string;
+  hora: string;
+  horaFin: string;
+  horaInicioNum: number; // hora inicio en formato numérico (8, 9, 10...)
+  horaFinNum: number; // hora fin en formato numérico
+  duracionHoras: number; // cantidad de columnas que ocupa
+  descripcion: string;
+  paciente: string;
+  servicio: string;
+  quirofano: string;
+  quirofanoId: number;
+  color: string;
+}
 
 @Component({
   selector: 'app-agenda',
-  imports: [DatePipe, CommonModule, MatIconModule],
+  imports: [DatePipe, CommonModule, NgFor, NgClass, MatIconModule, MatButtonModule],
   templateUrl: './agenda.html',
   styleUrl: './agenda.css',
 })
@@ -16,11 +33,50 @@ export class Agenda {
   weekDays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   weekDates: Date[] = [];
   weekLabel = '';
-  turnos: Array<{ fecha: string; hora: string; descripcion: string; color: string }> = [];
+  turnos: TurnoAgenda[] = [];
+  
+  // Horas de la jornada (columnas)
+  horasJornada: string[] = [];
+  horaInicio = 8;
+  horaFin = 18;
+  
+  // Quirófanos
+  quirofanos: IQuirofano[] = [];
+  selectedQuirofanoId: number | null = null; // null = todos
 
-  constructor(private cirugiaService: CirugiaService) {
+  constructor(
+    private cirugiaService: CirugiaService,
+    private quirofanoService: QuirofanoService
+  ) {
     this.currentWeekStart = this.getStartOfWeek(this.today);
+    this.generateHorasJornada();
+    this.loadQuirofanos();
     this.updateWeek();
+  }
+
+  private generateHorasJornada() {
+    this.horasJornada = [];
+    for (let h = this.horaInicio; h <= this.horaFin; h++) {
+      this.horasJornada.push(`${h.toString().padStart(2, '0')}:00`);
+    }
+  }
+
+  private loadQuirofanos() {
+    this.quirofanoService.getQuirofanos().subscribe((resp: any) => {
+      const data = resp?.data ?? resp ?? [];
+      this.quirofanos = Array.isArray(data) ? data : [];
+    });
+  }
+
+  selectQuirofano(quirofanoId: number | null) {
+    this.selectedQuirofanoId = quirofanoId;
+  }
+
+  get filteredTurnos(): TurnoAgenda[] {
+    if (this.selectedQuirofanoId === null) {
+      return this.turnos;
+    }
+    return this.turnos.filter(t => t.quirofanoId === this.selectedQuirofanoId);
   }
 
   updateWeek() {
@@ -33,14 +89,27 @@ export class Agenda {
       .getCirugiasPorFechas(this.getDateString(start), this.getDateString(end))
       .subscribe((response: any) => {
         if (response && response.data) {
-          console.log('Cirugías de la semana:', response.data);
           const cirugias = (response.data.contenido || response.data || []);
           this.turnos = cirugias.map((cirugia: any) => {
+            const horaInicioStr = cirugia.horaInicio || '08:00';
+            const horaFinStr = cirugia.horaFin || '09:00';
+            const [hhInicio] = horaInicioStr.split(':').map(Number);
+            const [hhFin] = horaFinStr.split(':').map(Number);
+            const duracion = Math.max(1, hhFin - hhInicio);
+            
             return {
               fecha: this.getDateString(new Date(cirugia.fechaInicio)),
-              hora: cirugia.horaInicio,
+              hora: horaInicioStr.substring(0, 5),
+              horaFin: horaFinStr.substring(0, 5),
+              horaInicioNum: hhInicio,
+              horaFinNum: hhFin,
+              duracionHoras: duracion,
               descripcion: `${cirugia.pacienteNombre}\n${cirugia.servicioNombre}\n${cirugia.quirofanoNombre}`,
-              color: 'green', // Puedes personalizar el color según el estado o prioridad
+              paciente: cirugia.pacienteNombre || '',
+              servicio: cirugia.servicioNombre || '',
+              quirofano: cirugia.quirofanoNombre || '',
+              quirofanoId: cirugia.quirofanoId || 0,
+              color: 'green',
             };
           });
         }
@@ -50,8 +119,7 @@ export class Agenda {
   getStartOfWeek(date: Date): Date {
     const d = new Date(date);
     const day = d.getDay();
-    // getDay(): 0=Dom, 1=Lun, ..., 6=Sab
-    const diff = d.getDate() - (day === 0 ? 6 : day - 1); // Lunes como inicio
+    const diff = d.getDate() - (day === 0 ? 6 : day - 1);
     d.setDate(diff);
     d.setHours(0, 0, 0, 0);
     return d;
@@ -68,7 +136,6 @@ export class Agenda {
   }
 
   formatDate(date: Date): string {
-    // Formato: dd/MM/yyyy
     return date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
   }
 
@@ -82,8 +149,24 @@ export class Agenda {
     this.updateWeek();
   }
 
-  getTurnosForDay(date: Date) {
+  getTurnosForDayAndHour(date: Date, hora: string): TurnoAgenda[] {
     const dateStr = this.getDateString(date);
-    return this.turnos.filter((t) => t.fecha === dateStr);
+    const horaNum = parseInt(hora.substring(0, 2), 10);
+    // Solo devolver turnos que INICIAN en esta hora exacta
+    return this.filteredTurnos.filter(t => {
+      return t.fecha === dateStr && t.horaInicioNum === horaNum;
+    });
+  }
+
+  // Calcula el ancho del turno basado en su duración
+  getTurnoWidth(turno: TurnoAgenda): string {
+    // Cada columna tiene un ancho base, el turno se extiende según duración
+    // Usamos calc() para que se adapte al ancho de las columnas
+    return `calc(${turno.duracionHoras * 100}% + ${(turno.duracionHoras - 1) * 1}px)`;
+  }
+
+  getTurnosForDay(date: Date): TurnoAgenda[] {
+    const dateStr = this.getDateString(date);
+    return this.filteredTurnos.filter((t) => t.fecha === dateStr);
   }
 }

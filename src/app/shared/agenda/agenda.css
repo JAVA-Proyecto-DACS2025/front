@@ -3,62 +3,289 @@
   background: #fff;
   border-radius: 18px;
   box-shadow: 0 2px 16px rgba(60, 60, 120, 0.08);
-  padding: 2rem 1.5rem;
+  padding: 1.5rem;
   margin: 2rem auto;
-  width: 90%;
+  width: 95%;
   overflow-x: auto;
 }
+
 .agenda-kanban-header {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 2rem;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
+
+.agenda-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
 .agenda-title {
   display: flex;
   align-items: center;
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.2rem;
 }
-.agenda-title-icon {
-  font-size: 2.2rem;
-  margin-right: 0.7rem;
-}
+
 .agenda-title-text {
+  font-size: 1.5rem;
+  font-weight: 700;
   color: #222;
 }
-.agenda-subtitle {
-  color: #535353;
-  margin-top: 8px;
-  font-size: 1.1rem;
-  width: 220px;
-  text-align: center;
-}
+
 .agenda-nav {
-  margin-top: 0.5rem;
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.5rem;
 }
+
 .agenda-nav button {
   background: #e7e9fb;
   color: #3a3a6a;
   border: none;
   border-radius: 20px;
-  padding: 0.4rem 1.2rem;
+  padding: 0.4rem 0.8rem;
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s;
 }
+
 .agenda-nav button:hover {
   background: #6a60ff;
   color: #fff;
 }
-.agenda-kanban-body {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: stretch;
+
+.agenda-subtitle {
+  color: #535353;
+  font-size: 1rem;
+  font-weight: 500;
+  min-width: 180px;
+  text-align: center;
 }
+
+/* Filtro de quirófanos */
+.quirofano-filter {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-weight: 600;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.quirofano-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.quirofano-chip {
+  border-radius: 20px !important;
+  padding: 0.3rem 1rem !important;
+  font-size: 0.9rem !important;
+  border: 1px solid #ccc !important;
+  background: #fff !important;
+  color: #555 !important;
+  transition: all 0.2s ease !important;
+}
+
+.quirofano-chip:hover {
+  background: #f0f0ff !important;
+  border-color: #6a60ff !important;
+}
+
+.quirofano-chip.active {
+  background: #6a60ff !important;
+  color: #fff !important;
+  border-color: #6a60ff !important;
+}
+
+/* Grilla de agenda */
+.agenda-grid-container {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.agenda-grid {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.agenda-grid th,
+.agenda-grid td {
+  border: 1px solid #e0e0e0;
+  padding: 0;
+}
+
+/* Header de horas */
+.hour-header-cell {
+  background: #f5f6fa;
+  color: #444;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.6rem 0.3rem;
+  text-align: center;
+  min-width: 70px;
+  position: sticky;
+  top: 0;
+}
+
+.day-header-cell {
+  background: #f5f6fa;
+  min-width: 100px;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+/* Filas de días */
+.day-row {
+  height: 80px;
+}
+
+.day-label-cell {
+  background: #f8f9fb;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 100px;
+  padding: 0.5rem;
+}
+
+.day-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+}
+
+.day-name {
+  font-weight: 700;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.day-date {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+/* Celdas de horas */
+.hour-cell {
+  vertical-align: top;
+  padding: 0.25rem;
+  min-width: 80px;
+  width: 80px;
+  background: #fff;
+  transition: background 0.15s;
+  position: relative;
+  overflow: visible;
+}
+
+.hour-cell:hover {
+  background: #f9f9ff;
+}
+
+.turnos-in-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  position: relative;
+}
+
+/* Chips de turnos - ahora se extienden según duración */
+.turno-chip {
+  border-radius: 6px;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  overflow: hidden;
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-height: 50px;
+  box-sizing: border-box;
+}
+
+.turno-chip:hover {
+  transform: scale(1.01);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+.turno-chip.green {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+.turno-chip.blue {
+  background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+  color: #0c5460;
+  border-left: 4px solid #17a2b8;
+}
+
+.turno-chip.yellow {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+  color: #856404;
+  border-left: 4px solid #ffc107;
+}
+
+.turno-time {
+  font-weight: 700;
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+.turno-info {
+  font-weight: 600;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.turno-servicio {
+  font-weight: 400;
+  font-size: 0.7rem;
+  opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .agenda-header-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .agenda-grid {
+    min-width: 600px;
+  }
+  
+  .hour-header-cell {
+    min-width: 55px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Legacy styles kept for compatibility */
+.agenda-kanban-body {
+  display: none; /* Hidden, using new grid layout */
+}
+
 .agenda-day-col {
   background: #f8f9fb;
   border-radius: 16px;
@@ -70,6 +297,7 @@
   display: flex;
   flex-direction: column;
 }
+
 .agenda-day-header {
   font-weight: 700;
   font-size: 1.1rem;
@@ -80,19 +308,23 @@
   justify-content: space-between;
   align-items: center;
 }
+
 .agenda-day-title {
   color: #222;
 }
+
 .agenda-day-date {
   color: #6a6a8a;
   font-size: 0.95rem;
 }
+
 .agenda-turnos-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
+
 .agenda-turno-card {
   border-radius: 12px;
   padding: 0.6rem 0.6rem;
@@ -102,72 +334,27 @@
   color: #1a3d1a;
   font-weight: 500;
 }
+
 .agenda-turno-card.blue {
   background: #e7f0fb;
   color: #1a2d3d;
 }
+
 .agenda-turno-card.yellow {
   background: #fdf6e3;
   color: #a67c00;
 }
+
 .agenda-turno-card.green {
   background: #e7fbe7;
   color: #1a3d1a;
 }
+
 .turno-hora {
   font-weight: 700;
-  font-size: 1.1rem;
-  margin-bottom: 0.2rem;
+  font-size: 0.9rem;
 }
+
 .turno-paciente {
-  font-size: 1rem;
-  margin-bottom: 0.1rem;
-}
-/* Estilos básicos para la agenda semanal */
-.agenda-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1rem;
-}
-.agenda-header button {
-  background: #6a60ff;
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  padding: 0.5rem 1.2rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.agenda-header button:hover {
-  background: #5548d9;
-}
-.agenda-table table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-}
-.agenda-table th,
-.agenda-table td {
-  text-align: center;
-  padding: 0.5rem;
-  border: 1px solid #e0e0e0;
-  min-width: 120px;
-  vertical-align: top;
-}
-.agenda-day {
-  min-height: 60px;
-}
-.turno-hora {
-  display: block;
-  font-weight: bold;
-  color: #6a60ff;
-}
-.turno-desc {
-  display: block;
-  font-size: 0.95rem;
-  color: #333;
-  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
 }

@@ -1,35 +1,75 @@
 <div class="agenda-kanban">
   <div class="agenda-kanban-header">
-    <div class="agenda-title">
-      <span class="agenda-title-text">Cirugías programadas </span>
+    <div class="agenda-header-top">
+      <div class="agenda-title">
+        <span class="agenda-title-text">Cirugías programadas</span>
+      </div>
+      <div class="agenda-nav">
+        <button mat-icon-button (click)="previousWeek()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="agenda-subtitle">{{ weekLabel }}</div>
+        <button mat-icon-button (click)="nextWeek()">
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
     </div>
-   
-    <div class="agenda-nav">
-      <button mat-icon-button (click)="previousWeek()">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-	   <div class="agenda-subtitle">{{ weekLabel }}</div>
-      <button mat-icon-button (click)="nextWeek()">
-        <mat-icon>arrow_forward</mat-icon>
-      </button>
+    
+    <!-- Filtro por quirófano -->
+    <div class="quirofano-filter">
+      <span class="filter-label">Quirófano:</span>
+      <div class="quirofano-buttons">
+        <button mat-stroked-button 
+                class="quirofano-chip"
+                [class.active]="selectedQuirofanoId === null"
+                (click)="selectQuirofano(null)">
+          Todos
+        </button>
+        <button mat-stroked-button 
+                *ngFor="let q of quirofanos"
+                class="quirofano-chip"
+                [class.active]="selectedQuirofanoId === q.id"
+                (click)="selectQuirofano(q.id)">
+          {{ q.nombre }}
+        </button>
+      </div>
     </div>
   </div>
-  <div class="agenda-kanban-body">
-    <div class="agenda-day-col" *ngFor="let day of weekDates; let i = index">
-      <div class="agenda-day-header">
-        <span class="agenda-day-title">{{ weekDays[i] }}</span>
-        <span class="agenda-day-date">{{ day | date : 'dd/MM' }}</span>
-      </div>
-      <div class="agenda-turnos-list">
-        <div
-          *ngFor="let turno of getTurnosForDay(day)"
-          class="agenda-turno-card"
-          [ngClass]="turno.color"
-        >
-          <div class="turno-hora">{{ turno.hora }}</div>
-          <div class="turno-paciente">{{ turno.descripcion }}</div>
-        </div>
-      </div>
-    </div>
+
+  <!-- Grilla: Días como filas, Horas como columnas -->
+  <div class="agenda-grid-container">
+    <table class="agenda-grid">
+      <thead>
+        <tr>
+          <th class="day-header-cell"></th>
+          <th *ngFor="let hora of horasJornada" class="hour-header-cell">
+            {{ hora }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let day of weekDates; let i = index" class="day-row">
+          <td class="day-label-cell">
+            <div class="day-label">
+              <span class="day-name">{{ weekDays[i] }}</span>
+              <span class="day-date">{{ day | date:'dd/MM' }}</span>
+            </div>
+          </td>
+          <td *ngFor="let hora of horasJornada" class="hour-cell">
+            <div class="turnos-in-cell">
+              <div *ngFor="let turno of getTurnosForDayAndHour(day, hora)"
+                   class="turno-chip"
+                   [ngClass]="turno.color"
+                   [style.width]="getTurnoWidth(turno)"
+                   [title]="turno.paciente + ' - ' + turno.servicio + ' - ' + turno.quirofano + ' (' + turno.hora + ' - ' + turno.horaFin + ')'">
+                <span class="turno-time">{{ turno.hora }} - {{ turno.horaFin }}</span>
+                <span class="turno-info">{{ turno.paciente }}</span>
+                <span class="turno-servicio">{{ turno.servicio }}</span>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
