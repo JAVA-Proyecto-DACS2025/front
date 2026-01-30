@@ -16,6 +16,7 @@ export interface IKeycloakUser {
   enabled: boolean;
   emailVerified: boolean;
   createdTimestamp?: number;
+  roles?: string[];
   attributes?: Record<string, string[]>;
 }
 

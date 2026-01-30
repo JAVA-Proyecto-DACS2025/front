@@ -42,6 +42,7 @@ export class UsuariosList implements OnInit {
     'username',
     'email',
     'nombre',
+    'rol',
     'estado',
     'emailVerified',
     'creado',
@@ -109,6 +110,24 @@ export class UsuariosList implements OnInit {
   getFullName(user: IKeycloakUser): string {
     const parts = [user.firstName, user.lastName].filter(Boolean);
     return parts.length > 0 ? parts.join(' ') : '-';
+  }
+
+  hasRole(user: IKeycloakUser, role: string): boolean {
+    return user.roles?.includes(role) ?? false;
+  }
+
+  getRolLabel(user: IKeycloakUser): string {
+    if (!user.roles || user.roles.length === 0) return 'Sin rol';
+    if (user.roles.includes('admin')) return 'Administrador';
+    if (user.roles.includes('personal_medico')) return 'Personal Médico';
+    return user.roles[0];
+  }
+
+  getRolIcon(user: IKeycloakUser): string {
+    if (!user.roles || user.roles.length === 0) return 'help_outline';
+    if (user.roles.includes('admin')) return 'admin_panel_settings';
+    if (user.roles.includes('personal_medico')) return 'medical_services';
+    return 'badge';
   }
 
   abrirDialogoCrear() {
