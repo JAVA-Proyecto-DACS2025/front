@@ -19,6 +19,30 @@ export interface IKeycloakUser {
   attributes?: Record<string, string[]>;
 }
 
+/**
+ * Interfaz para credenciales de Keycloak
+ */
+export interface IKeycloakCredential {
+  type: string;
+  value: string;
+  temporary: boolean;
+}
+
+/**
+ * Interfaz para crear usuario en Keycloak
+ */
+export interface IKeycloakUserCreate {
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  enabled: boolean;
+  emailVerified: boolean;
+  credentials: IKeycloakCredential[];
+  roles?: string[];
+  attributes?: Record<string, string[]>;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -51,5 +75,12 @@ export class UsuarioService extends BaseApiService {
    */
   toggleUsuarioStatus(id: string, enabled: boolean) {
     return this.put<IApiResponse<IKeycloakUser>>(`${API_ENDPOINTS.BFF.USER}/${id}/status`, { enabled });
+  }
+
+  /**
+   * Crea un nuevo usuario en Keycloak
+   */
+  createUsuario(userData: IKeycloakUserCreate) {
+    return this.post<IApiResponse<IKeycloakUser>>(API_ENDPOINTS.BFF.USER, userData);
   }
 }

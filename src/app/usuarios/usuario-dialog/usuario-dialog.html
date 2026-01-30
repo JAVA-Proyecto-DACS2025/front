@@ -1,0 +1,153 @@
+<h2 mat-dialog-title>
+  <mat-icon class="title-icon">person_add</mat-icon>
+  Crear nuevo usuario
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="form" class="form-grid">
+    <!-- Username -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre de usuario</mat-label>
+      <input matInput formControlName="username" placeholder="ej: jperez" />
+      <mat-icon matPrefix>account_circle</mat-icon>
+      @if (form.get('username')?.hasError('required') && form.get('username')?.touched) {
+        <mat-error>El nombre de usuario es requerido</mat-error>
+      }
+      @if (form.get('username')?.hasError('minlength')) {
+        <mat-error>Mínimo 3 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="ej: usuario@ejemplo.com" />
+      <mat-icon matPrefix>email</mat-icon>
+      @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+        <mat-error>El email es requerido</mat-error>
+      }
+      @if (form.get('email')?.hasError('email')) {
+        <mat-error>Ingrese un email válido</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Nombre y Apellido en una fila -->
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="firstName" placeholder="ej: Juan" />
+        @if (form.get('firstName')?.hasError('required') && form.get('firstName')?.touched) {
+          <mat-error>El nombre es requerido</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Apellido</mat-label>
+        <input matInput formControlName="lastName" placeholder="ej: Pérez" />
+        @if (form.get('lastName')?.hasError('required') && form.get('lastName')?.touched) {
+          <mat-error>El apellido es requerido</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Rol -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Rol</mat-label>
+      <mat-select formControlName="role" placeholder="Seleccione un rol">
+        @for (rol of roles; track rol.value) {
+          <mat-option [value]="rol.value">
+            <mat-icon class="role-icon">{{ rol.icon }}</mat-icon>
+            {{ rol.label }}
+          </mat-option>
+        }
+      </mat-select>
+      <mat-icon matPrefix>badge</mat-icon>
+      @if (form.get('role')?.hasError('required') && form.get('role')?.touched) {
+        <mat-error>El rol es requerido</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Contraseña -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Contraseña</mat-label>
+      <input matInput formControlName="password" 
+             [type]="hidePassword ? 'password' : 'text'" 
+             placeholder="Mínimo 6 caracteres" />
+      <mat-icon matPrefix>lock</mat-icon>
+      <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+        <mat-error>La contraseña es requerida</mat-error>
+      }
+      @if (form.get('password')?.hasError('minlength')) {
+        <mat-error>Mínimo 6 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Confirmar Contraseña -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Confirmar contraseña</mat-label>
+      <input matInput formControlName="confirmPassword" 
+             [type]="hideConfirmPassword ? 'password' : 'text'" 
+             placeholder="Repita la contraseña" />
+      <mat-icon matPrefix>lock_outline</mat-icon>
+      <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword">
+        <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (form.get('confirmPassword')?.hasError('required') && form.get('confirmPassword')?.touched) {
+        <mat-error>Confirme la contraseña</mat-error>
+      }
+      @if (form.get('confirmPassword')?.hasError('passwordMismatch')) {
+        <mat-error>Las contraseñas no coinciden</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Opciones -->
+    <div class="options-row">
+      <mat-checkbox formControlName="enabled" color="primary">
+        <span class="checkbox-label">
+          <mat-icon>check_circle</mat-icon>
+          Usuario activo
+        </span>
+      </mat-checkbox>
+
+      <mat-checkbox formControlName="emailVerified" color="primary">
+        <span class="checkbox-label">
+          <mat-icon>verified</mat-icon>
+          Email verificado
+        </span>
+      </mat-checkbox>
+
+      <mat-checkbox formControlName="temporaryPassword" color="warn">
+        <span class="checkbox-label">
+          <mat-icon>autorenew</mat-icon>
+          Contraseña temporal
+        </span>
+      </mat-checkbox>
+    </div>
+
+    @if (form.get('temporaryPassword')?.value) {
+      <div class="info-box">
+        <mat-icon>info</mat-icon>
+        <span>El usuario deberá cambiar su contraseña en el primer inicio de sesión.</span>
+      </div>
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()" [disabled]="isLoading">
+    Cancelar
+  </button>
+  <button mat-raised-button color="primary" (click)="guardar()" [disabled]="isLoading || form.invalid">
+    @if (isLoading) {
+      <mat-spinner diameter="20"></mat-spinner>
+    } @else {
+      <ng-container>
+        <mat-icon>save</mat-icon>
+        Crear usuario
+      </ng-container>
+    }
+  </button>
+</mat-dialog-actions>

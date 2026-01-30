@@ -9,7 +9,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UsuarioService, IKeycloakUser } from '../../core/services/usuario.service';
+import { UsuarioDialogComponent } from '../usuario-dialog/usuario-dialog';
 
 @Component({
   selector: 'app-usuarios-list',
@@ -24,6 +26,7 @@ import { UsuarioService, IKeycloakUser } from '../../core/services/usuario.servi
     MatIconModule,
     MatChipsModule,
     MatTooltipModule,
+    MatDialogModule,
   ],
   templateUrl: './usuarios-list.html',
   styleUrl: './usuarios-list.css'
@@ -44,7 +47,10 @@ export class UsuariosList implements OnInit {
     'creado',
   ];
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(
+    private usuarioService: UsuarioService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.loadPage(this.page, this.pageSize);
@@ -103,5 +109,24 @@ export class UsuariosList implements OnInit {
   getFullName(user: IKeycloakUser): string {
     const parts = [user.firstName, user.lastName].filter(Boolean);
     return parts.length > 0 ? parts.join(' ') : '-';
+  }
+
+  abrirDialogoCrear() {
+    const dialogRef = this.dialog.open(UsuarioDialogComponent, {
+      width: '480px',
+      height: 'auto',
+      maxHeight: '95vh',
+      disableClose: true,
+      autoFocus: false,
+      panelClass: 'usuario-dialog-panel',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        // Recargar la lista después de crear
+        this.loadPage(0, this.pageSize);
+        this.page = 0;
+      }
+    });
   }
 }
