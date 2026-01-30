@@ -10,7 +10,7 @@ export const API_ENDPOINTS = {
     PACIENTE: '/paciente',
     PACIENTE_LITE: '/paciente/lite',
     PACIENTES_EXTERNOS: '/paciente/hospital',
-    USER: '/user',
+    USER: '/users',
     DASHBOARD: '/dashboard'
   },
   

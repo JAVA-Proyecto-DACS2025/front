@@ -25,6 +25,10 @@ export const routes: Routes = [
     path: 'personal',
     loadComponent: () => import('./personal/personal').then((m) => m.PersonalComponent),
   },
+  {
+    path: 'usuarios',
+    loadComponent: () => import('./usuarios/usuarios').then((m) => m.Usuarios),
+  },
   { path: 'paciente', loadComponent: () => import('./paciente/paciente').then((m) => m.Paciente) },
   { path: '**', redirectTo: '/home' },
 ];

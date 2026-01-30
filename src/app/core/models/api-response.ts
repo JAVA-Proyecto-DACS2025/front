@@ -41,6 +41,17 @@ export interface IPaginatedResponse<T> extends IApiResponse<T[]> {
 }
 
 /**
+ * Interfaz para respuestas paginadas (formato español del backend)
+ */
+export interface IPaginatedResponseES<T> {
+  pagina: number;
+  tamaño: number;
+  totalElementos: number;
+  totalPaginas: number;
+  contenido: T[];
+}
+
+/**
  * Interfaz para filtros de búsqueda
  */
 export interface ISearchFilters {

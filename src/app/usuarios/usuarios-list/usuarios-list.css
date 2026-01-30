@@ -1,0 +1,164 @@
+.table-list-container {
+  min-height: auto;
+  max-width: 4000px;
+  padding: 16px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.171);
+  background: white;
+}
+
+.table-list-container .mat-mdc-header-cell {
+  background: #6a60ff;
+  color: white;
+  font-weight: 600;
+}
+
+.table-list-container .mat-mdc-row {
+  background: #f7f7f7;
+  cursor: pointer;
+  border-color: black;
+  border-radius: 8px;
+}
+
+.table-list-container .mat-mdc-row:nth-child(odd) {
+  background: #ffffff;
+}
+
+.table-list-container .mat-mdc-row:nth-child(even) {
+  background: #f7f7f7;
+}
+
+.table-list-container .mat-mdc-row:hover {
+  background: #dfdfdf;
+  cursor: pointer;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.search {
+  flex: 1;
+  min-width: 250px;
+  max-width: 400px;
+}
+
+.table-wrapper {
+  position: relative;
+  overflow-x: auto;
+}
+
+.table-wrapper.loading {
+  opacity: 0.6;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+  color: #6a60ff;
+}
+
+.loading-overlay .spinner {
+  animation: spin 1s linear infinite;
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.tabla-usuarios {
+  width: 100%;
+}
+
+/* User cell con icono */
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-icon {
+  color: #6a60ff;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Chips de estado */
+.chip-active {
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+
+.chip-inactive {
+  background-color: #ffebee !important;
+  color: #c62828 !important;
+}
+
+.chip-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+}
+
+/* Iconos de verificación de email */
+.verified {
+  color: #2e7d32;
+}
+
+.not-verified {
+  color: #f57c00;
+}
+
+/* Estado vacío */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  color: #757575;
+}
+
+.empty-state mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  color: #bdbdbd;
+}
+
+.empty-state p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search {
+    max-width: 100%;
+  }
+}
