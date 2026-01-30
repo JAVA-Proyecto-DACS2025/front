@@ -5,11 +5,13 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { KeycloakService } from '../core/services/keycloak.service';
 import { Agenda } from "../shared/agenda/agenda";
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, Agenda],
+  imports: [CommonModule, RouterModule, Agenda, MatTabsModule, MatIconModule],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
@@ -20,6 +22,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   hasRoleA = false;
   hasRoleB = false;
+  selectedTab = 0;
 
   constructor(public keycloakService: KeycloakService) {}
 

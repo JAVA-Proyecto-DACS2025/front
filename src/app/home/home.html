@@ -1,49 +1,139 @@
 <div class="home-container">
   <div class="header">
     <h1>{{ title }}</h1>
-    <p *ngIf="isLoggedIn">Bienvenido, {{ keycloakService.getFullName() }}</p>
-    <p *ngIf="!isLoggedIn">Inicia sesión para acceder a las funcionalidades</p>
+    @if (isLoggedIn) {
+      <p>Bienvenido, {{ keycloakService.getFullName() }}</p>
+    } @else {
+      <p>Inicia sesión para acceder a las funcionalidades</p>
+    }
   </div>
 
   <!-- Estado de autenticación -->
-  <div class="auth-status" *ngIf="!isLoggedIn">
-    <div class="auth-card">
-      <div class="auth-icon">🔐</div>
-      <h3>Autenticación Requerida</h3>
-      <p>
-        Para acceder a las funcionalidades de la aplicación, necesitas iniciar sesión con Keycloak.
-      </p>
-      <button (click)="login()" class="login-button">
-        <span class="button-icon">🔑</span>
-        Iniciar Sesión con Keycloak
-      </button>
+  @if (!isLoggedIn) {
+    <div class="auth-status">
+      <div class="auth-card">
+        <div class="auth-icon">🔐</div>
+        <h3>Autenticación Requerida</h3>
+        <p>
+          Para acceder a las funcionalidades de la aplicación, necesitas iniciar sesión con Keycloak.
+        </p>
+        <button (click)="login()" class="login-button">
+          <span class="button-icon">🔑</span>
+          Iniciar Sesión con Keycloak
+        </button>
+      </div>
     </div>
-  </div>
+  }
 
-  <!-- Botones de funcionalidades -->
+  <!-- Contenido con Tabs -->
+  @if (isLoggedIn) {
+    <div class="content-tabs">
+      <mat-tab-group [(selectedIndex)]="selectedTab" animationDuration="200ms">
+        <!-- Tab Agenda -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>calendar_month</mat-icon>
+            <span>Agenda</span>
+          </ng-template>
+          <div class="tab-content">
+            <app-agenda></app-agenda>
+          </div>
+        </mat-tab>
 
-  <div class="buttons-container" *ngIf="isLoggedIn">
-    <!-- Aquí puedes agregar más botones o componentes -->
-  </div>
+        <!-- Tab Métricas -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>analytics</mat-icon>
+            <span>Métricas</span>
+          </ng-template>
+          <div class="tab-content">
+            <div class="metrics-container">
+              <h2>Métricas del Sistema</h2>
+              <div class="metrics-grid">
+                <div class="metric-card">
+                  <mat-icon>event</mat-icon>
+                  <div class="metric-value">24</div>
+                  <div class="metric-label">Cirugías esta semana</div>
+                </div>
+                <div class="metric-card">
+                  <mat-icon>people</mat-icon>
+                  <div class="metric-value">12</div>
+                  <div class="metric-label">Pacientes atendidos</div>
+                </div>
+                <div class="metric-card">
+                  <mat-icon>medical_services</mat-icon>
+                  <div class="metric-value">8</div>
+                  <div class="metric-label">Quirófanos activos</div>
+                </div>
+                <div class="metric-card">
+                  <mat-icon>schedule</mat-icon>
+                  <div class="metric-value">3</div>
+                  <div class="metric-label">Cirugías pendientes hoy</div>
+                </div>
+              </div>
+              <p class="metrics-note">* Datos de ejemplo - Conectar con el backend para datos reales</p>
+            </div>
+          </div>
+        </mat-tab>
 
-  <!-- Agenda semanal de turnos -->
-  <app-agenda *ngIf="isLoggedIn"></app-agenda>
-
-  <!-- Información de roles del usuario -->
-  <div class="user-roles" *ngIf="isLoggedIn">
-    <h4>Roles asignados:</h4>
-    <div class="roles-list">
-      <span
-        *ngFor="let role of keycloakService.getUserRoles()"
-        class="role-badge"
-        [class.role-a]="role === 'ROLE-A'"
-        [class.role-b]="role === 'ROLE-B'"
-        [class.other-role]="role !== 'ROLE-A' && role !== 'ROLE-B'"
-      >
-        {{ role }}
-      </span>
+        <!-- Tab Reportes -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon>description</mat-icon>
+            <span>Reportes</span>
+          </ng-template>
+          <div class="tab-content">
+            <div class="reports-container">
+              <h2>Reportes Disponibles</h2>
+              <div class="reports-list">
+                <div class="report-item">
+                  <mat-icon>summarize</mat-icon>
+                  <div class="report-info">
+                    <span class="report-name">Reporte de cirugías mensuales</span>
+                    <span class="report-desc">Resumen de todas las cirugías del mes</span>
+                  </div>
+                  <button class="report-btn">Generar</button>
+                </div>
+                <div class="report-item">
+                  <mat-icon>person</mat-icon>
+                  <div class="report-info">
+                    <span class="report-name">Reporte de personal</span>
+                    <span class="report-desc">Actividad del personal médico</span>
+                  </div>
+                  <button class="report-btn">Generar</button>
+                </div>
+                <div class="report-item">
+                  <mat-icon>meeting_room</mat-icon>
+                  <div class="report-info">
+                    <span class="report-name">Uso de quirófanos</span>
+                    <span class="report-desc">Ocupación y disponibilidad</span>
+                  </div>
+                  <button class="report-btn">Generar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
     </div>
-  </div>
+
+    <!-- Información de roles del usuario -->
+    <div class="user-roles">
+      <h4>Roles asignados:</h4>
+      <div class="roles-list">
+        @for (role of keycloakService.getUserRoles(); track role) {
+          <span
+            class="role-badge"
+            [class.role-a]="role === 'ROLE-A'"
+            [class.role-b]="role === 'ROLE-B'"
+            [class.other-role]="role !== 'ROLE-A' && role !== 'ROLE-B'"
+          >
+            {{ role }}
+          </span>
+        }
+      </div>
+    </div>
+  }
 
   <div class="footer">
     <p>DACS Frontend - Sistema de Pruebas con Keycloak</p>
