@@ -84,4 +84,11 @@ export class UsuarioService extends BaseApiService {
   createUsuario(userData: IKeycloakUserCreate) {
     return this.post<IApiResponse<IKeycloakUser>>(API_ENDPOINTS.BFF.USER, userData);
   }
+
+  /**
+   * Actualiza un usuario en Keycloak
+   */
+  updateUsuario(id: string, userData: Partial<IKeycloakUserCreate>) {
+    return this.put<IApiResponse<IKeycloakUser>>(`${API_ENDPOINTS.BFF.USER}/${id}`, userData);
+  }
 }

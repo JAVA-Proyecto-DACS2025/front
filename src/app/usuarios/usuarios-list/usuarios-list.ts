@@ -10,8 +10,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { UsuarioService, IKeycloakUser } from '../../core/services/usuario.service';
 import { UsuarioDialogComponent } from '../usuario-dialog/usuario-dialog';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-usuarios-list',
@@ -27,6 +29,7 @@ import { UsuarioDialogComponent } from '../usuario-dialog/usuario-dialog';
     MatChipsModule,
     MatTooltipModule,
     MatDialogModule,
+    MatMenuModule,
   ],
   templateUrl: './usuarios-list.html',
   styleUrl: './usuarios-list.css'
@@ -46,6 +49,7 @@ export class UsuariosList implements OnInit {
     'estado',
     'emailVerified',
     'creado',
+    'acciones',
   ];
 
   constructor(
@@ -145,6 +149,47 @@ export class UsuariosList implements OnInit {
         // Recargar la lista después de crear
         this.loadPage(0, this.pageSize);
         this.page = 0;
+      }
+    });
+  }
+
+  editarUsuario(user: IKeycloakUser) {
+    const dialogRef = this.dialog.open(UsuarioDialogComponent, {
+      width: '480px',
+      height: 'auto',
+      maxHeight: '95vh',
+      disableClose: true,
+      autoFocus: false,
+      panelClass: 'usuario-dialog-panel',
+      data: user,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadPage(this.page, this.pageSize);
+      }
+    });
+  }
+
+  toggleEstado(user: IKeycloakUser) {
+    const accion = user.enabled ? 'dar de baja' : 'activar';
+    const confirmDialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: `Confirmar ${accion}`,
+        message: `¿Estás seguro de que deseas ${accion} al usuario "${user.username}"?`,
+      },
+    });
+
+    confirmDialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.usuarioService.toggleUsuarioStatus(user.id, !user.enabled).subscribe({
+          next: () => {
+            this.loadPage(this.page, this.pageSize);
+          },
+          error: (error) => {
+            console.error('Error al cambiar estado del usuario:', error);
+          }
+        });
       }
     });
   }

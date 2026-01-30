@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>
-  <mat-icon class="title-icon">person_add</mat-icon>
-  Crear nuevo usuario
+  <mat-icon class="title-icon">{{ isEditMode ? 'edit' : 'person_add' }}</mat-icon>
+  {{ isEditMode ? 'Editar usuario' : 'Crear nuevo usuario' }}
 </h2>
 
 <mat-dialog-content class="dialog-content">
@@ -69,10 +69,10 @@
 
     <!-- Contraseña -->
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Contraseña</mat-label>
+      <mat-label>{{ isEditMode ? 'Nueva contraseña (opcional)' : 'Contraseña' }}</mat-label>
       <input matInput formControlName="password" 
              [type]="hidePassword ? 'password' : 'text'" 
-             placeholder="Mínimo 6 caracteres" />
+             [placeholder]="isEditMode ? 'Dejar vacío para mantener la actual' : 'Mínimo 6 caracteres'" />
       <mat-icon matPrefix>lock</mat-icon>
       <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
         <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
@@ -87,7 +87,7 @@
 
     <!-- Confirmar Contraseña -->
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Confirmar contraseña</mat-label>
+      <mat-label>{{ isEditMode ? 'Confirmar nueva contraseña' : 'Confirmar contraseña' }}</mat-label>
       <input matInput formControlName="confirmPassword" 
              [type]="hideConfirmPassword ? 'password' : 'text'" 
              placeholder="Repita la contraseña" />
@@ -146,7 +146,7 @@
     } @else {
       <ng-container>
         <mat-icon>save</mat-icon>
-        Crear usuario
+        {{ isEditMode ? 'Guardar cambios' : 'Crear usuario' }}
       </ng-container>
     }
   </button>

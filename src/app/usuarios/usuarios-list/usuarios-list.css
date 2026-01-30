@@ -180,6 +180,20 @@
   margin: 0;
 }
 
+/* Columna de acciones */
+.acciones-cell {
+  display: flex;
+  justify-content: center;
+}
+
+.acciones-cell button {
+  color: #616161;
+}
+
+.acciones-cell button:hover {
+  color: #6a60ff;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .toolbar {
