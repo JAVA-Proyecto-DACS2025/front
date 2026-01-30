@@ -9,6 +9,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
 import { CirugiaService } from '../../core/services/cirugia.service';
 import { ICirugia } from '../../core/models/cirugia';
 import { IPaginatedResponse } from '../../core/models/api-response';
@@ -32,28 +35,27 @@ import { EquipoMedicoDialog } from '../equipo-medico-dialog/equipo-medico-dialog
     MatButtonModule,
     MatTableModule,
     MatDialogModule,
+    MatChipsModule,
+    MatTooltipModule,
+    MatMenuModule,
   ],
 })
 export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestroy {
   displayedColumns: string[] = [
     'fechaInicio',
-    'horaInicio',
     'pacienteNombre',
-    'dni',
     'servicioNombre',
     'estado',
     'tipo',
     'prioridad',
-    'anestesia',
     'quirofanoNombre',
     'acciones',
-    'medicos',
-    'eliminar',
   ];
   dataSource = new MatTableDataSource<ICirugia>([]);
   page = 0;
   pageSize = 16;
   totalItems = 0;
+  isLoading = false;
   private pageCache = new Map<string, { data: ICirugia[]; total: number }>();
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -110,8 +112,9 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     // si no está en caché, llamar al servidor
-    this.cirugiaService.getCirugias(page, pageSize).subscribe(
-      (resp: any) => {
+    this.isLoading = true;
+    this.cirugiaService.getCirugias(page, pageSize).subscribe({
+      next: (resp: any) => {
         // Adaptar a la estructura real de la respuesta del backend
         const content = resp?.data?.contenido || [];
         const totalItems = resp?.data?.totalElementos || 0;
@@ -123,6 +126,7 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
         this.totalItems = totalItems;
         this.page = pageNumber;
         this.pageSize = pageSizeResp;
+        this.isLoading = false;
 
         // guardar en caché
         this.pageCache.set(cacheKey, {
@@ -135,8 +139,11 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
           this.paginator.pageSize = this.pageSize;
         }
       },
-      (err) => console.error('Error loading cirugias', err)
-    );
+      error: (err) => {
+        console.error('Error loading cirugias', err);
+        this.isLoading = false;
+      }
+    });
   }
 
   applyFilter(filterValue: string) {
@@ -180,5 +187,33 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
           });
         }
       });
+  }
+
+  getEstadoClass(estado: string): string {
+    const estadoLower = estado?.toLowerCase() || '';
+    if (estadoLower.includes('programada') || estadoLower.includes('pendiente')) return 'chip-pendiente';
+    if (estadoLower.includes('confirmada') || estadoLower.includes('aprobada')) return 'chip-confirmada';
+    if (estadoLower.includes('realizada') || estadoLower.includes('completada')) return 'chip-realizada';
+    if (estadoLower.includes('cancelada')) return 'chip-cancelada';
+    return '';
+  }
+
+  getPrioridadClass(prioridad: string): string {
+    const prioridadLower = prioridad?.toLowerCase() || '';
+    if (prioridadLower.includes('alta') || prioridadLower.includes('urgente')) return 'chip-alta';
+    if (prioridadLower.includes('media')) return 'chip-media';
+    if (prioridadLower.includes('baja') || prioridadLower.includes('normal')) return 'chip-baja';
+    return '';
+  }
+
+  formatFechaHora(fecha: string, hora: string): string {
+    if (!fecha) return '-';
+    const fechaStr = new Date(fecha).toLocaleDateString('es-AR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+    const horaStr = hora ? hora.substring(0, 5) : '';
+    return horaStr ? `${fechaStr} ${horaStr}hs` : fechaStr;
   }
 }

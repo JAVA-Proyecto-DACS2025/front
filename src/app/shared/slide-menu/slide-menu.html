@@ -52,38 +52,42 @@
 
   <!-- User -->
   <div class="sidebar-user">
-    <div [hidden]="isLoggedIn">
+    @if (!isLoggedIn) {
       <button mat-raised-button color="primary" (click)="login()">
         <mat-icon>login</mat-icon>
         Iniciar sesión
       </button>
-    </div>
+    } @else {
+      <div class="user-box" (click)="toggleUserMenu()">
+        <div class="avatar">{{ getFullName().charAt(0).toUpperCase() }}</div>
 
-    <div [hidden]="!isLoggedIn" class="user-box" (click)="toggleUserMenu()">
-      <div class="avatar">{{ getFullName().charAt(0).toUpperCase() }}</div>
+        <div class="user-details">
+          <div class="name">{{ getFullName() }}</div>
+          <div class="role">{{ getUserRoles().join(', ') }}</div>
+        </div>
 
-      <div class="user-details">
-        <div class="name">{{ getFullName() }}</div>
-        <div class="role">{{ getUserRoles().join(', ') }}</div>
+        <mat-icon fontSet="material-symbols-outlined" class="arrow" [class.rotated]="showUserMenu">
+          expand_more
+        </mat-icon>
       </div>
 
-      <mat-icon fontSet="material-symbols-outlined" class="arrow" [class.rotated]="showUserMenu">
-        expand_more
-      </mat-icon>
-    </div>
+      @if (showUserMenu) {
+        <div class="user-dropdown">
+          <button (click)="goToAccount()" class="dropdown-item">
+            <mat-icon fontSet="material-symbols-outlined">person</mat-icon>
+            Mi Cuenta
+          </button>
 
-    <div class="user-dropdown" [hidden]="!showUserMenu">
-      <button (click)="goToAccount()" class="dropdown-item">
-        <mat-icon fontSet="material-symbols-outlined">person</mat-icon>
-        Mi Cuenta
-      </button>
-
-      <button (click)="logout()" class="dropdown-item logout">
-        <mat-icon fontSet="material-symbols-outlined">logout</mat-icon>
-        Cerrar sesión
-      </button>
-    </div>
+          <button (click)="logout()" class="dropdown-item logout">
+            <mat-icon fontSet="material-symbols-outlined">logout</mat-icon>
+            Cerrar sesión
+          </button>
+        </div>
+      }
+    }
   </div>
 </aside>
 
-<div [hidden]="!showUserMenu" class="overlay" (click)="closeUserMenu()"></div>
+@if (showUserMenu) {
+  <div class="overlay" (click)="closeUserMenu()"></div>
+}

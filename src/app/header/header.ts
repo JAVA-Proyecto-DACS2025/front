@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -20,7 +20,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userProfile: KeycloakProfile | null = null;
   showUserMenu = false;
 
-  constructor(private keycloakService: KeycloakService) {}
+  constructor(
+    private keycloakService: KeycloakService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.checkLoginStatus();
@@ -37,6 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (this.isLoggedIn) {
       this.userProfile = this.keycloakService.getUserProfile();
     }
+    this.cdr.detectChanges();
   }
 
   private subscribeToUserProfile(): void {
@@ -44,7 +48,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(profile => {
         this.userProfile = profile;
-        this.isLoggedIn = !!profile;
+        this.isLoggedIn = this.keycloakService.isLoggedIn();
+        this.cdr.detectChanges();
       });
   }
 

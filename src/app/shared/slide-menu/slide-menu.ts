@@ -20,7 +20,7 @@ export class SlideMenuComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   
   
-  isLoggedIn = true;
+  isLoggedIn = false;
   showUserMenu = false;
   showCirugias = false;
   userProfile: KeycloakProfile | null = null;
@@ -49,7 +49,7 @@ export class SlideMenuComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe(profile => {
           this.userProfile = profile;
-          this.isLoggedIn = !!profile;
+          this.isLoggedIn = this.keycloakService.isLoggedIn();
         });
     }
 

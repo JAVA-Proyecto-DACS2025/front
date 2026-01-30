@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatTableDataSource } from '@angular/material/table';
@@ -14,10 +15,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { PersonalDialogComponent } from '../personal-dialog/personal-dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-personal-list',
   imports: [
+    CommonModule,
     MatIcon,
     MatFormField,
     MatLabel,
@@ -29,6 +34,9 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
+    MatChipsModule,
+    MatTooltipModule,
+    MatMenuModule,
   ],
   templateUrl: './personal-list.html',
   styleUrls: ['./personal-list.css'],
@@ -37,21 +45,20 @@ export class PersonalList {
   totalItems: number = 0;
   pageSize: number = 16;
   page: number = 0;
+  isLoading: boolean = false;
 
   constructor(private personalService: PersonalService, private dialog: MatDialog) {}
 
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns: string[] = [
     'legajo',
-    'nombre',
-    'apellido',
+    'nombreCompleto',
     'dni',
     'especialidad',
     'rol',
     'estado',
     'telefono',
-    'editar',
-    'eliminar',
+    'acciones',
   ];
 
   ngOnInit() {
@@ -72,22 +79,46 @@ export class PersonalList {
   }
 
   loadPage(page: number, pageSize: number) {
-    this.personalService.getPersonal(page, pageSize).subscribe((response: any) => {
-      // Adaptar a la estructura real de la respuesta del backend
-      const content = response?.data?.contenido || [];
-      const totalItems = response?.data?.totalElementos || 0;
-      const pageNumber = response?.data?.pagina || page;
-      const pageSizeResp = response?.data?.tamaño || pageSize;
+    this.isLoading = true;
+    this.personalService.getPersonal(page, pageSize).subscribe({
+      next: (response: any) => {
+        const content = response?.data?.contenido || [];
+        const totalItems = response?.data?.totalElementos || 0;
+        const pageNumber = response?.data?.pagina || page;
+        const pageSizeResp = response?.data?.tamaño || pageSize;
 
-      this.dataSource.data = content;
-      this.totalItems = totalItems;
-      this.pageSize = pageSizeResp;
-      this.page = pageNumber;
+        this.dataSource.data = content;
+        this.totalItems = totalItems;
+        this.pageSize = pageSizeResp;
+        this.page = pageNumber;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      }
     });
   }
 
-  applyFilter(arg0: any) {
-    throw new Error('Method not implemented.');
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  getEstadoClass(estado: string): string {
+    const estadoLower = estado?.toLowerCase() || '';
+    if (estadoLower === 'activo' || estadoLower === 'disponible') return 'estado-activo';
+    if (estadoLower === 'inactivo' || estadoLower === 'no disponible') return 'estado-inactivo';
+    if (estadoLower === 'licencia' || estadoLower === 'vacaciones') return 'estado-licencia';
+    return 'estado-default';
+  }
+
+  getRolClass(rol: string): string {
+    const rolLower = rol?.toLowerCase() || '';
+    if (rolLower.includes('cirujano') || rolLower.includes('medico')) return 'rol-medico';
+    if (rolLower.includes('enfermero') || rolLower.includes('enfermera')) return 'rol-enfermero';
+    if (rolLower.includes('anestesista') || rolLower.includes('anestesiólogo')) return 'rol-anestesista';
+    if (rolLower.includes('instrumentista') || rolLower.includes('instrumentador')) return 'rol-instrumentista';
+    return 'rol-default';
   }
 
   deletePersonal(id: number) {

@@ -1,12 +1,20 @@
 <div class="table-list-container">
+  <!-- Loading Overlay -->
+  @if (isLoading) {
+    <div class="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
+  }
+
   <div class="toolbar">
     <mat-form-field class="search" appearance="outline">
       <mat-label>Buscar</mat-label>
       <input
         matInput
-        (keyup)="applyFilter($any($event.target).value)"
-        placeholder="Paciente, médico, tipo..."
+        (keyup)="applyFilter($event)"
+        placeholder="Nombre, DNI, especialidad..."
       />
+      <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
     <button mat-raised-button class="button-add" (click)="openPersonal()">
       <mat-icon>person_add</mat-icon> Nuevo personal
@@ -14,79 +22,102 @@
   </div>
 
   <div class="table-wrapper">
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 tabla-personal">
-      <!-- Paciente -->
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z0 tabla-personal">
+      <!-- Legajo -->
       <ng-container matColumnDef="legajo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Legajo</th>
-        <td mat-cell *matCellDef="let s">{{ s.legajo }}</td>
+        <td mat-cell *matCellDef="let p">
+          <span class="legajo-badge">{{ p.legajo }}</span>
+        </td>
       </ng-container>
 
-      <!-- Nombre -->
-      <ng-container matColumnDef="nombre">
+      <!-- Nombre Completo -->
+      <ng-container matColumnDef="nombreCompleto">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
-        <td mat-cell *matCellDef="let s">{{ s.nombre }}</td>
+        <td mat-cell *matCellDef="let p">
+          <div class="personal-info">
+            <span class="personal-nombre">{{ p.nombre }} {{ p.apellido }}</span>
+            <span class="personal-email" *ngIf="p.email">{{ p.email }}</span>
+          </div>
+        </td>
       </ng-container>
 
-      <!-- Apellido -->
-      <ng-container matColumnDef="apellido">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Apellido</th>
-        <td mat-cell *matCellDef="let s">{{ s.apellido }}</td>
-      </ng-container>
-
-      <!-- Dni -->
+      <!-- DNI -->
       <ng-container matColumnDef="dni">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Dni</th>
-        <td mat-cell *matCellDef="let s">{{ s.dni }}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>DNI</th>
+        <td mat-cell *matCellDef="let p">{{ p.dni }}</td>
       </ng-container>
 
-      <!-- especialidad -->
+      <!-- Especialidad -->
       <ng-container matColumnDef="especialidad">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Especialidad</th>
-        <td mat-cell *matCellDef="let s">{{ s.especialidad }}</td>
+        <td mat-cell *matCellDef="let p">
+          <span class="especialidad-text" [matTooltip]="p.especialidad">{{ p.especialidad || '-' }}</span>
+        </td>
       </ng-container>
 
       <!-- Rol -->
       <ng-container matColumnDef="rol">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Rol</th>
-        <td mat-cell *matCellDef="let s">{{ s.rol }}</td>
+        <td mat-cell *matCellDef="let p">
+          <mat-chip [ngClass]="getRolClass(p.rol)">
+            {{ p.rol || '-' }}
+          </mat-chip>
+        </td>
       </ng-container>
 
-      <!-- estado -->
+      <!-- Estado -->
       <ng-container matColumnDef="estado">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header mat-sort-header>Estado</th>
-        <td mat-cell *matCellDef="let s">{{ s.estado }}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+        <td mat-cell *matCellDef="let p">
+          <mat-chip [ngClass]="getEstadoClass(p.estado)">
+            {{ p.estado || 'Activo' }}
+          </mat-chip>
+        </td>
       </ng-container>
 
       <!-- Teléfono -->
       <ng-container matColumnDef="telefono">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</th>
-        <td mat-cell *matCellDef="let s">{{ s.telefono }}</td>
-      </ng-container>
-
-      <!-- Editar -->
-      <ng-container matColumnDef="editar">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let s">
-          <button mat-icon-button color="primary" (click)="openPersonal(s)">
-            <mat-icon>edit</mat-icon>
-          </button>
+        <td mat-cell *matCellDef="let p">
+          <span class="telefono-text">{{ p.telefono || '-' }}</span>
         </td>
       </ng-container>
 
-      <!-- Eliminar -->
-      <ng-container matColumnDef="eliminar">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let s">
-          <button mat-icon-button color="primary" (click)="deletePersonal(s.id)">
-            <mat-icon>person_remove</mat-icon>
+      <!-- Acciones -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let p">
+          <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Acciones">
+            <mat-icon>more_vert</mat-icon>
           </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="openPersonal(p)">
+              <mat-icon>edit</mat-icon>
+              <span>Editar</span>
+            </button>
+            <button mat-menu-item (click)="deletePersonal(p.id)" class="menu-delete">
+              <mat-icon>delete</mat-icon>
+              <span>Eliminar</span>
+            </button>
+          </mat-menu>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <!-- Empty State -->
+      <tr class="mat-row empty-row" *matNoDataRow>
+        <td class="mat-cell empty-cell" [attr.colspan]="displayedColumns.length">
+          <div class="empty-state">
+            <mat-icon>people_outline</mat-icon>
+            <span>No se encontró personal</span>
+          </div>
+        </td>
+      </tr>
     </table>
-    <!-- paginador: length desde totalItems, pageSize/pageIndex desde el componente -->
+
     <mat-paginator
       [length]="totalItems"
       [pageSize]="pageSize"

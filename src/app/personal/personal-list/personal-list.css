@@ -1,160 +1,277 @@
 .table-list-container {
-  min-height: auto;
-  max-width: 4000px;
-  padding: 16px;
+  position: relative;
+  min-height: 400px;
+  max-width: 100%;
+  padding: 24px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  border-radius: 8px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.171);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   background: white;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 12px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #6a60ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.toolbar .mat-mdc-form-field {
+  margin: 0;
+}
+
+.search {
+  flex: 1 1 300px;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.button-add {
+  background: #6a60ff !important;
+  color: white !important;
+  height: 56px;
+  padding: 0 24px !important;
+  font-weight: 500;
+  border-radius: 8px !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s ease;
+}
+
+.button-add:hover {
+  background: #5a50ef !important;
+}
+
+/* Table Wrapper */
+.table-wrapper {
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+  overflow: hidden;
+}
+
+/* Table */
+.tabla-personal {
+  width: 100%;
 }
 
 .table-list-container .mat-mdc-header-cell {
   background: #6a60ff;
   color: white;
   font-weight: 600;
+  font-size: 13px;
+  padding: 12px 12px;
+  border: none;
 }
 
 .table-list-container .mat-mdc-row {
-  background: #f7f7f7;
-  cursor: pointer;
-  border-color: black;
-  border-radius: 8px;
+  transition: background 0.15s ease;
 }
 
 .table-list-container .mat-mdc-row:nth-child(odd) {
-  background: #ffffff; /* blanco */
+  background: #ffffff;
 }
 
 .table-list-container .mat-mdc-row:nth-child(even) {
-  background: #f7f7f7; /* gris claro que ya tenés */
+  background: #fafafa;
 }
-
 
 .table-list-container .mat-mdc-row:hover {
-  background: #dfdfdf;
-  cursor: pointer;
+  background: #f0f0ff;
 }
 
-.table-list-container .button-add {
-  background: #6a60ff;
-  color: white;
-  height: 56px;
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  font-size: 16px;
+.table-list-container .mat-mdc-cell {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #f5f5f5;
 }
 
-
-.toolbar {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  margin-bottom: 15px;
-}
-
-/* Alinear altura del campo de búsqueda con el botón */
-.toolbar .mat-mdc-form-field {
-  margin: 0;
-  height: 56px;
-}
-.toolbar .mat-mdc-text-field-wrapper {
-  height: 100%;
-  display: inline-flex;
-  align-items: center;
-}
-.toolbar .mat-mdc-form-field-infix {
-  padding-block: 16px; /* equilibra la altura total a ~56px */
-}
-
-/* el campo de búsqueda ocupa el espacio disponible */
-.search {
-  flex: 1 1 400px; /* crece, puede encogerse, base 400px */
-  min-width: 200px;
-  max-width: 500px;
+/* Legajo Badge */
+.legajo-badge {
+  background: #e8e6ff;
+  color: #6a60ff;
+  padding: 4px 10px;
   border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
 }
 
-.table-wrapper {
-  min-height: auto; /* o el valor que quieras */
-  overflow: auto;
-  border-radius: 8px;
-  /* box-shadow: 0 6px 18px rgba(0, 0, 0, 0.171); */
-  border: 1px solid #e0e0e0;
+/* Personal Info */
+.personal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-/* Tabla de personal: fijar layout y anchos de columnas */
-.tabla-personal {
-  table-layout: fixed !important;
-  width: 100%;
+.personal-nombre {
+  font-weight: 500;
+  color: #1a1a1a;
 }
 
-/* Evitar que el contenido mueva columnas; truncar con ellipsis */
-.tabla-personal .mat-mdc-header-cell,
-.tabla-personal .mat-mdc-cell {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.personal-email {
+  font-size: 12px;
+  color: #666;
 }
 
-/* Anchos fijos por columna */
-.tabla-personal .mat-column-legajo {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
+/* Especialidad */
+.especialidad-text {
+  color: #555;
 }
 
-.tabla-personal .mat-column-nombre {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
+/* Teléfono */
+.telefono-text {
+  color: #555;
+  font-family: 'SF Mono', 'Monaco', monospace;
+  font-size: 13px;
 }
 
-.tabla-personal .mat-column-dni {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
+/* Chips de Rol */
+.rol-medico {
+  background-color: #e3f2fd !important;
+  color: #1565c0 !important;
 }
 
-.tabla-personal .mat-column-apellido {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
+.rol-enfermero {
+  background-color: #f3e5f5 !important;
+  color: #7b1fa2 !important;
 }
 
-.tabla-personal .mat-column-especialidad {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
+.rol-anestesista {
+  background-color: #fff3e0 !important;
+  color: #e65100 !important;
 }
 
-.tabla-personal .mat-column-rol {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
+.rol-instrumentista {
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
 }
 
-.tabla-personal .mat-column-estado {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
+.rol-default {
+  background-color: #f5f5f5 !important;
+  color: #616161 !important;
 }
 
-.tabla-personal .mat-column-telefono {
+/* Chips de Estado */
+.estado-activo {
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+
+.estado-inactivo {
+  background-color: #ffebee !important;
+  color: #c62828 !important;
+}
+
+.estado-licencia {
+  background-color: #fff8e1 !important;
+  color: #f57f17 !important;
+}
+
+.estado-default {
+  background-color: #f5f5f5 !important;
+  color: #616161 !important;
+}
+
+/* Menu */
+.menu-delete {
+  color: #d32f2f !important;
+}
+
+.menu-delete mat-icon {
+  color: #d32f2f !important;
+}
+
+/* Empty State */
+.empty-row {
+  height: 200px;
+}
+
+.empty-cell {
+  text-align: center !important;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #999;
+}
+
+.empty-state mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #ccc;
+}
+
+/* Paginator */
+.mat-mdc-paginator {
+  background: #fafafa;
+  border-top: 1px solid #e8e8e8;
+}
+
+/* Column widths */
+.mat-column-legajo {
   width: 100px;
-  min-width: 100px;
-  max-width: 100px;
 }
-  
-.tabla-personal .mat-column-editar,
-.tabla-personal .mat-column-eliminar {
-  width: 40px;
-  min-width: 40px;
-  max-width: 40px;
+
+.mat-column-nombreCompleto {
+  min-width: 180px;
+}
+
+.mat-column-dni {
+  width: 110px;
+}
+
+.mat-column-especialidad {
+  min-width: 140px;
+}
+
+.mat-column-rol {
+  width: 130px;
+}
+
+.mat-column-estado {
+  width: 110px;
+}
+
+.mat-column-telefono {
+  width: 120px;
+}
+
+.mat-column-acciones {
+  width: 80px;
   text-align: center;
-
-}
-
-.tabla-personal .mat-column-eliminar {
-  padding-right:30px; /* separa el botón del borde de la columna */
 }

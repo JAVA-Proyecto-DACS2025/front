@@ -1,150 +1,279 @@
 .table-list-container {
-  min-height: auto;
-  max-width: 4000px;
-  padding: 16px;
+  position: relative;
+  min-height: 400px;
+  max-width: 100%;
+  padding: 24px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  border-radius: 8px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.171);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   background: white;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 12px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #6a60ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.toolbar .mat-mdc-form-field {
+  margin: 0;
+}
+
+.search {
+  flex: 1 1 300px;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.button-add {
+  background: #6a60ff !important;
+  color: white !important;
+  height: 56px;
+  padding: 0 24px !important;
+  font-weight: 500;
+  border-radius: 8px !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s ease;
+}
+
+.button-add:hover {
+  background: #5a50ef !important;
+}
+
+/* Table Wrapper */
+.table-wrapper {
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+  overflow: hidden;
+}
+
+/* Table */
+.tabla-pacientes {
+  width: 100%;
 }
 
 .table-list-container .mat-mdc-header-cell {
   background: #6a60ff;
   color: white;
   font-weight: 600;
+  font-size: 13px;
+  padding: 14px 16px;
+  border: none;
 }
 
 .table-list-container .mat-mdc-row {
-  background: #f7f7f7;
-  cursor: pointer;
-  border-color: black;
-  border-radius: 8px;
+  transition: background 0.15s ease;
 }
 
 .table-list-container .mat-mdc-row:nth-child(odd) {
-  background: #ffffff; /* blanco */
+  background: #ffffff;
 }
 
 .table-list-container .mat-mdc-row:nth-child(even) {
-  background: #f7f7f7; /* gris claro que ya tenés */
+  background: #fafafa;
 }
-
 
 .table-list-container .mat-mdc-row:hover {
-  background: #dfdfdf;
-  cursor: pointer;
+  background: #f0f0ff;
 }
 
-.table-list-container .button-add {
-  background: #6a60ff;
-  color: white;
-  height: 56px;
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  font-size: 16px;
+.table-list-container .mat-mdc-cell {
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
 }
 
+/* Paciente Info */
+.paciente-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 
-.toolbar {
+.paciente-nombre {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.paciente-direccion {
+  font-size: 12px;
+  color: #666;
+}
+
+/* DNI Badge */
+.dni-badge {
+  background: #e8e6ff;
+  color: #6a60ff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+/* Fecha Info */
+.fecha-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fecha-text {
+  color: #333;
+}
+
+.edad-text {
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+}
+
+/* Datos Físicos */
+.datos-fisicos {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chip-altura,
+.chip-peso {
+  height: 24px !important;
+  min-height: 24px !important;
+  font-size: 12px !important;
+  padding: 0 8px !important;
+  width: fit-content !important;
+}
+
+.chip-altura {
+  background-color: #e3f2fd !important;
+  color: #1565c0 !important;
+}
+
+.chip-altura mat-icon,
+.chip-peso mat-icon {
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
+  margin-right: 2px;
+}
+
+.chip-peso {
+  background-color: #f3e5f5 !important;
+  color: #7b1fa2 !important;
+}
+
+/* Contacto */
+.telefono-text {
   display: flex;
   align-items: center;
-  gap: 22px;
-  margin-bottom: 15px;
+  gap: 6px;
+  color: #555;
+  font-family: 'SF Mono', 'Monaco', monospace;
+  font-size: 13px;
 }
 
-/* Alinear altura del campo de búsqueda con el botón */
-.toolbar .mat-mdc-form-field {
-  margin: 0;
-  height: 56px;
+.contact-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  color: #888;
 }
 
+/* Menu */
+.menu-delete {
+  color: #d32f2f !important;
+}
 
-.toolbar .mat-mdc-text-field-wrapper {
-  height: 100%;
-  display: inline-flex;
+.menu-delete mat-icon {
+  color: #d32f2f !important;
+}
+
+/* Empty State */
+.empty-row {
+  height: 200px;
+}
+
+.empty-cell {
+  text-align: center !important;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-}
-.toolbar .mat-mdc-form-field-infix {
-  padding-block: 16px; /* equilibra la altura total a ~56px */
-}
-
-/* Tabla de pacientes: fijar layout y anchos de columnas */
-.tabla-pacientes {
-  table-layout: fixed !important;
-  width: 100%;
+  gap: 12px;
+  color: #999;
 }
 
-.tabla-pacientes .mat-mdc-header-cell,
-.tabla-pacientes .mat-mdc-cell {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.empty-state mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #ccc;
 }
 
-.tabla-pacientes .mat-column-nombre {
+/* Paginator */
+.mat-mdc-paginator {
+  background: #fafafa;
+  border-top: 1px solid #e8e8e8;
+}
+
+/* Column widths */
+.mat-column-nombreCompleto {
+  width: 140px;
+}
+
+.mat-column-dni {
   width: 120px;
-  min-width: 120px;
-  max-width: 120px;
 }
-.tabla-pacientes .mat-column-apellido {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
-}
-.tabla-pacientes .mat-column-dni {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
-}
-.tabla-pacientes .mat-column-fecha_nacimiento {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
-}
-.tabla-pacientes .mat-column-altura {
-  width: 65px;
-  min-width: 65px;
-  max-width: 65px;
-}
-.tabla-pacientes .mat-column-peso {
-  width: 90px;
-  min-width: 90px;
-  max-width: 90px;
-}
-.tabla-pacientes .mat-column-direccion {
+
+.mat-column-fechaNacimiento {
   width: 130px;
-  min-width: 130px;
-  max-width: 130px;
 }
-.tabla-pacientes .mat-column-telefono {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
+
+.mat-column-datosFisicos {
+  width: 160px;
 }
-.tabla-pacientes .mat-column-editar,
-.tabla-pacientes .mat-column-eliminar {
-  width: 30px;
-  min-width: 30px;
-  max-width: 30px;
+
+.mat-column-contacto {
+  width: 140px;
+}
+
+.mat-column-acciones {
+  width: 80px;
   text-align: center;
-}
-.tabla-pacientes .mat-column-eliminar {
-  padding-right: 35px;
-}
-
-/* el campo de búsqueda ocupa el espacio disponible */
-.search {
-  flex: 1 1 400px; /* crece, puede encogerse, base 400px */
-  min-width: 200px;
-  max-width: 500px;
-  border-radius: 6px;
-}
-
-.table-wrapper {
-  min-height: auto; /* o el valor que quieras */
-  overflow: auto;
-  border-radius: 8px;
-  /* box-shadow: 0 6px 18px rgba(0, 0, 0, 0.171); */
-  border: 1px solid #e0e0e0;
 }

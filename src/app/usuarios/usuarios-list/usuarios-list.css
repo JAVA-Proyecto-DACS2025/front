@@ -15,10 +15,7 @@
 }
 
 .table-list-container .mat-mdc-row {
-  background: #f7f7f7;
-  cursor: pointer;
-  border-color: black;
-  border-radius: 8px;
+  transition: background 0.15s ease;
 }
 
 .table-list-container .mat-mdc-row:nth-child(odd) {
@@ -26,12 +23,15 @@
 }
 
 .table-list-container .mat-mdc-row:nth-child(even) {
-  background: #f7f7f7;
+  background: #fafafa;
 }
 
 .table-list-container .mat-mdc-row:hover {
-  background: #dfdfdf;
-  cursor: pointer;
+  background: #f0f0ff;
+}
+
+.table-list-container .mat-mdc-cell {
+  border-bottom: 1px solid #f5f5f5;
 }
 
 .toolbar {

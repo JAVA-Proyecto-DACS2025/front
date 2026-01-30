@@ -15,107 +15,217 @@
 }
 
 .table-list-container .mat-mdc-row {
-  background: #f7f7f7;
-  cursor: pointer;
-  border-color: black;
-  border-radius: 8px;
+  transition: background 0.15s ease;
 }
 
 .table-list-container .mat-mdc-row:nth-child(odd) {
-  background: #ffffff; /* blanco */
+  background: #ffffff;
 }
 
 .table-list-container .mat-mdc-row:nth-child(even) {
-  background: #f7f7f7; /* gris claro que ya tenés */
+  background: #fafafa;
 }
-
 
 .table-list-container .mat-mdc-row:hover {
-  background: #dfdfdf;
-  cursor: pointer;
+  background: #f0f0ff;
 }
 
-.table-list-container .button-add {
-  background: #6a60ff;
-  color: white;
-  height: 56px; /* igual alto que mat-form-field outline */
-  min-height: 56px;
-  box-sizing: border-box;
-  padding: 0 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1px;
-  font:  600 16px 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+.table-list-container .mat-mdc-cell {
+  border-bottom: 1px solid #f0f0f0;
 }
-.table-list-container .button-add mat-icon {
-  font-size: 22px;
-  width: 22px;
-  height: 22px;
-}
-
 
 .toolbar {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 22px;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
-.toolbar .mat-mdc-form-field {
-  margin: 0; /* alinear verticalmente con el botón */
-  height: 56px;
-}
-.toolbar .mat-mdc-text-field-wrapper {
-  height: 100%;
-  align-items: center;
-}
-.toolbar .mat-mdc-form-field-infix {
-  padding-top: 14px;
-  padding-bottom: 14px;
-}
-
-/* el campo de búsqueda ocupa el espacio disponible */
 .search {
-  flex: 1 1 400px; /* crece, puede encogerse, base 400px */
-  min-width: 200px;
-  max-width: 500px;
-  border-radius: 6px;
+  flex: 1;
+  min-width: 250px;
+  max-width: 400px;
+}
+
+.btn-crear {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 56px;
+  padding: 0 24px;
+  font-weight: 500;
+}
+
+.btn-crear mat-icon {
+  margin-right: 4px;
 }
 
 .table-wrapper {
-  min-height: auto; /* o el valor que quieras */
-  overflow: auto;
-  border-radius: 8px;
-  /* box-shadow: 0 6px 18px rgba(0, 0, 0, 0.171); */
-  border: 1px solid #e0e0e0;
+  position: relative;
+  overflow-x: auto;
+}
+
+.table-wrapper.loading {
+  opacity: 0.6;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+  color: #6a60ff;
+}
+
+.loading-overlay .spinner {
+  animation: spin 1s linear infinite;
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .tabla-solicitudes {
   width: 100%;
-  table-layout: fixed !important; /* forzar anchos fijos */
 }
 
-/* Anchos fijos para cada columna */
-.mat-column-fechaInicio { width: 80px !important; min-width: 80px; max-width: 80px; }
-.mat-column-horaInicio  { width: 75px !important; min-width: 75px; max-width: 75px; }
-.mat-column-pacienteNombre    { width: 100px !important; min-width: 100px; max-width: 100px; }
-.mat-column-dni         { width: 90px !important; min-width: 90px; max-width: 90px; }
-.mat-column-servicioNombre    { width: 100px !important; min-width: 100px; max-width: 100px; }
-.mat-column-estado      { width: 90px !important; min-width: 90px; max-width: 90px; }
-.mat-column-tipo        { width: 90px !important; min-width: 90px; max-width: 90px; }
-.mat-column-prioridad   { width: 90px !important; min-width: 90px; max-width: 90px; }
-.mat-column-anestesia   { width: 90px !important; min-width: 90px; max-width: 90px; }
-.mat-column-quirofanoNombre   { width: 90px !important; min-width: 90px; max-width: 90px; }
-.mat-column-medicos     { width: 33px !important; min-width: 33px; max-width: 33px; }
-.mat-column-acciones    { width: 33px !important; min-width: 33px; max-width: 33px; }
-.mat-column-eliminar    { width: 33px !important; min-width: 33px; max-width: 33px; }
+/* Celdas con iconos */
+.fecha-cell,
+.quirofano-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-/* Evitar que el texto desborde las celdas */
-.tabla-solicitudes th,
-.tabla-solicitudes td {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  box-sizing: border-box;
+.fecha-icon,
+.quirofano-icon {
+  color: #6a60ff;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.paciente-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.paciente-cell .nombre {
+  font-weight: 500;
+}
+
+.paciente-cell .dni {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Chips de estado */
+.chip-estado,
+.chip-prioridad {
+  font-size: 12px;
+  min-height: 24px;
+}
+
+.chip-pendiente {
+  background-color: #fff3e0 !important;
+  color: #e65100 !important;
+}
+
+.chip-confirmada {
+  background-color: #e3f2fd !important;
+  color: #1565c0 !important;
+}
+
+.chip-realizada {
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+
+.chip-cancelada {
+  background-color: #ffebee !important;
+  color: #c62828 !important;
+}
+
+/* Chips de prioridad */
+.chip-alta {
+  background-color: #ffebee !important;
+  color: #c62828 !important;
+}
+
+.chip-media {
+  background-color: #fff3e0 !important;
+  color: #e65100 !important;
+}
+
+.chip-baja {
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+
+/* Columna de acciones */
+.acciones-cell {
+  display: flex;
+  justify-content: center;
+}
+
+.acciones-cell button {
+  color: #616161;
+}
+
+.acciones-cell button:hover {
+  color: #6a60ff;
+}
+
+.delete-option {
+  color: #c62828 !important;
+}
+
+.delete-option mat-icon {
+  color: #c62828 !important;
+}
+
+/* Estado vacío */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  color: #9e9e9e;
+}
+
+.empty-state mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  color: #bdbdbd;
+}
+
+.empty-state p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search {
+    max-width: 100%;
+  }
 }

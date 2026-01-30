@@ -18,18 +18,18 @@ export class RoleGuard implements CanActivate {
   canActivate(): Observable<boolean | UrlTree> {
     return new Observable(observer => {
       if (!this.keycloakService.isLoggedIn()) {
-        observer.next(this.router.createUrlTree(['/login']));
+        observer.next(this.router.createUrlTree(['/home']));
         observer.complete();
         return;
       }
 
-      // Verificar si tiene ROLE-A o ROLE-B
-      const hasRequiredRole = this.keycloakService.hasAnyRole(['ROLE-A', 'ROLE-B']);
+      // Verificar si tiene admin o personal_medico
+      const hasRequiredRole = this.keycloakService.hasAnyRole(['admin', 'personal_medico']);
       
       if (hasRequiredRole) {
         observer.next(true);
       } else {
-        observer.next(this.router.createUrlTree(['/unauthorized']));
+        observer.next(this.router.createUrlTree(['/home']));
       }
       
       observer.complete();
@@ -38,7 +38,7 @@ export class RoleGuard implements CanActivate {
 }
 
 /**
- * Guard específico para ROLE-A
+ * Guard específico para admin
  */
 @Injectable({
   providedIn: 'root'
@@ -52,15 +52,15 @@ export class RoleAGuard implements CanActivate {
   canActivate(): Observable<boolean | UrlTree> {
     return new Observable(observer => {
       if (!this.keycloakService.isLoggedIn()) {
-        observer.next(this.router.createUrlTree(['/login']));
+        observer.next(this.router.createUrlTree(['/home']));
         observer.complete();
         return;
       }
 
-      if (this.keycloakService.hasRole('ROLE-A')) {
+      if (this.keycloakService.hasRole('admin')) {
         observer.next(true);
       } else {
-        observer.next(this.router.createUrlTree(['/unauthorized']));
+        observer.next(this.router.createUrlTree(['/home']));
       }
       
       observer.complete();
@@ -69,7 +69,7 @@ export class RoleAGuard implements CanActivate {
 }
 
 /**
- * Guard específico para ROLE-B
+ * Guard específico para personal_medico
  */
 @Injectable({
   providedIn: 'root'
@@ -83,15 +83,16 @@ export class RoleBGuard implements CanActivate {
   canActivate(): Observable<boolean | UrlTree> {
     return new Observable(observer => {
       if (!this.keycloakService.isLoggedIn()) {
-        observer.next(this.router.createUrlTree(['/login']));
+        observer.next(this.router.createUrlTree(['/home']));
         observer.complete();
         return;
       }
 
-      if (this.keycloakService.hasRole('ROLE-B')) {
+      // Personal médico o admin pueden acceder
+      if (this.keycloakService.hasAnyRole(['personal_medico', 'admin'])) {
         observer.next(true);
       } else {
-        observer.next(this.router.createUrlTree(['/unauthorized']));
+        observer.next(this.router.createUrlTree(['/home']));
       }
       
       observer.complete();

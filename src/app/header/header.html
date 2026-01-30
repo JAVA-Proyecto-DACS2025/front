@@ -21,76 +21,81 @@
 
     <!-- Área de usuario -->
     <div class="header-user">
-      <!-- Usuario no logueado -->
-      <div *ngIf="!isLoggedIn" class="user-not-logged">
-        <button (click)="login()" class="login-button">
-          <span class="button-icon">🔑</span>
-          Iniciar Sesión
-        </button>
-      </div>
-
-      <!-- Usuario logueado -->
-      <div *ngIf="isLoggedIn" class="user-logged">
-        <!-- Información del usuario -->
-        <div class="user-info" (click)="toggleUserMenu()">
-          <div class="user-avatar">
-            <span>{{ getFullName().charAt(0).toUpperCase() }}</span>
-          </div>
-          <div class="user-details">
-            <span class="user-name">{{ getFullName() }}</span>
-            <span class="user-role">{{ getUserRoles().join(', ') }}</span>
-          </div>
-          <div class="user-arrow" [class.rotated]="showUserMenu">▼</div>
+      @if (!isLoggedIn) {
+        <!-- Usuario no logueado -->
+        <div class="user-not-logged">
+          <button (click)="login()" class="login-button">
+            <span class="button-icon">🔑</span>
+            Iniciar Sesión
+          </button>
         </div>
+      } @else {
+        <!-- Usuario logueado -->
+        <div class="user-logged">
+          <!-- Información del usuario -->
+          <div class="user-info" (click)="toggleUserMenu()">
+            <div class="user-avatar">
+              <span>{{ getFullName().charAt(0).toUpperCase() }}</span>
+            </div>
+            <div class="user-details">
+              <span class="user-name">{{ getFullName() }}</span>
+              <span class="user-role">{{ getUserRoles().join(', ') }}</span>
+            </div>
+            <div class="user-arrow" [class.rotated]="showUserMenu">▼</div>
+          </div>
 
-        <!-- Menú desplegable del usuario -->
-        <div class="user-menu" [class.show]="showUserMenu" (click)="$event.stopPropagation()">
-          <div class="menu-header">
-            <div class="menu-user-info">
-              <div class="menu-avatar">
-                <span>{{ getFullName().charAt(0).toUpperCase() }}</span>
-              </div>
-              <div class="menu-user-details">
-                <span class="menu-name">{{ getFullName() }}</span>
-                <span class="menu-email">{{ getEmail() }}</span>
-                <span class="menu-username">@{{ getUsername() }}</span>
+          <!-- Menú desplegable del usuario -->
+          <div class="user-menu" [class.show]="showUserMenu" (click)="$event.stopPropagation()">
+            <div class="menu-header">
+              <div class="menu-user-info">
+                <div class="menu-avatar">
+                  <span>{{ getFullName().charAt(0).toUpperCase() }}</span>
+                </div>
+                <div class="menu-user-details">
+                  <span class="menu-name">{{ getFullName() }}</span>
+                  <span class="menu-email">{{ getEmail() }}</span>
+                  <span class="menu-username">@{{ getUsername() }}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="menu-divider"></div>
+            <div class="menu-divider"></div>
 
-          <div class="menu-section">
-            <h4 class="menu-section-title">Roles</h4>
-            <div class="menu-roles">
-              <span
-                *ngFor="let role of getUserRoles()"
-                class="role-badge"
-                [class.role-a]="role === 'ROLE-A'"
-                [class.role-b]="role === 'ROLE-B'"
-              >
-                {{ role }}
-              </span>
+            <div class="menu-section">
+              <h4 class="menu-section-title">Roles</h4>
+              <div class="menu-roles">
+                @for (role of getUserRoles(); track role) {
+                  <span
+                    class="role-badge"
+                    [class.role-a]="role === 'ROLE-A'"
+                    [class.role-b]="role === 'ROLE-B'"
+                  >
+                    {{ role }}
+                  </span>
+                }
+              </div>
+            </div>
+
+            <div class="menu-divider"></div>
+
+            <div class="menu-actions">
+              <button (click)="goToAccount()" class="menu-action">
+                <span class="action-icon">👤</span>
+                Mi Cuenta
+              </button>
+              <button (click)="logout()" class="menu-action logout">
+                <span class="action-icon">🚪</span>
+                Cerrar Sesión
+              </button>
             </div>
           </div>
-
-          <div class="menu-divider"></div>
-
-          <div class="menu-actions">
-            <button (click)="goToAccount()" class="menu-action">
-              <span class="action-icon">👤</span>
-              Mi Cuenta
-            </button>
-            <button (click)="logout()" class="menu-action logout">
-              <span class="action-icon">🚪</span>
-              Cerrar Sesión
-            </button>
-          </div>
         </div>
-      </div>
+      }
     </div>
   </div>
 
   <!-- Overlay para cerrar el menú -->
-  <div *ngIf="showUserMenu" class="menu-overlay" (click)="closeUserMenu()"></div>
+  @if (showUserMenu) {
+    <div class="menu-overlay" (click)="closeUserMenu()"></div>
+  }
 </header>

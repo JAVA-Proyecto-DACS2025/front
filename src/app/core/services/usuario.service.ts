@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpParams } from '@angular/common/http';
 import { BaseApiService } from './base-api.service';
 import { IUser } from '../models/user';
 import { IApiResponse, IPaginatedResponseES } from '../models/api-response';
@@ -75,7 +76,9 @@ export class UsuarioService extends BaseApiService {
    * Activa o desactiva un usuario
    */
   toggleUsuarioStatus(id: string, enabled: boolean) {
-    return this.put<IApiResponse<IKeycloakUser>>(`${API_ENDPOINTS.BFF.USER}/${id}/status`, { enabled });
+    const url = `${this.baseUrl}${API_ENDPOINTS.BFF.USER}/${id}/status`;
+    const params = new HttpParams().set('enabled', String(enabled));
+    return this.http.put<IApiResponse<IKeycloakUser>>(url, null, { params });
   }
 
   /**
