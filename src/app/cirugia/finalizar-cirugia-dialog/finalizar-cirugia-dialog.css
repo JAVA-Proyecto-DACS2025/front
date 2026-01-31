@@ -1,0 +1,264 @@
+/* ==================== DIALOG CONTAINER ==================== */
+::ng-deep .mat-mdc-dialog-container {
+  border-radius: 24px !important;
+  overflow: hidden !important;
+}
+
+/* ==================== TITLE ==================== */
+h2[mat-dialog-title] {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: #fff;
+  margin: 0;
+  padding: 16px 24px;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.title-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+/* ==================== CONTENT ==================== */
+mat-dialog-content.dialog-content {
+  background: #fff;
+  padding: 20px 24px;
+  min-width: 500px;
+  max-width: 600px;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+/* ==================== CIRUGIA INFO ==================== */
+.cirugia-info {
+  background: #f8f9fa;
+  padding: 12px 16px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-row {
+  display: flex;
+  gap: 8px;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #666;
+  min-width: 70px;
+}
+
+.info-value {
+  color: #333;
+}
+
+/* ==================== SECTION DIVIDER ==================== */
+.section-divider {
+  height: 1px;
+  background: #e8e8e8;
+  margin: 16px 0;
+}
+
+/* ==================== FORM SECTION ==================== */
+.section-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  margin: 0 0 12px 0;
+}
+
+.intervencion-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn-agregar {
+  background: #6a60ff !important;
+  color: #fff !important;
+  border-radius: 20px !important;
+}
+
+.btn-agregar mat-icon {
+  margin-right: 4px;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* ==================== INTERVENCIONES LIST ==================== */
+.intervenciones-section {
+  margin-top: 8px;
+}
+
+.empty-intervenciones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  color: #666;
+  gap: 8px;
+  background: #fafafa;
+  border-radius: 12px;
+  border: 2px dashed #e0e0e0;
+}
+
+.empty-intervenciones mat-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  color: #ccc;
+}
+
+.empty-intervenciones p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.empty-intervenciones .hint {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.intervenciones-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.intervencion-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: #f8f8fc;
+  border-radius: 10px;
+  border: 1px solid #e8e8f0;
+  transition: all 0.2s;
+}
+
+.intervencion-item:hover {
+  background: #f0f0ff;
+}
+
+.intervencion-item.editing {
+  background: #e8f5e9;
+  border-color: #4caf50;
+}
+
+.intervencion-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.intervencion-nombre {
+  font-weight: 500;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.intervencion-observaciones {
+  font-size: 0.8rem;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.intervencion-actions {
+  display: flex;
+  gap: 2px;
+}
+
+.intervencion-actions button {
+  width: 32px;
+  height: 32px;
+}
+
+.intervencion-actions mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.btn-remover {
+  color: #e53935 !important;
+}
+
+.btn-remover:hover {
+  background: rgba(229, 57, 53, 0.1) !important;
+}
+
+/* ==================== DIALOG ACTIONS ==================== */
+mat-dialog-actions {
+  padding: 12px 24px 20px 24px;
+  gap: 8px;
+}
+
+button[mat-button], button[mat-raised-button] {
+  min-width: 100px;
+  border-radius: 20px;
+}
+
+.btn-finalizar {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%) !important;
+  color: #fff !important;
+  font-weight: 500;
+  padding: 0 20px !important;
+}
+
+.btn-finalizar mat-icon {
+  margin-right: 6px;
+}
+
+.btn-finalizar:disabled {
+  background: #ccc !important;
+  color: #999 !important;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==================== MAT FORM FIELD OVERRIDES ==================== */
+::ng-deep .intervencion-form .mat-mdc-form-field-flex {
+  min-height: 48px !important;
+}
+
+mat-label {
+  color: #6a60ff;
+  font-weight: 500;
+}
+
+textarea[matInput] {
+  resize: vertical;
+}

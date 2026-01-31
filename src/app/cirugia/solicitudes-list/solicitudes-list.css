@@ -8,14 +8,23 @@
   background: white;
 }
 
+.table-list-container .mat-mdc-cell {
+  border-bottom: 1px solid #f0f0f0;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
 .table-list-container .mat-mdc-header-cell {
   background: #6a60ff;
   color: white;
   font-weight: 600;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .table-list-container .mat-mdc-row {
   transition: background 0.15s ease;
+  height: 48px;
 }
 
 .table-list-container .mat-mdc-row:nth-child(odd) {
@@ -28,10 +37,6 @@
 
 .table-list-container .mat-mdc-row:hover {
   background: #f0f0ff;
-}
-
-.table-list-container .mat-mdc-cell {
-  border-bottom: 1px solid #f0f0f0;
 }
 
 .toolbar {
@@ -185,6 +190,14 @@
 
 .acciones-cell button:hover {
   color: #6a60ff;
+}
+
+.finalizar-option {
+  color: #2e7d32 !important;
+}
+
+.finalizar-option mat-icon {
+  color: #2e7d32 !important;
 }
 
 .delete-option {

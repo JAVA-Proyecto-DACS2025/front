@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -19,6 +19,7 @@ import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
 import { CirugiaDialog } from '../cirugia-dialog/cirugia-dialog';
 import { EquipoMedicoDialog } from '../equipo-medico-dialog/equipo-medico-dialog';
+import { FinalizarCirugiaDialog } from '../finalizar-cirugia-dialog/finalizar-cirugia-dialog';
 
 @Component({
   selector: 'app-solicitudes-list',
@@ -62,7 +63,10 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   private paginatorSub?: Subscription;
 
-  constructor(private cirugiaService: CirugiaService, private dialog: MatDialog) {}
+  private cirugiaService = inject(CirugiaService);
+  private dialog = inject(MatDialog);
+
+  constructor() {}
 
   ngOnInit(): void {
     this.loadPage(this.page, this.pageSize);
@@ -168,6 +172,22 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
 
   openEquipoMedico(cirugiaId: number) {
     this.dialog.open(EquipoMedicoDialog, { data: { cirugiaId } });
+  }
+
+  finalizarCirugia(cirugia: ICirugia) {
+    this.dialog
+      .open(FinalizarCirugiaDialog, {
+        data: { cirugia },
+        width: '600px',
+        maxHeight: '90vh',
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.pageCache.clear();
+          this.loadPage(this.page, this.pageSize);
+        }
+      });
   }
 
   deleteCirugia(cirugiaId: number) {

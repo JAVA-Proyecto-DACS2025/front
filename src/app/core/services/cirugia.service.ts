@@ -4,6 +4,7 @@ import { ICirugia } from '../models/cirugia';
 import { IApiResponse, IPaginatedResponse } from '../models/api-response';
 import { IMiembroEquipoMedico } from '../models/miembro-equipo';
 import { IQuirofano } from '../models/quirofano';
+import { IIntervencion, ITipoIntervencion } from '../models/intervencion';
 
 @Injectable({
   providedIn: 'root',
@@ -49,5 +50,30 @@ export class CirugiaService extends BaseApiService {
 
   getServicios() {
     return this.get<IApiResponse<any>>('/cirugias/servicios');
+  }
+
+  // Intervenciones
+  getIntervencionesByCirugiaId(cirugiaId: number) {
+    return this.get<IApiResponse<IIntervencion[]>>(`/cirugias/${cirugiaId}/intervenciones`);
+  }
+
+  createIntervencion(cirugiaId: number, intervencion: IIntervencion) {
+    return this.post<IApiResponse<IIntervencion>>(`/cirugias/${cirugiaId}/intervenciones`, intervencion);
+  }
+
+  updateIntervencion(cirugiaId: number, intervencion: IIntervencion) {
+    return this.put<IApiResponse<IIntervencion>>(`/cirugias/${cirugiaId}/intervenciones/${intervencion.id}`, intervencion);
+  }
+
+  deleteIntervencion(cirugiaId: number, intervencionId: number) {
+    return this.delete<void>(`/cirugias/${cirugiaId}/intervenciones/${intervencionId}`);
+  }
+
+  getTiposIntervencion() {
+    return this.get<IApiResponse<ITipoIntervencion[]>>('/cirugias/tipos-intervencion');
+  }
+
+  finalizarCirugia(cirugiaId: number, intervenciones: IIntervencion[]) {
+    return this.put<IApiResponse<ICirugia>>(`/cirugias/${cirugiaId}/finalizar`, { intervenciones });
   }
 }

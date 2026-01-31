@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DatePipe, CommonModule, NgFor, NgClass } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -56,11 +56,11 @@ export class Agenda {
   quirofanos: IQuirofano[] = [];
   selectedQuirofanoId: number | null = null; // null = todos
 
-  constructor(
-    private cirugiaService: CirugiaService,
-    private quirofanoService: QuirofanoService,
-    private dialog: MatDialog
-  ) {
+  private cirugiaService = inject(CirugiaService);
+  private quirofanoService = inject(QuirofanoService);
+  private dialog = inject(MatDialog);
+
+  constructor() {
     this.currentWeekStart = this.getStartOfWeek(this.today);
     this.generateHorasJornada();
     this.loadQuirofanos();
