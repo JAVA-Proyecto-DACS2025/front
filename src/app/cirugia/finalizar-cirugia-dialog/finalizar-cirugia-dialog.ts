@@ -111,17 +111,39 @@ export class FinalizarCirugiaDialog implements OnInit {
       observaciones: this.form.value.observaciones || '',
     };
 
+    this.isLoading = true;
+
     if (this.editingIndex !== null) {
       // Actualizar intervención existente
       intervencion.id = this.intervenciones[this.editingIndex].id;
-      this.intervenciones[this.editingIndex] = intervencion;
-      this.editingIndex = null;
+      this.cirugiaService.updateIntervencion(this.data.cirugia.id!, intervencion).subscribe({
+        next: (resp: any) => {
+          const data = resp?.data ?? resp;
+          this.intervenciones[this.editingIndex!] = data;
+          this.editingIndex = null;
+          this.form.reset();
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error actualizando intervención', err);
+          this.isLoading = false;
+        }
+      });
     } else {
       // Agregar nueva
-      this.intervenciones.push(intervencion);
+      this.cirugiaService.createIntervencion(this.data.cirugia.id!, intervencion).subscribe({
+        next: (resp: any) => {
+          const data = resp?.data ?? resp;
+          this.intervenciones.push(data);
+          this.form.reset();
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error creando intervención', err);
+          this.isLoading = false;
+        }
+      });
     }
-
-    this.form.reset();
   }
 
   editarIntervencion(index: number): void {
@@ -139,12 +161,36 @@ export class FinalizarCirugiaDialog implements OnInit {
   }
 
   removerIntervencion(index: number): void {
-    this.intervenciones.splice(index, 1);
-    if (this.editingIndex === index) {
-      this.editingIndex = null;
-      this.form.reset();
-    } else if (this.editingIndex !== null && this.editingIndex > index) {
-      this.editingIndex--;
+    const intervencion = this.intervenciones[index];
+    
+    // Si tiene id, eliminar del backend
+    if (intervencion.id) {
+      this.isLoading = true;
+      this.cirugiaService.deleteIntervencion(this.data.cirugia.id!, intervencion.id).subscribe({
+        next: () => {
+          this.intervenciones.splice(index, 1);
+          if (this.editingIndex === index) {
+            this.editingIndex = null;
+            this.form.reset();
+          } else if (this.editingIndex !== null && this.editingIndex > index) {
+            this.editingIndex--;
+          }
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error eliminando intervención', err);
+          this.isLoading = false;
+        }
+      });
+    } else {
+      // Si no tiene id, solo eliminar localmente
+      this.intervenciones.splice(index, 1);
+      if (this.editingIndex === index) {
+        this.editingIndex = null;
+        this.form.reset();
+      } else if (this.editingIndex !== null && this.editingIndex > index) {
+        this.editingIndex--;
+      }
     }
   }
 

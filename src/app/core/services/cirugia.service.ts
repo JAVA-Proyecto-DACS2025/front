@@ -70,7 +70,7 @@ export class CirugiaService extends BaseApiService {
   }
 
   getTiposIntervencion() {
-    return this.get<IApiResponse<ITipoIntervencion[]>>('/cirugias/tipos-intervencion');
+    return this.get<IApiResponse<ITipoIntervencion[]>>('/tipos-intervenciones');
   }
 
   finalizarCirugia(cirugiaId: number, intervenciones: IIntervencion[]) {
