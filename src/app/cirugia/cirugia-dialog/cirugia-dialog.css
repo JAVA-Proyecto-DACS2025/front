@@ -203,9 +203,8 @@ mat-dialog-content.dialog-content {
   justify-content: center;
   padding: 40px 24px;
   text-align: center;
-  background: linear-gradient(135deg, rgba(106, 96, 255, 0.03) 0%, rgba(106, 96, 255, 0.08) 100%);
+  background: #fff;
   border-radius: 16px;
-  border: 2px dashed rgba(106, 96, 255, 0.2);
 }
 
 .equipo-empty-icon {
