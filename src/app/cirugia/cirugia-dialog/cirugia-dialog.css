@@ -65,17 +65,6 @@
   display: block;
 }
 
-/* asegurar que el form apile los controles en columna */
-mat-dialog-content form {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-height: 520px;
-  max-height: 720px;
-  overflow-y: auto;
-  
-}
-
 /* responsive: en pantallas pequeñas apilar fecha/hora */
 @media (max-width: 600px) {
   .row.two-columns {
@@ -99,11 +88,292 @@ mat-dialog-content, h2[mat-dialog-title] {
 }
 mat-dialog-content.dialog-content {
   background: #fff;
-  padding: 24px 16px 8px 16px;
+  padding: 0 16px 8px 16px;
   min-width: 440px;
-  max-width: 580px;
+  max-width: 620px;
   max-height: 800px;
   max-height: 1000px;
+}
+
+/* ==================== TABS ==================== */
+.cirugia-tabs {
+  margin-top: 8px;
+}
+
+::ng-deep .cirugia-tabs .mat-mdc-tab-header {
+  margin-bottom: 8px;
+}
+
+::ng-deep .cirugia-tabs .mat-mdc-tab {
+  min-width: 120px;
+}
+
+::ng-deep .cirugia-tabs .mat-mdc-tab-labels {
+  gap: 8px;
+}
+
+.tab-content {
+  padding: 16px 0 8px 0;
+  min-height: 480px;
+  max-height: 580px;
+  overflow-y: auto;
+}
+
+.tab-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tab-disabled {
+  opacity: 0.5;
+}
+
+.tab-lock-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  opacity: 0.6;
+}
+
+/* ==================== EQUIPO MÉDICO TAB ==================== */
+.equipo-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ==================== EQUIPO MÉDICO - HEADER ==================== */
+.equipo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+}
+
+.equipo-header-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.equipo-header-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: #6a60ff;
+  opacity: 0.8;
+}
+
+.equipo-title {
+  margin: 0 0 2px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.equipo-subtitle {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+}
+
+.btn-agregar {
+  border-radius: 20px !important;
+  padding: 0 20px !important;
+}
+
+.btn-agregar mat-icon {
+  margin-right: 6px;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* ==================== EQUIPO MÉDICO - EMPTY STATE ==================== */
+.equipo-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(106, 96, 255, 0.03) 0%, rgba(106, 96, 255, 0.08) 100%);
+  border-radius: 16px;
+  border: 2px dashed rgba(106, 96, 255, 0.2);
+}
+
+.equipo-empty-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(106, 96, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.equipo-empty-icon mat-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: #6a60ff;
+}
+
+.equipo-empty h4 {
+  margin: 0 0 6px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.equipo-empty p {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* ==================== EQUIPO MÉDICO - LISTA DE TARJETAS ==================== */
+.equipo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.equipo-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.equipo-card:hover {
+  border-color: rgba(106, 96, 255, 0.3);
+  box-shadow: 0 2px 8px rgba(106, 96, 255, 0.1);
+}
+
+.equipo-card-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6a60ff 0%, #8b7fff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.equipo-card-avatar mat-icon {
+  color: #fff;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.equipo-card-info {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 140px;
+  min-width: 0;
+}
+
+.equipo-card-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.equipo-card-legajo {
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.45);
+  margin-top: 2px;
+}
+
+.equipo-card-rol {
+  flex: 1;
+  min-width: 0;
+}
+
+.rol-field {
+  width: 100%;
+}
+
+::ng-deep .equipo-card-rol .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+::ng-deep .equipo-card-rol .mat-mdc-text-field-wrapper {
+  padding: 0 12px !important;
+}
+
+::ng-deep .equipo-card-rol .mat-mdc-form-field-flex {
+  height: 40px !important;
+  min-height: 40px !important;
+}
+
+::ng-deep .equipo-card-rol .mat-mdc-floating-label {
+  top: 20px !important;
+}
+
+::ng-deep .equipo-card-rol input {
+  font-size: 13px !important;
+}
+
+.equipo-card-delete {
+  flex-shrink: 0;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.equipo-card:hover .equipo-card-delete {
+  opacity: 1;
+}
+
+.equipo-card-delete mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* ==================== EQUIPO MÉDICO - FOOTER ==================== */
+.equipo-footer {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 12px;
+  margin-top: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.equipo-count {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.equipo-count mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
 }
 
 /* Título con fondo y bordes arriba */

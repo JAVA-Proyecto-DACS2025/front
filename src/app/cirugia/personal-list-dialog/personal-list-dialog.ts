@@ -58,11 +58,14 @@ export class PersonalListDialog implements OnInit {
       distinctUntilChanged(),
       switchMap((q) => this.personalService.searchPersonalLite(this.page, this.pageSize, (q ?? '').trim()).pipe(
         map((r: any) => r ?? {}),
-        catchError(() => of({ data: [], totalItems: 0 }))
+        catchError(() => of({ data: { contenido: [], totalElementos: 0 } }))
       ))
     ).subscribe((resp: any) => {
-      this.dataSource.data = resp?.data ?? [];
-      this.totalItems = resp?.totalItems ?? (this.dataSource.data.length || 0);
+      const data = resp?.data;
+      const content = Array.isArray(data?.contenido) ? data.contenido : (Array.isArray(data?.content) ? data.content : []);
+      const totalItems = typeof data?.totalElementos === 'number' ? data.totalElementos : (typeof data?.totalElements === 'number' ? data.totalElements : content.length);
+      this.dataSource.data = content;
+      this.totalItems = totalItems;
       if (this.paginator) {
         this.paginator.pageIndex = this.page;
         this.paginator.pageSize = this.pageSize;
@@ -72,15 +75,15 @@ export class PersonalListDialog implements OnInit {
 
   loadPage(page: number, pageSize: number, q: string) {
     this.personalService.searchPersonalLite(page, pageSize, q ?? '').subscribe((resp: any) => {
-      // Adaptar a la estructura paginada del backend
+      // Adaptar a la estructura paginada del backend (contenido, totalElementos, pagina, tamaño)
       const data = resp?.data;
-      const content = Array.isArray(data?.content) ? data.content : [];
-      const totalItems = typeof data?.totalElements === 'number' ? data.totalElements : content.length;
+      const content = Array.isArray(data?.contenido) ? data.contenido : (Array.isArray(data?.content) ? data.content : []);
+      const totalItems = typeof data?.totalElementos === 'number' ? data.totalElementos : (typeof data?.totalElements === 'number' ? data.totalElements : content.length);
       this.dataSource.data = content;
       this.totalItems = totalItems;
       if (this.paginator) {
-        this.paginator.pageIndex = typeof data?.number === 'number' ? data.number : page;
-        this.paginator.pageSize = typeof data?.size === 'number' ? data.size : pageSize;
+        this.paginator.pageIndex = typeof data?.pagina === 'number' ? data.pagina : (typeof data?.number === 'number' ? data.number : page);
+        this.paginator.pageSize = typeof data?.tamaño === 'number' ? data.tamaño : (typeof data?.size === 'number' ? data.size : pageSize);
       }
     });
   }

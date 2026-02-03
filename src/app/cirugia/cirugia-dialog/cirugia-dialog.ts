@@ -1,5 +1,5 @@
 import { Component, Inject, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -8,6 +8,9 @@ import {
   MatDialogContent,
 } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatListModule } from '@angular/material/list';
 import { ICirugia } from '../../core/models/cirugia';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
 import { CirugiaService } from '../../core/services/cirugia.service';
@@ -28,6 +31,9 @@ import { PacienteListLite } from '../../shared/paciente-list-lite/paciente-list-
 import { QuirofanoService } from '../../core/services/quirofano.service';
 import { IQuirofano } from '../../core/models/quirofano';
 import { SeleccionTurnos } from '../seleccion-turnos/seleccion-turnos';
+import { IMiembroEquipoMedico } from '../../core/models/miembro-equipo';
+import { PersonalService } from '../../core/services/personal.service';
+import { PersonalListDialog } from '../personal-list-dialog/personal-list-dialog';
 
 @Component({
   standalone: true,
@@ -48,6 +54,9 @@ import { SeleccionTurnos } from '../seleccion-turnos/seleccion-turnos';
     MatNativeDateModule,
     MatSelectModule,
     MatTooltipModule,
+    MatTabsModule,
+    MatTableModule,
+    MatListModule,
   ],
 })
 export class CirugiaDialog {
@@ -57,11 +66,21 @@ export class CirugiaDialog {
   public pacienteCtrl = new FormControl<string>('');
   public quirofanos: IQuirofano[] = [];
   public servicios: any[] = [];
+  
+  // Equipo médico
+  public searchControl = new FormControl<string>('');
+  public displayedColumnsEquipo: string[] = ['nombre', 'legajo', 'rol', 'accionEliminar'];
+  public dataSourceEquipo = new MatTableDataSource<any>([]);
+  
+  // Estado inicial para detectar cambios
+  private initialCirugiaData: string = '';
+  private initialEquipoMedico: string = '';
 
   constructor(
     private fb: FormBuilder,
     private cirugiaService: CirugiaService,
     private quirofanoService: QuirofanoService,
+    private personalService: PersonalService,
     private dialogRef: MatDialogRef<CirugiaDialog>,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: ICirugia
@@ -81,6 +100,8 @@ export class CirugiaDialog {
       prioridad: [''],
       anestesia: [''],
       tipo: [''],
+      // Equipo médico como FormArray
+      equipoMedico: this.fb.array([]),
     });
   }
 
@@ -97,6 +118,12 @@ export class CirugiaDialog {
           dni: (this.data as any)?.dni,
         })
       );
+      // Guardar estado inicial de la cirugía (sin equipoMedico)
+      this.saveInitialCirugiaState();
+      // Cargar equipo médico si existe cirugía
+      if (this.data.id) {
+        this.loadEquipoMedico(this.data.id);
+      }
     } else {
       // En modo creación, cargar servicios automáticamente
       this.openSeleccionServicios();
@@ -192,6 +219,16 @@ export class CirugiaDialog {
   }
 
   private updateCirugia(cirugiaData: ICirugia) {
+    const cirugiaChanged = this.hasCirugiaChanged();
+    const equipoChanged = this.hasEquipoMedicoChanged();
+
+    // Si no hay cambios en nada, cerrar sin hacer requests
+    if (!cirugiaChanged && !equipoChanged) {
+      console.log('No hay cambios, cerrando sin actualizar');
+      this.dialogRef.close(null);
+      return;
+    }
+
     const confirmDialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Confirmar actualización',
@@ -201,17 +238,68 @@ export class CirugiaDialog {
 
     confirmDialogRef.afterClosed().subscribe((result) => {
       if (!result) return;
-      const payload = Helpers.buildCirugiaPayload(cirugiaData);
-      this.cirugiaService.updateCirugia(payload).subscribe(
-        (resp: any) => {
-          const payload = resp && resp.data ? resp.data : resp;
-          this.dialogRef.close(payload);
-        },
-        (err) => {
-          console.error('Error actualizando cirugía', err);
-        }
-      );
+
+      // Solo actualizar cirugía si cambió
+      if (cirugiaChanged) {
+        const payload = Helpers.buildCirugiaPayload(cirugiaData);
+        this.cirugiaService.updateCirugia(payload).subscribe(
+          (resp: any) => {
+            const cirugiaResp = resp && resp.data ? resp.data : resp;
+            // Solo guardar equipo médico si cambió
+            if (equipoChanged) {
+              this.saveEquipoMedicoAndClose(cirugiaData.id!, cirugiaResp);
+            } else {
+              this.dialogRef.close(cirugiaResp);
+            }
+          },
+          (err) => {
+            console.error('Error actualizando cirugía', err);
+          }
+        );
+      } else if (equipoChanged) {
+        // Solo cambió el equipo médico
+        this.saveEquipoMedicoAndClose(cirugiaData.id!, cirugiaData);
+      }
     });
+  }
+
+  /** Guarda el equipo médico y cierra el dialog */
+  private saveEquipoMedicoAndClose(cirugiaId: number, responseData: any) {
+    const equipoPayload = this.equipoMedico.value;
+    this.cirugiaService.saveEquipoMedico(equipoPayload, cirugiaId).subscribe({
+      next: () => {
+        console.log('Equipo médico guardado correctamente');
+        this.dialogRef.close(responseData);
+      },
+      error: (err) => {
+        console.error('Error guardando equipo médico', err);
+        this.dialogRef.close(responseData);
+      },
+    });
+  }
+
+  // ==================== DETECCIÓN DE CAMBIOS ====================
+
+  /** Guarda el estado inicial de la cirugía para comparar después */
+  private saveInitialCirugiaState() {
+    const { equipoMedico, ...cirugiaFields } = this.form.value;
+    this.initialCirugiaData = JSON.stringify(cirugiaFields);
+  }
+
+  /** Guarda el estado inicial del equipo médico para comparar después */
+  private saveInitialEquipoState() {
+    this.initialEquipoMedico = JSON.stringify(this.equipoMedico.value);
+  }
+
+  /** Verifica si los datos de la cirugía cambiaron */
+  private hasCirugiaChanged(): boolean {
+    const { equipoMedico, ...cirugiaFields } = this.form.value;
+    return JSON.stringify(cirugiaFields) !== this.initialCirugiaData;
+  }
+
+  /** Verifica si el equipo médico cambió */
+  private hasEquipoMedicoChanged(): boolean {
+    return JSON.stringify(this.equipoMedico.value) !== this.initialEquipoMedico;
   }
 
   cancelar() {
@@ -317,5 +405,78 @@ export class CirugiaDialog {
   /** Getter para usar en el HTML */
   get isEditMode(): boolean {
     return !!this.form.value.id;
+  }
+
+  // ==================== EQUIPO MÉDICO ====================
+
+  /** Getter para el FormArray del equipo médico */
+  get equipoMedico(): FormArray {
+    return this.form.get('equipoMedico') as FormArray;
+  }
+
+  /** Carga el equipo médico de una cirugía existente */
+  loadEquipoMedico(cirugiaId: number) {
+    this.cirugiaService.getEquipoMedicoByCirugiaId(cirugiaId).subscribe((resp: any) => {
+      const integrantes = (resp?.data ?? []) as IMiembroEquipoMedico[];
+      integrantes.forEach((p) => this.addIntegrante(p));
+      this.dataSourceEquipo.data = this.equipoMedico.value ?? [];
+      // Guardar estado inicial del equipo médico
+      this.saveInitialEquipoState();
+    });
+  }
+
+  /** Abre el diálogo de selección de personal */
+  openPersonalListDialog() {
+    const dialogRef = this.dialog.open(PersonalListDialog, {
+      width: '860px',
+      data: { q: this.searchControl.value ?? '' },
+    });
+
+    dialogRef.afterClosed().subscribe((selected: IMiembroEquipoMedico | null) => {
+      if (selected) {
+        this.addIntegrante(selected);
+      }
+    });
+  }
+
+  /** Agrega un integrante al equipo médico (evita duplicados) */
+  addIntegrante(personal?: Partial<IMiembroEquipoMedico>) {
+    const id = (personal as any)?.personalId ?? (personal as any)?.id ?? null;
+    if (id !== null && this.equipoMedico.controls.some((c) => c.value.personalId === id)) {
+      return; // ya agregado
+    }
+
+    const grupo = this.fb.group({
+      personalId: [id],
+      cirugiaId: [this.form.value.id],
+      nombre: [personal?.nombre ?? ''],
+      rol: [personal?.rol ?? ''],
+      legajo: [personal?.legajo ?? ''],
+    });
+    this.equipoMedico.push(grupo);
+    this.dataSourceEquipo.data = this.equipoMedico.value ?? [];
+  }
+
+  /** Elimina un integrante del equipo médico */
+  removeIntegrante(index: number) {
+    this.equipoMedico.removeAt(index);
+    this.dataSourceEquipo.data = this.equipoMedico.value ?? [];
+  }
+
+  /** Guarda el equipo médico (solo en modo edición) */
+  saveEquipoMedico() {
+    const cirugiaId = this.form.value.id;
+    if (!cirugiaId) {
+      console.warn('No se puede guardar equipo médico sin ID de cirugía');
+      return;
+    }
+
+    const payload = this.equipoMedico.value;
+    this.cirugiaService.saveEquipoMedico(payload, cirugiaId).subscribe({
+      next: () => {
+        console.log('Equipo médico guardado correctamente');
+      },
+      error: (err) => console.error('Error guardando equipo médico', err),
+    });
   }
 }
