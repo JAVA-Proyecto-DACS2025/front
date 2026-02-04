@@ -124,14 +124,18 @@
                 <mat-icon>edit</mat-icon>
                 <span>Editar</span>
               </button>
-              <button mat-menu-item (click)="finalizarCirugia(s)" class="finalizar-option">
-                <mat-icon>check_circle</mat-icon>
-                <span>Marcar como finalizada</span>
-              </button>
-              <button mat-menu-item (click)="deleteCirugia(s.id)" class="delete-option">
-                <mat-icon>delete</mat-icon>
-                <span>Eliminar</span>
-              </button>
+              <ng-container *ngIf="s.estado !== 'FINALIZADA'">
+                <button mat-menu-item (click)="finalizarCirugia(s)" class="finalizar-option">
+                  <mat-icon>check_circle</mat-icon>
+                  <span>Marcar como finalizada</span>
+                </button>
+              </ng-container>
+              <ng-container *ngIf="s.estado !== 'FINALIZADA'">
+                <button mat-menu-item (click)="deleteCirugia(s.id)" class="delete-option">
+                  <mat-icon>delete</mat-icon>
+                  <span>Cancelar</span>
+                </button>
+              </ng-container>
             </mat-menu>
           </div>
         </td>

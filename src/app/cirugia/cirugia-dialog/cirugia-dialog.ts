@@ -96,7 +96,7 @@ export class CirugiaDialog {
       // fecha como Date y hora como string "HH:MM"
       fechaInicio: [null],
       horaInicio: [''],
-      estado: ['PENDIENTE'],
+      estado: ['PROGRAMADA'],
       prioridad: [''],
       anestesia: [''],
       tipo: [''],
