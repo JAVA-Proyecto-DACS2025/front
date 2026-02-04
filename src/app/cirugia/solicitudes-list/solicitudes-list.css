@@ -48,6 +48,12 @@
   gap: 16px;
 }
 
+.estado-filtros {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .search {
   flex: 1;
   min-width: 250px;

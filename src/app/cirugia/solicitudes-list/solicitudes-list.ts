@@ -42,6 +42,7 @@ import { FinalizarCirugiaDialog } from '../finalizar-cirugia-dialog/finalizar-ci
   ],
 })
 export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestroy {
+  selectedEstado: string | null = null;
   displayedColumns: string[] = [
     'fechaInicio',
     'pacienteNombre',
@@ -97,8 +98,8 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
     this.paginatorSub?.unsubscribe();
   }
 
-  loadPage(page: number, pageSize: number) {
-    const cacheKey = `${page}-${pageSize}`;
+  loadPage(page: number, pageSize: number, estado?: string) {
+    const cacheKey = `${page}-${pageSize}-${estado || ''}`;
 
     // verificar si la página está en caché
     if (this.pageCache.has(cacheKey)) {
@@ -117,7 +118,7 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
 
     // si no está en caché, llamar al servidor
     this.isLoading = true;
-    this.cirugiaService.getCirugias(page, pageSize).subscribe({
+    this.cirugiaService.getCirugias(page, pageSize, estado).subscribe({
       next: (resp: any) => {
         // Adaptar a la estructura real de la respuesta del backend
         const content = resp?.data?.contenido || [];
@@ -150,8 +151,32 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
     });
   }
 
+
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  filtrarPorEstado(estado: string) {
+    this.selectedEstado = estado;
+    let estadoParam = '';
+    switch (estado) {
+      case 'FINALIZADA':
+        estadoParam = 'FINALIZADA';
+        break;
+      case 'CANCELADA':
+        estadoParam = 'CANCELADA';
+        break;
+      case 'PROGRAMADA':
+        estadoParam = 'PROGRAMADA';
+        break;
+      case 'EN_TRANS':
+        estadoParam = 'EN_TRANS'; // Ajusta este valor según el backend
+        break;
+      default:
+        estadoParam = '';
+    }
+    this.pageCache.clear();
+    this.loadPage(0, this.pageSize, estadoParam);
   }
 
   onPage(event: PageEvent) {
