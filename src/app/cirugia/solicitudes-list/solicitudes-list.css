@@ -39,13 +39,68 @@
   background: #f0f0ff;
 }
 
+
 .toolbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 16px;
+  margin-bottom: 16px;
+}
+
+
+.search-filtros-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.btn-crear-wrapper {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.estado-filtros {
+  display: flex;
+  gap: 4px;
+}
+
+.estado-btn {
+  border-radius: 8px !important;
+  background: #f5f5f7 !important;
+  color: #333 !important;
+  font-weight: 500;
+  box-shadow: none !important;
+  padding: 0 18px !important;
+  min-width: 120px;
+  height: 40px;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.estado-btn.selected {
+  background: #6a60ff !important;
+  color: #fff !important;
+}
+
+.estado-btn mat-icon {
+  font-size: 20px;
+  margin-right: 4px;
+}
+
+@media (max-width: 768px) {
+  .search-filtros-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .estado-filtros {
+    justify-content: flex-start;
+    gap: 4px;
+  }
 }
 
 .estado-filtros {
@@ -148,23 +203,24 @@
   min-height: 24px;
 }
 
+
 .chip-pendiente {
-  background-color: #fff3e0 !important;
-  color: #e65100 !important;
+  background-color: #fff9e5 !important; /* amarillo pastel */
+  color: #fbc02d !important;
 }
 
-.chip-confirmada {
-  background-color: #e3f2fd !important;
-  color: #1565c0 !important;
+.chip-programada {
+  background-color: #e5f6ff !important; /* celeste pastel */
+  color: #1976d2 !important;
 }
 
 .chip-realizada {
-  background-color: #e8f5e9 !important;
-  color: #2e7d32 !important;
+  background-color: #e5ffe5 !important; /* verde pastel */
+  color: #388e3c !important;
 }
 
 .chip-cancelada {
-  background-color: #ffebee !important;
+  background-color: #ffe5e5 !important; /* rojo pastel */
   color: #c62828 !important;
 }
 

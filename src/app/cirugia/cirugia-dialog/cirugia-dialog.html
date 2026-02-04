@@ -88,25 +88,45 @@
           <!-- Estado -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Estado</mat-label>
-            <input matInput formControlName="estado" />
+            <mat-select formControlName="estado">
+              <!-- <mat-option value="PROGRAMADA">Programada</mat-option> -->
+              <mat-option value="EN_CURSO">En curso</mat-option>
+              <mat-option value="FINALIZADA">Finalizada</mat-option>
+              <mat-option value="CANCELADA">Cancelada</mat-option>
+              <mat-option value="PENDIENTE">Pendiente</mat-option>
+            </mat-select>
           </mat-form-field>
 
           <!-- Prioridad -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Prioridad</mat-label>
-            <input matInput formControlName="prioridad" />
+            <mat-select formControlName="prioridad">
+              <mat-option value="ALTA">Alta</mat-option>
+              <mat-option value="MEDIA">Media</mat-option>
+              <mat-option value="BAJA">Baja</mat-option>
+            </mat-select>
           </mat-form-field>
 
           <!-- Anestesia -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Anestesia</mat-label>
-            <input matInput formControlName="anestesia" />
+            <mat-select formControlName="anestesia">
+              <mat-option value="GENERAL">General</mat-option>
+              <mat-option value="LOCAL">Local</mat-option>
+              <mat-option value="REGIONAL">Regional</mat-option>
+              <mat-option value="SEDACION">Sedación</mat-option>
+            </mat-select>
           </mat-form-field>
 
           <!-- Tipo -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Tipo</mat-label>
-            <input matInput formControlName="tipo" />
+            <mat-select formControlName="tipo">
+              <mat-option value="ELECTIVA">Electiva</mat-option>
+              <mat-option value="URGENTE">Urgente</mat-option>
+              <mat-option value="PROGRAMADA">Programada</mat-option>
+              <mat-option value="AMBULATORIA">Ambulatoria</mat-option>
+            </mat-select>
           </mat-form-field>
         </form>
       </div>

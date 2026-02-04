@@ -1,35 +1,38 @@
 <div class="table-list-container">
 
   <div class="toolbar">
-    <mat-form-field class="search" appearance="outline">
-      <mat-label>Buscar cirugía</mat-label>
-      <input
-        matInput
-        (keyup)="applyFilter($any($event.target).value)"
-        placeholder="Paciente, servicio, tipo..."
-      />
-      <mat-icon matSuffix>search</mat-icon>
-    </mat-form-field>
 
-    <div class="estado-filtros">
-      <button mat-stroked-button [color]="selectedEstado === 'FINALIZADA' ? 'primary' : ''" (click)="filtrarPorEstado('FINALIZADA')">
-        <mat-icon>check_circle</mat-icon> Finalizada
-      </button>
-      <button mat-stroked-button [color]="selectedEstado === 'CANCELADA' ? 'warn' : ''" (click)="filtrarPorEstado('CANCELADA')">
-        <mat-icon>cancel</mat-icon> Cancelada
-      </button>
-      <button mat-stroked-button [color]="selectedEstado === 'PROGRAMADA' ? 'accent' : ''" (click)="filtrarPorEstado('PROGRAMADA')">
-        <mat-icon>event_available</mat-icon> Programada
-      </button>
-      <button mat-stroked-button [color]="selectedEstado === 'EN_TRANS' ? 'accent' : ''" (click)="filtrarPorEstado('EN_TRANS')">
-        <mat-icon>autorenew</mat-icon> En curso
-      </button>
+    <div class="search-filtros-row">
+      <mat-form-field class="search" appearance="outline">
+        <mat-label>Buscar cirugía</mat-label>
+        <input
+          matInput
+          (keyup)="applyFilter($any($event.target).value)"
+          placeholder="Paciente, servicio, tipo..."
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      <div class="estado-filtros">
+        <button mat-button class="estado-btn" [ngClass]="{'selected': selectedEstado === 'FINALIZADA'}" (click)="filtrarPorEstado('FINALIZADA')">
+          <mat-icon>check_circle</mat-icon> Finalizada
+        </button>
+        <button mat-button class="estado-btn" [ngClass]="{'selected': selectedEstado === 'CANCELADA'}" (click)="filtrarPorEstado('CANCELADA')">
+          <mat-icon>cancel</mat-icon> Cancelada
+        </button>
+        <button mat-button class="estado-btn" [ngClass]="{'selected': selectedEstado === 'PROGRAMADA'}" (click)="filtrarPorEstado('PROGRAMADA')">
+          <mat-icon>event_available</mat-icon> Programada
+        </button>
+        <button mat-button class="estado-btn" [ngClass]="{'selected': selectedEstado === 'EN_TRANS'}" (click)="filtrarPorEstado('EN_TRANS')">
+          <mat-icon>autorenew</mat-icon> En curso
+        </button>
+      </div>
+      <div class="btn-crear-wrapper">
+        <button mat-raised-button color="primary" class="btn-crear" (click)="openCirugia()">
+          <mat-icon>add_circle</mat-icon>
+          Nueva cirugía
+        </button>
+      </div>
     </div>
-
-    <button mat-raised-button color="primary" class="btn-crear" (click)="openCirugia()">
-      <mat-icon>add_circle</mat-icon>
-      Nueva cirugía
-    </button>
   </div>
 
   <div class="table-wrapper" [class.loading]="isLoading">

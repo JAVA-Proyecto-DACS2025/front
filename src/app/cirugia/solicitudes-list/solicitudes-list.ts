@@ -157,6 +157,13 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   filtrarPorEstado(estado: string) {
+    // Si el botón ya está seleccionado, deselecciona y quita el filtro
+    if (this.selectedEstado === estado) {
+      this.selectedEstado = null;
+      this.pageCache.clear();
+      this.loadPage(0, this.pageSize);
+      return;
+    }
     this.selectedEstado = estado;
     let estadoParam = '';
     switch (estado) {
@@ -170,7 +177,7 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
         estadoParam = 'PROGRAMADA';
         break;
       case 'EN_TRANS':
-        estadoParam = 'EN_TRANS'; // Ajusta este valor según el backend
+        estadoParam = 'EN_CURSO';
         break;
       default:
         estadoParam = '';
@@ -235,11 +242,11 @@ export class SolicitudesListComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   getEstadoClass(estado: string): string {
-    const estadoLower = estado?.toLowerCase() || '';
-    if (estadoLower.includes('programada') || estadoLower.includes('pendiente')) return 'chip-pendiente';
-    if (estadoLower.includes('confirmada') || estadoLower.includes('aprobada')) return 'chip-confirmada';
-    if (estadoLower.includes('realizada') || estadoLower.includes('completada')) return 'chip-realizada';
-    if (estadoLower.includes('cancelada')) return 'chip-cancelada';
+    const estadoUpper = (estado || '').toUpperCase();
+    if (estadoUpper === 'PROGRAMADA') return 'chip-programada';
+    if (estadoUpper === 'EN_CURSO' || estadoUpper === 'PENDIENTE') return 'chip-pendiente';
+    if (estadoUpper === 'FINALIZADA' || estadoUpper === 'REALIZADA' || estadoUpper === 'COMPLETADA') return 'chip-realizada';
+    if (estadoUpper === 'CANCELADA') return 'chip-cancelada';
     return '';
   }
 
