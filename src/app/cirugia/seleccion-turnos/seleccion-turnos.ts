@@ -38,7 +38,7 @@ export class SeleccionTurnos {
       intervalMinutes?: number;
       servicioId?: number;
       quirofanos?: any[];
-    } | null
+    } | null,
   ) {
     const days = data?.days ?? 7;
     const startHour = data?.startHour ?? '08:00';
@@ -75,23 +75,39 @@ export class SeleccionTurnos {
     fechaLimite.setDate(this.fechaHoy.getDate() + days);
     const estado = 'DISPONIBLE';
     const quirofanoId = this.selectedQuirofanoId ?? 0;
-    this.cirugiaService.getTurnosDisponibles(quirofanoId, this.getDateString(this.fechaHoy), this.getDateString(fechaLimite), 0, 300, estado).subscribe({
-      next: (resp: any) => {
-        // La respuesta viene directamente con contenido (sin data wrapper)
-        const contenido = resp?.contenido ?? resp?.data?.contenido ?? [];
-        if (Array.isArray(contenido) && contenido.length > 0) {
-          // Extraer fechaHoraInicio de cada turno
-          const horarios = contenido.map((turno: any) => turno.fechaHoraInicio);
-          this.buildColumnsFromBackend(horarios);
-        } else {
-          console.warn('No turnos available or invalid response format');
-          this.columns = [];
-        }
-      },
-      error: (err) => {
-        console.error('Error al cargar turnos disponibles:', err);
-      }
-    });
+    const now = new Date();
+    this.fechaHoy.setHours(
+      now.getHours(),
+      now.getMinutes(),
+      now.getSeconds(),
+      now.getMilliseconds(),
+    );
+    this.cirugiaService
+      .getTurnosDisponibles(
+        quirofanoId,
+        this.getDateString(this.fechaHoy),
+        this.getDateString(fechaLimite),
+        0,
+        300,
+        estado,
+      )
+      .subscribe({
+        next: (resp: any) => {
+          // La respuesta viene directamente con contenido (sin data wrapper)
+          const contenido = resp?.contenido ?? resp?.data?.contenido ?? [];
+          if (Array.isArray(contenido) && contenido.length > 0) {
+            // Extraer fechaHoraInicio de cada turno
+            const horarios = contenido.map((turno: any) => turno.fechaHoraInicio);
+            this.buildColumnsFromBackend(horarios);
+          } else {
+            console.warn('No turnos available or invalid response format');
+            this.columns = [];
+          }
+        },
+        error: (err) => {
+          console.error('Error al cargar turnos disponibles:', err);
+        },
+      });
   }
 
   private buildColumnsFromBackend(horarios: string[]): void {
@@ -102,36 +118,36 @@ export class SeleccionTurnos {
     }
 
     const columnMap = new Map<string, DayColumn>();
-    
+
     horarios.forEach((isoString: string) => {
       const fecha = new Date(isoString);
-      
+
       // Extraer fecha en formato YYYY-MM-DD para agrupar
       const yyyy = fecha.getFullYear();
       const mm = (fecha.getMonth() + 1).toString().padStart(2, '0');
       const dd = fecha.getDate().toString().padStart(2, '0');
       const fechaKey = `${yyyy}-${mm}-${dd}`;
-      
+
       // Crear columna si no existe
       if (!columnMap.has(fechaKey)) {
         const title = this.formatDayTitle(fecha);
         columnMap.set(fechaKey, { date: fecha, title, slots: [] });
       }
-      
+
       // Extraer hora en formato HH:MM
       const hh = fecha.getHours().toString().padStart(2, '0');
       const min = fecha.getMinutes().toString().padStart(2, '0');
       const timeStr = `${hh}:${min}`;
-      
+
       const slot: Slot = {
         label: timeStr,
         time: timeStr,
-        date: fecha
+        date: fecha,
       };
-      
+
       columnMap.get(fechaKey)!.slots.push(slot);
     });
-    
+
     this.columns = Array.from(columnMap.values());
   }
 
@@ -139,7 +155,7 @@ export class SeleccionTurnos {
     days: number,
     startHour: string,
     endHour: string,
-    interval: number
+    interval: number,
   ): DayColumn[] {
     const out: DayColumn[] = [];
     for (let i = 0; i < days; i++) {
@@ -155,7 +171,7 @@ export class SeleccionTurnos {
     date: Date,
     startHour: string,
     endHour: string,
-    interval: number
+    interval: number,
   ): Slot[] {
     const [sh, sm] = startHour.split(':').map(Number);
     const [eh, em] = endHour.split(':').map(Number);
@@ -171,12 +187,12 @@ export class SeleccionTurnos {
   }
 
   select(slot: Slot) {
-    const quirofano = this.quirofanos.find(q => q.id === this.selectedQuirofanoId);
-    this.dialogRef.close({ 
-      date: slot.date, 
+    const quirofano = this.quirofanos.find((q) => q.id === this.selectedQuirofanoId);
+    this.dialogRef.close({
+      date: slot.date,
       time: slot.time,
       quirofanoId: this.selectedQuirofanoId,
-      quirofanoNombre: quirofano?.nombre ?? ''
+      quirofanoNombre: quirofano?.nombre ?? '',
     });
   }
 

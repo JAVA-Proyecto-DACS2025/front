@@ -359,7 +359,7 @@ export class CirugiaDialog {
   openSeleccionTurnos() {
     const servicioId = this.form.get('servicioId')?.value;
     const ref = this.dialog.open(SeleccionTurnos, {
-      width: '960px',
+      width: '860px',
       maxHeight: '90vh',
       data: {
         days: 7,

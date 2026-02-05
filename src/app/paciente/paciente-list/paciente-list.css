@@ -2,7 +2,7 @@
   position: relative;
   min-height: 400px;
   max-width: 100%;
-  padding: 24px;
+  padding: 12px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -42,7 +42,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 4px;
   flex-wrap: wrap;
 }
 
@@ -89,8 +89,8 @@
   background: #6a60ff;
   color: white;
   font-weight: 600;
-  font-size: 13px;
-  padding: 14px 16px;
+  font-size: 12px;
+  padding: 8px 10px;
   border: none;
 }
 
@@ -111,8 +111,8 @@
 }
 
 .table-list-container .mat-mdc-cell {
-  padding: 14px 16px;
-  font-size: 14px;
+  padding: 0px 10px;
+  font-size: 13px;
   color: #333;
   border-bottom: 1px solid #f0f0f0;
 }
@@ -121,16 +121,17 @@
 .paciente-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .paciente-nombre {
   font-weight: 500;
   color: #1a1a1a;
+  font-size: 13px;
 }
 
 .paciente-direccion {
-  font-size: 12px;
+  font-size: 11px;
   color: #666;
 }
 
@@ -138,10 +139,10 @@
 .dni-badge {
   background: #e8e6ff;
   color: #6a60ff;
-  padding: 4px 10px;
+  padding: 2px 7px;
   border-radius: 6px;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12px;
   font-family: 'SF Mono', 'Monaco', monospace;
 }
 
@@ -149,15 +150,16 @@
 .fecha-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .fecha-text {
   color: #333;
+  font-size: 13px;
 }
 
 .edad-text {
-  font-size: 12px;
+  font-size: 11px;
   color: #666;
   font-style: italic;
 }
@@ -165,16 +167,16 @@
 /* Datos Físicos */
 .datos-fisicos {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   flex-wrap: wrap;
 }
 
 .chip-altura,
 .chip-peso {
-  height: 24px !important;
-  min-height: 24px !important;
-  font-size: 12px !important;
-  padding: 0 8px !important;
+  height: 20px !important;
+  min-height: 20px !important;
+  font-size: 11px !important;
+  padding: 0 6px !important;
   width: fit-content !important;
 }
 
@@ -200,16 +202,16 @@
 .telefono-text {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   color: #555;
   font-family: 'SF Mono', 'Monaco', monospace;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .contact-icon {
-  font-size: 18px !important;
-  width: 18px !important;
-  height: 18px !important;
+  font-size: 15px !important;
+  width: 15px !important;
+  height: 15px !important;
   color: #888;
 }
 
