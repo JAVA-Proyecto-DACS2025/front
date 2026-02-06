@@ -8,7 +8,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "src/app/shared/slide-menu/slide-menu.componentts"  ],
   "exclude": [
     "src/**/*.spec.ts"
   ]
