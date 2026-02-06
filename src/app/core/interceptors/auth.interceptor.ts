@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { KeycloakService } from '../services/keycloak.service';
 
 /**
@@ -8,23 +9,23 @@ import { KeycloakService } from '../services/keycloak.service';
  */
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private keycloakService: KeycloakService) {}
+  constructor(private keycloakService: KeycloakService) {
+  }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Obtener el token actual de Keycloak
-    const token = this.keycloakService.getToken();
-
-    // Si hay token y la petición no es para assets, añadir el header de autorización
-    if (token && !this.isAssetRequest(request.url)) {
-      const authRequest = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
+    return from(this.keycloakService.getToken()).pipe(
+      switchMap(token => {
+        if (token && !this.isAssetRequest(request.url)) {
+          const authRequest = request.clone({
+            setHeaders: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          return next.handle(authRequest);
         }
-      });
-      return next.handle(authRequest);
-    }
-
-    return next.handle(request);
+        return next.handle(request);
+      })
+    );
   }
 
   /**
