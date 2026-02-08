@@ -49,29 +49,41 @@
           <div class="tab-content">
             <div class="metrics-container">
               <h2>Métricas del Sistema</h2>
-              <div class="metrics-grid">
-                <div class="metric-card">
-                  <mat-icon>event</mat-icon>
-                  <div class="metric-value">24</div>
-                  <div class="metric-label">Cirugías esta semana</div>
+              <div class="metrics-grid pretty-metrics">
+                <div class="metric-card pretty-card">
+                  <mat-icon class="metric-icon">people</mat-icon>
+                  <div class="metric-value pretty-value">{{ estadisticas?.totalPacientes ?? '-' }}</div>
+                  <div class="metric-label">Total Pacientes</div>
                 </div>
-                <div class="metric-card">
-                  <mat-icon>people</mat-icon>
-                  <div class="metric-value">12</div>
-                  <div class="metric-label">Pacientes atendidos</div>
+                <div class="metric-card pretty-card">
+                  <mat-icon class="metric-icon">pending_actions</mat-icon>
+                  <div class="metric-value pretty-value">{{ estadisticas?.cirugiasPendientes ?? '-' }}</div>
+                  <div class="metric-label">Cirugías Pendientes</div>
                 </div>
-                <div class="metric-card">
-                  <mat-icon>medical_services</mat-icon>
-                  <div class="metric-value">8</div>
-                  <div class="metric-label">Quirófanos activos</div>
+                <div class="metric-card pretty-card">
+                  <mat-icon class="metric-icon">today</mat-icon>
+                  <div class="metric-value pretty-value">{{ estadisticas?.cirugiasHoy ?? '-' }}</div>
+                  <div class="metric-label">Cirugías Hoy</div>
                 </div>
-                <div class="metric-card">
-                  <mat-icon>schedule</mat-icon>
-                  <div class="metric-value">3</div>
-                  <div class="metric-label">Cirugías pendientes hoy</div>
+                <div class="metric-card pretty-card">
+                  <mat-icon class="metric-icon">date_range</mat-icon>
+                  <div class="metric-value pretty-value">{{ estadisticas?.cirugiasEstaSemana ?? '-' }}</div>
+                  <div class="metric-label">Cirugías Esta Semana</div>
+                </div>
+                <div class="metric-card wide pretty-card">
+                  <mat-icon class="metric-icon">meeting_room</mat-icon>
+                  <div class="metric-label">Quirófanos Activos</div>
+                  <ul class="quirofano-list" *ngIf="estadisticas">
+                    <li *ngFor="let q of (estadisticas?.quirofanosDisponibles || []).concat(estadisticas?.quirofanosEnUso || [])">
+                      <span class="quirofano-nombre" [ngStyle]="{color: (q.estado && q.estado.toLowerCase().includes('disponible')) ? '#43a047' : '#e53935', 'font-weight': 'bold'}">
+                        {{ q.nombre }}
+                      </span>
+                    </li>
+                  </ul>
+                  <span *ngIf="!(estadisticas?.quirofanosDisponibles?.length || estadisticas?.quirofanosEnUso?.length)" class="no-data">Ninguno</span>
                 </div>
               </div>
-              <p class="metrics-note">* Datos de ejemplo - Conectar con el backend para datos reales</p>
+              <div *ngIf="!estadisticas" class="metrics-note">Cargando métricas...</div>
             </div>
           </div>
         </mat-tab>

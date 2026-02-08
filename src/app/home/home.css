@@ -1,3 +1,8 @@
+.quirofano-estado {
+  font-size: 0.95em;
+  margin-left: 0.3em;
+  transition: color 0.2s;
+}
 .home-container {
   margin-top: 0px;
   display: flex;
